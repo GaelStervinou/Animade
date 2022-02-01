@@ -6,7 +6,7 @@ class View
 {
     private $view;
     private $template;
-    private $data;
+    private $data = [];
 
     public function __construct($view, $template = "front")
     {
@@ -22,20 +22,31 @@ class View
         $this->template = strtolower($template);
     }
 
-    public function __toString()
-    {
-        return "test classe view";
-    }
-
-    public function __destruct()
-    {
-        extract($this->data);
-        include "View/".$this->template.".tpl.php";
-    }
-
     public function assign($key, $value):void
     {
         $this->data[$key] = $value;
+    }
+
+    public function includePartial($name, $config)
+    {
+        if(!file_exists('View/Partial/'.$name.'.partial.php'))
+        {
+            die('partial : '. $name . ' 404' );
+        }
+        include('View/Partial/'.$name.'.partial.php');
+    }
+
+    public function __toString():string
+    {
+        return "Ceci est la classe View";
+    }
+
+
+    public function __destruct()
+    {
+        //Array ( [firstname] => Yves )
+        extract($this->data);
+        include "View/".$this->template.".tpl.php";
     }
 
 }
