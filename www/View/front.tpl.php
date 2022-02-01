@@ -2,10 +2,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Template de front</title>
-    <meta name="description" content="Ceci est la description de la page">
+    <title><?= $titleSeo??"Template du front" ?></title>
+    <meta name="description" content="ceci est la description de ma page">
 </head>
 <body>
-<?php include $this->view.".view.php"; ?>
+
+<?php include $this->view.".view.php";?>
+
 </body>
 </html>

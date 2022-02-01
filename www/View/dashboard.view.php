@@ -1,7 +1,4 @@
-<h1>DASHBAORD <?php echo $firstname ?></h1>
+<h1>Tableau de bord</h1>
+<h2>Welcome <?= $firstname ?> <?= $lastname ?></h2>
 
-<?php //if(): ?>
 
-<?php //else:?>
-
-<?php //endif; ?>

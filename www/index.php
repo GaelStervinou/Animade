@@ -1,10 +1,15 @@
 <?php
-
 namespace App;
 
+require "conf.inc.php";
+
+
 function myAutoloader($class){
+    //$class = App\Core\CleanWords
     $class = str_ireplace("App\\", "", $class);
+    //$class = Core\CleanWords
     $class = str_ireplace("\\", "/", $class);
+    //$class = Core/CleanWords
     if(file_exists($class.".class.php")){
         include $class.".class.php";
     }
@@ -12,8 +17,8 @@ function myAutoloader($class){
 
 spl_autoload_register("App\myAutoloader");
 
-$uri = str_replace(['/admin', '/user'], '', $_SERVER["REQUEST_URI"]);
 
+$uri = $_SERVER["REQUEST_URI"];
 
 $routeFile = "routes.yml";
 if(!file_exists($routeFile)){
@@ -22,8 +27,9 @@ if(!file_exists($routeFile)){
 
 $routes = yaml_parse_file($routeFile);
 
+
 if( empty($routes[$uri]) || empty($routes[$uri]["controller"])  || empty($routes[$uri]["action"]) ){
-    die("Page 404");
+        die("Page 404");
 }
 
 $controller = ucfirst(strtolower($routes[$uri]["controller"]));
@@ -36,13 +42,13 @@ $controllerFile = "Controller/".$controller.".class.php";
 if(!file_exists($controllerFile)){
     die("Le controller ".$controllerFile." n'existe pas");
 }
-
 include $controllerFile;
 
-$controller = "App\Controller\\".$controller;
+$controller = "App\\Controller\\".$controller;
 if( !class_exists($controller) ){
-    die("La classe ".$controller." n'existe pas");
+   die("La classe ".$controller." n'existe pas");
 }
+
 $objectController = new $controller();
 
 if( !method_exists($objectController, $action) ){
@@ -50,3 +56,7 @@ if( !method_exists($objectController, $action) ){
 }
 
 $objectController->$action();
+
+
+
+
