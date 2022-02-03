@@ -11,25 +11,17 @@ class Validator{
         }
         foreach($config['inputs'] as $name => $input){
 
-            if(!isset($data[$name]) && (!in_array($input['type'], ['checkbox', 'radiobutton']) && $input['required'] == true)){
+            if(!isset($data[$name]) && (!in_array($input['type']) && $input['required'] == true)){
                 $result[] = "Il manque des champs";
             }
-            if(!empty($input['required']) && empty($data[$name]) && $input['type'] == 'file'){
+            if(!empty($input['required']) && empty($data[$name])){
                 $result[] = "Vous devez remplir le champs ". $name;
             }
-            if($input['type'] == 'password' && !self::checkPassword($data[$name])){
+            if($input['type'] == 'password' && self::checkPassword($data[$name])){
                 $result[] = "Mot de passe incorrect";
             }
             if($input['type'] == 'email' && !self::checkEmail($data[$name])){
                 $result[] = "Email incorrect";;
-            }
-            if($input['type'] == 'file'){
-                if($data[$name]['size'] > 4000000){
-                    $result[] = "Fichier trop lourd";
-                }
-                if(strlen($data[$name]['name']) > 60){
-                    $result[] = "Nom du fichier trop long";
-                }
             }
 
         }
