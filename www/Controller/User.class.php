@@ -23,6 +23,13 @@ class User{
     public function register()
     {
         $user = new UserModel();
+        $user = $user->setId(1);
+        $token = $user->checkToken($user->getToken());
+        if($token == true){
+            echo " Vous êtes bien connectés";
+        } else {
+            echo " Vous n'êtes pas connectés";
+        }
         if(!empty($_POST)){
             if(!empty($_FILES)){
                 foreach($_FILES as $name => $info){

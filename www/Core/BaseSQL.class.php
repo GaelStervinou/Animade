@@ -57,4 +57,18 @@ abstract class BaseSQL
         return $queryPrepared->fetchObject(get_called_class());
     }
 
+    public function checkToken($token)
+    {
+        // améliorer en utilisant la variable $_SESSION pour stocker le token
+        $sql = "SELECT token FROM ".$this->table." WHERE id=:id";
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->execute(['id' => $this->getId()]);
+        $right_token = $queryPrepared->fetch()["token"];
+        if ($token == $right_token) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 }
