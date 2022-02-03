@@ -123,6 +123,11 @@ class User extends BaseSQL
         parent::save();
     }
 
+    public function login($email, $password)
+    {
+        parent::login($email, $password);
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -131,6 +136,11 @@ class User extends BaseSQL
     public function getFormLogin(): array
     {
         return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Se connecter",
+            ],
             'inputs' => [
                 'email' => [
                     'type' => 'email',

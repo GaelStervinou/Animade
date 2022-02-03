@@ -17,11 +17,11 @@ class Validator{
             if(!empty($input['required']) && empty($data[$name])){
                 $result[] = "Vous devez remplir le champs ". $name;
             }
-            if($input['type'] == 'password' && self::checkPassword($data[$name])){
+            if($input['type'] == 'password' && !self::checkPassword($data[$name])){
                 $result[] = "Mot de passe incorrect";
             }
             if($input['type'] == 'email' && !self::checkEmail($data[$name])){
-                $result[] = "Email incorrect";;
+                $result[] = "Email incorrect";
             }
 
         }
