@@ -23,11 +23,10 @@ try {
     $mail->Username = "thomasesgipa@gmail.com";
     $mail->Password = "gfGYF3XD8@dgDcFJ";
 
-
     //Charset
     $mail->Charset = "utf-8";
 
-    //Destinataires
+    //Destinataires: à remplacer par la varibale du mail qui est rensigné au moment de l'inscription
     $mail->addAddress("thomasesgipa@gmail.com");
 
     //Expéditeur
