@@ -1,0 +1,34 @@
+$col-nb: 12;
+$gutter-width: 2%;
+
+.grid{
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  .row{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin: 0 ($gutter-width/2) * -1;
+  }
+
+  .col{
+    display:flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin: 0 ($gutter-width/2) * -1;
+  }
+
+  @for $i from 1 through $col-nb {
+    .col-#{$i} {
+      width: (((100 / $col-nb) * $i) * 1%) ;
+      padding: 0 ($gutter-width/2);
+    }
+  }
+  .content{
+    background-color: $red;
+    height: 30px;
+    margin-bottom: 15px;
+  }
+}

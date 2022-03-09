@@ -11,8 +11,24 @@ class User{
 
     public function login()
     {
-        $view = new View("Login");
-        $view->assign("titleSeo","Se connecter au site");
+        $user = new UserModel();
+
+
+        if(!empty($_POST["password"]) && !empty($_POST["email"])){
+            $check_password = $user->login($_POST["email"], $_POST["password"]);
+            if($check_password == true){
+                echo " vous êtes connectés";
+                $view = new View("dashboard");
+                $view->assign("firstname", $user->getFirstname());
+                $view->assign("lastname", $user->getLastname());
+            }else{
+                echo " mot de passe incorrect";
+            }
+        }else{
+            $view = new View("Login");
+            $view->assign("titleSeo","Se connecter au site");
+            $view->assign("user", $user);
+        }
     }
 
     public function logout()
@@ -31,21 +47,26 @@ class User{
             }
             $result = Validator::run($user->getFormRegister(), $_POST);
             if(empty($result)){
-                echo "Formulaire validé";
+                $user->setEmail($_POST["email"]);
+                $user->setFirstname($_POST["firstname"]);
+                $user->setLastname($_POST["lastname"]);
+                $user->setPassword($_POST["password"]);
+                $user->save();
+                $view = new View("dashboard");
+                $view->assign("firstname", $user->getFirstname());
+                $view->assign("lastname", $user->getLastname());
             }else{
                 echo "Formulaire invalide :<br>";
                 foreach($result as $error){
                     echo $error ."<br>";
                 }
+                $user = new UserModel();
+                $view = new View("register");
             }
         }else{
-            echo "Pas OK";
+            $user = new UserModel();
+            $view = new View("register");
         }
-
-
-        //$user = $user->setId(5);
-
-        $view = new View("register");
         $view->assign('user', $user);
     }
 

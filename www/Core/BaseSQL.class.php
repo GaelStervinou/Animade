@@ -10,7 +10,8 @@ abstract class BaseSQL
 
     public function __construct()
     {
-        //Intégrer singleton
+        // Intégrer singleton
+        // cf exo design pattern
 
         try {
             $this->pdo = new \PDO("mysql:host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME,DBUSER,DBPWD);
@@ -31,7 +32,6 @@ abstract class BaseSQL
         $columns = get_object_vars($this);
         $columns = array_diff_key($columns, $varsToExclude);
         $columns = array_filter($columns);
-
         if(!is_null($this->getId())) {
             foreach($columns as $key => $value)
             {
@@ -42,7 +42,6 @@ abstract class BaseSQL
             $sql = "INSERT INTO ".$this->table."(".implode(",", array_keys($columns)).")
         VALUES(:".implode(",:", array_keys($columns)).")";
         }
-
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute( $columns );
     }
@@ -51,10 +50,18 @@ abstract class BaseSQL
     {
         $sql = "SELECT * FROM ".$this->table." WHERE id=:id";
 
-        // select * from user where
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute(['id' => $id]);
         return $queryPrepared->fetchObject(get_called_class());
+    }
+
+    public function login($email, $password)
+    {
+        $sql = "SELECT password FROM ".$this->table." WHERE email =:email";
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->execute(['email' => $email]);
+        $res = $queryPrepared->fetch()["password"];
+        return password_verify($password, $res);
     }
 
 }
