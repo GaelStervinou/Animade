@@ -1,0 +1,33 @@
+*{
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+a:not([href]){
+  pointer-events: none;
+}
+
+body{
+  font-family: $font1;
+  background-color: $light-grey;
+}
+
+h1{
+  font-family: $font2;
+  font-size: rem(24);
+}
+
+h2{
+  font-family: $font2;
+  font-size: rem(16);
+}
+
+.container{
+  max-width: $container-width;
+  margin: auto;
+  position: relative;
+}
+
+#dashboard h1{
+  text-align: center;
+}

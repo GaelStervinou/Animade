@@ -1,0 +1,23 @@
+#side-bar{
+  background: $side-bar-bg;
+  height: 100%;
+
+  .row{
+    align-items: center;
+    div{
+      margin-bottom: 30px;
+      background: white;
+      color: $animade-blue;
+      border-radius: 5px;
+      justify-content: center;
+      padding: 15px 15px;
+      a{
+        padding: 0.5em;
+        display: block;
+        text-decoration: none;
+        color: $animade-blue;
+      }
+    }
+  }
+
+}

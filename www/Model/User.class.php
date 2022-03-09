@@ -125,7 +125,7 @@ class User extends BaseSQL
 
     public function login($email, $password)
     {
-        parent::login($email, $password);
+        return parent::login($email, $password);
     }
 
     public function __construct()

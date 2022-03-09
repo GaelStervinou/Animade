@@ -1,0 +1,33 @@
+.block-stat{
+  padding-bottom: 50px;
+
+  .images-stat{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  img{
+    max-width: 45%;
+  }
+
+  .stat-nombre{
+    background: $animade-blue;
+    color: white;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: 1px solid $animade-blue;
+
+    p{
+      text-align: center;
+    }
+
+  }
+}
+
+.articles-dashboard{
+  h3{
+    font-size: 0.75rem;
+  }
+}

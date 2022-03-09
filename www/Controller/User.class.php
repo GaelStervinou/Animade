@@ -13,9 +13,9 @@ class User{
     {
         $user = new UserModel();
 
+
         if(!empty($_POST["password"]) && !empty($_POST["email"])){
             $check_password = $user->login($_POST["email"], $_POST["password"]);
-            var_dump($user->login($_POST["email"], $_POST["password"]));
             if($check_password == true){
                 echo " vous êtes connectés";
                 $view = new View("dashboard");
@@ -28,7 +28,6 @@ class User{
             $view = new View("Login");
             $view->assign("titleSeo","Se connecter au site");
             $view->assign("user", $user);
-            echo " error";
         }
     }
 
@@ -69,7 +68,6 @@ class User{
             $view = new View("register");
         }
         $view->assign('user', $user);
-
     }
 
 }

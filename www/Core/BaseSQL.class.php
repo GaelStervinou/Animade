@@ -10,7 +10,8 @@ abstract class BaseSQL
 
     public function __construct()
     {
-        //Intégrer singleton
+        // Intégrer singleton
+        // cf exo design pattern
 
         try {
             $this->pdo = new \PDO("mysql:host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME,DBUSER,DBPWD);
@@ -49,7 +50,6 @@ abstract class BaseSQL
     {
         $sql = "SELECT * FROM ".$this->table." WHERE id=:id";
 
-        // select * from user where
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute(['id' => $id]);
         return $queryPrepared->fetchObject(get_called_class());
