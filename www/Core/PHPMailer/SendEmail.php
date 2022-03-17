@@ -1,4 +1,6 @@
 <?php
+//on doit utiliser un namespace
+namespace PHPMailer\PHPMailer;
 // Inclure les fichiers phpmailer
 require 'includes/PHPMailer.php';
 require 'includes/SMTP.php';
