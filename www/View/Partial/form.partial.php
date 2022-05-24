@@ -3,9 +3,14 @@ Création du formulaire
 <form method="<?= $config['config']['method'] ?>" action="<?= $config['config']['action'] ?>" enctype="multipart/form-data">
 
     <?php foreach ($config['inputs'] as $name => $input):
+        if(!empty($input['label'])):
+            ?>
+            <label for="<?= $input['id']?>"><?= $input['label']?></label>
+        <?php endif;
         switch($input['type']):
             case 'select' :
     ?>
+
                 <select name="<?= $name?>" id="<?= $input['id']?>" class="<?= $input['class']?>"
                         placeholder="<?= $input['placeholder']?>" <?= empty($input['required'])?:'required=required'?>>
                     <?php foreach($input['options'] as $label => $info):?>

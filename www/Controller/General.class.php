@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Core\View;
 
 class General{
-
     public function home()
     {
         echo "Welcome";
@@ -16,5 +15,3 @@ class General{
         $view = new View("contact");
     }
 }
-
-

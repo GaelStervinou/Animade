@@ -2,20 +2,40 @@
 
 namespace App\Model;
 use App\Core\BaseSQL;
+use App\Model\Role;
 
 class User extends BaseSQL
 {
-
+    
+    /** @var int|null $id */
     private $id = null;
+    
+    /** @var int|null $role_id */
+    protected $role_id = null;
+
+    /** @var RoleModel|null $role */
+    protected $role = null;
+
+    /** @var string $email */
     protected $email;
+
+    /** @var string $password */
     protected $password;
+
+    /** @var string $firstname */
     protected $firstname;
+
+    /** @var string $lastname */
     protected $lastname;
+
+    /** @var int|null $status */
     protected $status = null;
+
+    /** @var string|null $token */
     protected $token = null;
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -23,7 +43,34 @@ class User extends BaseSQL
     }
 
     /**
-     * @return mixed
+     * @return int|null
+     */
+    public function getRoleId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|null $role_id
+     *
+     */
+    public function setRoleId(?int $role_id): void
+    {
+        $this->role_id = $role_id;
+    }
+
+    public function getRole(): ?RoleModel
+    {
+        // ne pas oublier de créer une fonction __toString() dans la table RoleModel pour pouvoir l'écrire ?
+        if ($this->role instanceof RoleModel) {
+            return $this->role;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
      */
     public function getEmail(): string
     {
@@ -39,7 +86,7 @@ class User extends BaseSQL
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPassword(): string
     {
@@ -55,7 +102,7 @@ class User extends BaseSQL
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFirstname(): string
     {
@@ -71,7 +118,7 @@ class User extends BaseSQL
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLastname(): string
     {
@@ -87,7 +134,7 @@ class User extends BaseSQL
     }
 
     /**
-     * @return null
+     * @return int|null
      */
     public function getStatus(): int
     {
@@ -103,7 +150,7 @@ class User extends BaseSQL
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getToken(): string
     {
@@ -177,6 +224,7 @@ class User extends BaseSQL
                 'firstname' => [
                     'type' => 'text',
                     'placeholder' => 'Prénom',
+                    'label' => 'Prénom',
                     'id' => 'firstnameRegister',
                     'class' => 'inputRegister',
                     'min' => 2,
