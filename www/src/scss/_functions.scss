@@ -3,8 +3,19 @@
   @return ($pxVal / $base) * 1rem;
 }
 
-@mixin cover-bg(){
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+@mixin cover-bg($image, $x: 0px){
+  background-size: 100%;
+  height: 800px;
+  background: {
+    image: $image;
+    repeat: no-repeat;
+  }
 }
+
+
+
+// @mixin cover-bg(){
+//   background-position: center;
+//   background-size: cover;
+//   background-repeat: no-repeat;
+// }

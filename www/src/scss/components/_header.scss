@@ -17,6 +17,7 @@ header .container > a img{
   width: 140px;
 }
 
+
 .container{
   max-width: 1170px;
   margin: auto;
@@ -68,11 +69,13 @@ header.sticky{
 }
 
 header .container > a > img{
-  width: 50%;
+  width: 80%;
   max-width: 100%;
 }
 
-
+header .container #site-nav{
+  margin-top: 15px;
+}
 
 
 @media screen and (max-width:1200px){

@@ -1,83 +1,59 @@
-Création du formulaire
-
+<link rel="stylesheet" type="text/css" href="dist/main.css">
 <form method="<?= $config['config']['method'] ?>" action="<?= $config['config']['action'] ?>" enctype="multipart/form-data">
 
+
+<h1><?= $config['config']['title']?></h1>
+
     <?php foreach ($config['inputs'] as $name => $input):
-        switch($input['type']):
-            case 'select' :
-    ?>
-                <select name="<?= $name?>" id="<?= $input['id']?>" class="<?= $input['class']?>"
-                        placeholder="<?= $input['placeholder']?>" <?= empty($input['required'])?:'required=required'?>>
-                    <?php foreach($input['options'] as $label => $info):?>
-                        <option value="<?=$info['value']?>" <?= empty($info['selected'])?:'selected=selected'?>><?=$label?></option>
-                    <?php endforeach;?>
-                </select>
-                <br>
-                <br>
-            <?php break;
-            case 'textarea' : ?>
-            <textarea name="<?= $name?>"
-                      id="<?= $input['id']?>"
-                      class="<?= $input['class']?>"
-                      placeholder="<?= $input['placeholder']?>"
-                      cols="<?= $input['cols']?>" rows="<?= $input['rows']?>"
-                <?= empty($input['required'])?:'required=required'?>>
-            </textarea>
-                <br>
-                <br>
-                <?php break;
-            case 'radiobutton' :
-                foreach($input['value'] as $value => $info ):?>
-                    <input name="<?= $name?>"
-                           id="<?= $input['id']?>"
-                           type="radio"
-                           class="<?= $input['class']?>"
-                           value="<?= $value?>"
-                           placeholder="<?= $input['placeholder']?>"
-                        <?= empty($info['checked'])?:'checked'?>
-                        <?= empty($input['required'])?:'required=required'?>
-                    >
-                    <label for="<?= $name?>"><?= $info['label']?></label>
-                <?php endforeach; ?>
-                    <br>
-                    <br>
+    if(!empty($input['label'])):
+        ?>
+        
+        <div class="row">
+            <div class="col-6">
+                <label for="<?= $input['id']?>"><?= $input['label']?></label>
+            </div>
+        </div>
+        
+    <?php endif;
+    switch($input['type']):
+        case 'select' :
+?>
+<!-- Input Email -->
+    <div class="row field">
+        <div class="col-6">
+            <input 
+                name="<?= $name?>" 
+                id="<?= $input['id']?>" 
+                class="<?= $input['class']?>"
+                placeholder="<?= $input['placeholder']?>" 
+                <?= empty($input['required'])?:'required=required'?>
+            >
+            </input>
+        </div>
+    </div>
 
-                <?php break;
-            case 'checkbox' : ?>
-                <input name="<?= $name?>"
-                       id="<?= $input['id']?>"
-                       type="<?= $input['type']?>"
-                       class="<?= $input['class']?>"
-                       value="<?= $input['value']['value']?>"
-                    <?= empty($input['value']['checked'])?:'checked'?>
-                >
-                <label for="<?= $name?>"><?= $input['label']?></label>
-                <br>
-                <br>
-                <?php break;
-            case 'file' : ?>
-                <input name="<?= $name?>"
-                       id="<?= $input['id']?>"
-                       type="<?= $input['type']?>"
-                       class="<?= $input['class']?>"
-                       accept="image/*,.pdf,.doc,.docx"
-                >
-                <label for="<?= $name?>"><?= $input['label']?></label>
-                <br>
-                <br>
-            <?php break;
-            default : ?>
+    <?php break; 
+    default : ?>
 
-        <input name="<?= $name?>"
-               id="<?= $input['id']?>"
-               type="<?= $input['type']?>"
-               class="<?= $input['class']?>"
-               placeholder="<?= $input['placeholder']?>"
-               <?= empty($input['required'])?:'required=required'?>
-        >
-    <br>
-    <br>
+   <!-- Input MDP -->
+   <div class="row field">
+        <div class="col-6">
+            <input 
+            name="<?= $name?>"
+            id="<?= $input['id']?>"
+            type="<?= $input['type']?>"
+            class="<?= $input['class']?>"
+            placeholder="<?= $input['placeholder']?>"
+            <?= empty($input['required'])?:'required=required'?>
+            >
+            </input>
+        </div>
+    </div>
+  
 
     <?php endswitch; endforeach; ?>
-    <input type="submit" value="<?= $config['config']['submit']?>">
+    <div class="row">
+        <button  class="button" type="submit" value="<?= $config['config']['submit']?>">Connexion
+    </div>
+    
 </form>
