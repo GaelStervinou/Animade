@@ -18,7 +18,10 @@
   controller: user
   action: register
 
-
 /dashboard:
   controller: admin
   action: dashboard
+
+/verify_account:
+  controller: user
+  action: verifyAccount

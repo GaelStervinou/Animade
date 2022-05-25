@@ -8,10 +8,9 @@ use App\Core\View;
 use App\Core\PHPMailer;
 use App\Core\SMTP;
 use App\Core\Exception;
+//use App\Helpers\Token;
 
 use App\Model\User as UserModel;
-
-//hypotétiquement;
 
 class User{
 
@@ -44,6 +43,8 @@ class User{
 
     public function register()
     {
+        $tokenVerification = "1536DHDCICuudz7";
+        //$tokenVerification = Token::RandomString(75);
         $user = new UserModel();
         if(!empty($_POST)){
             if(!empty($_FILES)){
@@ -58,6 +59,11 @@ class User{
                 $user->setFirstname($_POST["firstname"]);
                 $user->setLastname($_POST["lastname"]);
                 $user->setPassword($_POST["password"]);
+                $user->setEmailToken($tokenVerification);
+
+                // Quand le mail est envoyé et que le user clique sur le lien qui changera le status du token,
+                // faire un $user->setEmailToken('3') par exemple pour ne pas pouvoir réexecuter la fonction
+                
                 $user->save();
                 //envoi de mail de vérification avec un token spécial
                 //ce token sera envoyé en paramètre vers une route /account_verification
@@ -76,20 +82,20 @@ class User{
                     $mail->Port = 465;
                     $mail->SMTPAuth = true;
                     $mail->Username = "thomasesgipa@gmail.com";
-                    $mail->Password = "gfGYF3XD8@dgDcFJ";
+                    $mail->Password = "fxopxxzbyzfbymmq";
 
                     //Charset
                     $mail->Charset = "utf-8";
 
                     //Destinataires: à remplacer par la varibale du mail qui est rensigné au moment de l'inscription
-                    $mail->addAddress("stervinou.g36@gmail.com");
+                    $mail->addAddress($_POST["email"]);
 
                     //Expéditeur
                     $mail->setFrom("thomasesgipa@gmail.com");
 
                     //Contenu
-                    $mail->Subject = "Test envoi validation adresse email";
-                    $mail->Body = "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant.";
+                    $mail->Subject = "Validation de votre e-mail Animade";
+                    $mail->Body = "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant : http:localhost/Core/PHPMailer/verifyAccount.php?token=&emailToken=".$tokenVerification;
 
                     //On envoie le mail
                     $mail->send();
@@ -150,6 +156,13 @@ class User{
             $view = new View("register");
         }
         $view->assign('user', $user);
+    }
+
+    public function verifyAccount()
+    {
+        $userID = $_GET['id'];
+
+
     }
 
 }

@@ -1,0 +1,1 @@
+<h1>Votre adresse mail a été vérifié</h1>
