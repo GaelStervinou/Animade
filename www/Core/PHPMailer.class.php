@@ -5038,4 +5038,42 @@ class PHPMailer
     {
         $this->oauth = $oauth;
     }
+
+    public function sendEmail(string $receiver, array $options)
+    {
+        try {
+            //Configuration
+            $this->SMTPDebug = SMTP::DEBUG_SERVER; //Informations de debug
+
+            // On configure le SMTP
+            // déclarer des constantes pour ça
+            $this->isSMTP();
+            $this->Host ="ssl://smtp.gmail.com";
+            $this->Port = 465;
+            $this->SMTPAuth = true;
+            $this->Username = "thomasesgipa@gmail.com";
+            $this->Password = "fxopxxzbyzfbymmq";
+
+            //Charset
+            $this->Charset = "utf-8";
+
+            //Destinataires: à remplacer par la varibale du mail qui est rensigné au moment de l'inscription
+            $this->addAddress($receiver);
+
+            //Expéditeur ( déclarer une constante pour ça )
+            $this->setFrom("thomasesgipa@gmail.com");
+
+            //Contenu
+            $this->Subject = $options['subject'] ?? '';
+            $this->Body = $options['body'] ?? '';
+
+            //On envoie le mail
+            $this->send();
+            echo "Mail envoyé correctement";
+
+        }catch(Exception $e){
+            echo "Message non envoyé. Erreur: {$this->ErrorInfo}";
+
+        }
+    }
 }

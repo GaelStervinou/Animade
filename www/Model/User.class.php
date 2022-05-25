@@ -11,8 +11,9 @@ class User extends BaseSQL
     protected $password;
     protected $firstname;
     protected $lastname;
-    protected $status = null;
+    protected $status = 0;
     protected $token = null;
+    protected $emailToken;
 
     /**
      * @return mixed
@@ -116,6 +117,18 @@ class User extends BaseSQL
     public function generateToken(): void
     {
         $this->token = str_shuffle(md5(uniqid()));
+    }
+
+    public function getEmailVerifToken(): string
+    {     
+        return $this->email_verif_token;
+    }
+
+    public function setEmailToken($emailToken): void
+    {
+        $this->emailToken = $emailToken;
+
+        //return $this;
     }
 
     public function save()

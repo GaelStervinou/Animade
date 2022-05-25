@@ -19,6 +19,10 @@ spl_autoload_register("App\myAutoloader");
 
 
 $uri = $_SERVER["REQUEST_URI"];
+$parameters_pos = strpos($uri, "?");
+if($parameters_pos != false){
+    $uri = substr($uri, 0, $parameters_pos);
+}
 
 $routeFile = "routes.yml";
 if(!file_exists($routeFile)){
