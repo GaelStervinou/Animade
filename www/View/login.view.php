@@ -1,4 +1,4 @@
-<!--<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -28,7 +28,10 @@
             <div id="login-form">
                 <div class="row">
                     <div class="col-3">
-                        <form method="POST" action="/login">
+
+                        <?php $this->includePartial('form', $user->getFormLogin()); ?>
+                        
+                        <!-- <form method="POST" action="/login">
                             <h1>Se connecter</h1>
                             <div class="row">
                                 <div class="col-6">
@@ -47,14 +50,14 @@
                             </div>
                             <div class="row field">
                                 <div class="col-6">
-                                    <input type="text" id="password">
+                                    <input type="test" id="password">
                                 </div>
                             </div>
                             <div class="row">
-                                <button type="submit">Connexion</button>
+                                <button class="button" type="submit">Connexion</button>
 
                             </div>
-                        </form>
+                        </form> -->
                     </div>
 
                 </div>
@@ -64,6 +67,5 @@
     </section>
 </main>
 </body>
-</html>!-->
+</html>
 
-<?php $this->includePartial('form', $user->getFormLogin()); ?>
