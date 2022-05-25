@@ -62,24 +62,22 @@ abstract class BaseSQL
         return password_verify($password, $res);
     }
 
-    public function emailVerification($tokenVerification)
+    public function emailVerification()
     {
-        // $sql = "SELECT id FROM ".$this->table." WHERE emailToken = ". $tokenVerification;
-        // $queryPrepared = $this->pdo->prepare($sql);
+        ['emailToken' => $email_token, 'email' => $user_email ] = $_GET;
+        $user = $this->pdo->prepare("SELECT * FROM ". $this->table ." WHERE email =:user_email AND emailToken =:email_token");
+        $user->execute(['user_email' => $user_email, 'email_token' => $email_token]);
 
-        $iduser = $_GET['id'];
-        $emailToken = $_GET['emailToken'];
-        $recupUser = $this->pdo->prepare('SELECT * FROM zdek_user WHERE id = ? AND emailToken = ?');
-        $recupUser->execute(array($iduser, $emailToken));
+        if ($user->rowCount() > 0) {
+            $userInfo = $user->fetch();
+            if ($userInfo['status'] == 0) {
 
-        if ($recupUser->rowCount() > 0) {
-            $userInfo = $recupUser->fetch();
-            if ($userInfo['status'] != 1) {
-                $updateStatus = $this->pdo->prepare('UPDATE zdek_user SET status = ? WHERE id = ?');
-                $updateStatus->execute(array(1, $iduser));
+                $updateStatus = $this->pdo->prepare("UPDATE ". $this->table ." SET status = 1 WHERE id =:user_id");
+                $updateStatus->execute(['user_id' => $userInfo['id']]);
             }
+            return $userInfo['id'];
         }
 
-        echo 'L\'id user est ' . $iduser . ' et le token de l\'email est : ' . $emailToken;
+
     }
 }

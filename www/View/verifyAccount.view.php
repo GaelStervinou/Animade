@@ -1,1 +1,1 @@
-<h1>Votre adresse mail a été vérifié</h1>
+<h1>Please verify your email</h1>
