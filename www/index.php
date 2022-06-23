@@ -1,6 +1,10 @@
 <?php
 namespace App;
 
+use App\Core\Security;
+
+session_start();
+
 require "conf.inc.php";
 
 
@@ -34,6 +38,14 @@ $routes = yaml_parse_file($routeFile);
 
 if( empty($routes[$uri]) || empty($routes[$uri]["controller"])  || empty($routes[$uri]["action"]) ){
         die("Page 404");
+}
+if(!empty($routes[$uri]["security"])){
+    if($routes[$uri]["security"]["role"] == 'author'){
+        Security::isAuthor();
+    }elseif($routes[$uri]["security"]["role"] == 'admin'){
+        Security::isAdmin();
+    }
+
 }
 
 $controller = ucfirst(strtolower($routes[$uri]["controller"]));

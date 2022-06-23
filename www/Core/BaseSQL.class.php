@@ -3,10 +3,13 @@
 
 namespace App\Core;
 
-abstract class BaseSQL
+use App\Core\QueryBuilder;
+
+abstract class BaseSQL implements QueryBuilder
 {
     protected $pdo;
     protected $table;
+    private $query;
 
     public function __construct()
     {
@@ -44,13 +47,9 @@ abstract class BaseSQL
         $queryPrepared->execute($columns);
     }
 
-    public function setId($id): object
+    public function setId($id)
     {
-        $sql = "SELECT * FROM " . $this->table . " WHERE id=:id";
-
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute(['id' => $id]);
-        return $queryPrepared->fetchObject(get_called_class());
+        return $this->findOneBy($this->table, ['id' => $id]);
     }
 
     public function login($email, $password)
@@ -77,7 +76,118 @@ abstract class BaseSQL
             }
             return $userInfo['id'];
         }
-
-
+        return false;
     }
+
+    //modifier pour avoir une fonction générique à tous les modèles ( getOneBy() );
+
+    public function findBy(array $options, string $table)
+    {
+        $parameters = ['table' => $table];
+        $where = $options['where'];
+        //var_dump($options);die;
+        foreach ($options['where'] as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+//var_dump(implode(",", $where), $where);die;
+        $sql = "SELECT id FROM " . DBPREFIX . ":table WHERE " . implode(",", $where);
+//var_dump($parameters, $sql);die;
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->execute($parameters);
+
+        $objectList = [];
+        foreach($queryPrepared->fetch() as $object){
+            $objectList[] = $object->fetchObject();
+        }
+        //$id = $queryPrepared->fetch()["id"];
+return $objectList;
+        //return $this->setId($id, "App\Model\User");
+    }
+
+    public function findOneBy(string $table, array $where)
+    {
+        $this->select($table, ['*']);
+        foreach ($where as $column => $value){
+            $this->where($column, $value);
+        }
+        return $this->fetchQuery(get_called_class(), 'one');
+    }
+
+    public function init() {
+        $this->query = new \StdClass;
+    }
+
+    public function insert (string $table, array $values) : QueryBuilder {
+        return true;
+    }
+
+    public function updateTable(string $table, array $primaryKeys, array $valuesToUpdate) : QueryBuilder {
+        $this->init();
+        $finalValues = [];
+        foreach($valuesToUpdate as $column => $value){
+            $finalValues[] = $column . "='" . $value."'";
+        }
+        $this->query->base = "UPDATE ".$table." SET " . implode(',', $finalValues);
+        foreach($primaryKeys as $column => $value){
+            $this->where($column, $value);
+        }
+        return $this;
+    }
+
+    public function select (string $table, array $columns): QueryBuilder {
+        $this->init();
+
+        $this->query->base = "SELECT " . implode(',', $columns) . " FROM ".$table;
+        return $this;
+    }
+
+    public function where (string $column, string $value, string $operator = '='): QueryBuilder {
+
+        $this->query->where[] = ' ' . $column . $operator . "'" . $value . "'" ;
+        return $this;
+    }
+
+    public function limit (int $from, int $offset): QueryBuilder {
+        $this->query->limit = ' LIMIT ' . $from . ', ' . $offset;
+        return $this;
+    }
+
+    public function getQuery (): string {
+
+        $sql = $this->query->base;
+
+        if(!empty($this->query->where)) {
+            $sql .= " WHERE " . implode(" AND ",$this->query->where);
+        }
+
+        if(isset($this->query->limit)) {
+            $sql .= " " . $this->query->limit;
+        }
+
+        $sql .= ';';
+
+        return $sql;
+    }
+
+    public function fetchQuery($class=null, $fetch_type=null)
+    {
+        $query = $this->prepareQuery();
+        if(!is_null($class)){
+            $query->setFetchMode(\PDO::FETCH_CLASS, $class);
+        }
+        $query->execute();
+        if($fetch_type == 'one'){
+            return $query->fetch();
+        }else{
+            return $query->fetchAll();
+        }
+    }
+
+    public function prepareQuery()
+    {
+        $res = $this->getQuery();
+        return $this->pdo->prepare($res);
+    }
+
 }

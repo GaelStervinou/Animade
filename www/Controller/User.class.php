@@ -8,7 +8,7 @@ use App\Core\View;
 use App\Core\PHPMailer;
 use App\Core\SMTP;
 use App\Core\Exception;
-//use App\Helpers\Token;
+use App\Core\Security;
 
 use App\Model\User as UserModel;
 
@@ -18,14 +18,16 @@ class User{
     {
         $user = new UserModel();
 
-
         if(!empty($_POST["password"]) && !empty($_POST["email"])){
             $check_password = $user->login($_POST["email"], $_POST["password"]);
             if($check_password == true){
-                echo " vous êtes connectés";
-                $view = new View("dashboard");
-                $view->assign("firstname", $user->getFirstname());
-                $view->assign("lastname", $user->getLastname());
+                //$user = $user->getUserFromEmail($_POST["email"]);
+                //$user = $user->findBy(['where' => ['email' => $_POST['email']]], 'user');
+                $user = $user->findOneBy(DBPREFIX.'user', ['id' => 11]);
+                $user->generateToken();
+               //Redirect
+                Security::login($user);
+                header('Location:/dashboard');
             }else{
                 echo " mot de passe incorrect";
             }

@@ -21,7 +21,15 @@
 /dashboard:
   controller: admin
   action: dashboard
+  security:
+    role: admin
 
 /verify_account:
   controller: user
   action: verifyAccount
+
+/new_page:
+  controller: page
+  action: newPage
+  security:
+    role: author
