@@ -1,0 +1,8 @@
+#register-form{
+    // background-image: cover-bg(background-image );
+    // background-repeat: no-repeat;
+    // background-size: 100%;
+    
+    @include cover-bg(url("../assets/images/one_piece.jpg"), 0);
+
+  }

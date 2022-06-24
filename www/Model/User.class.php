@@ -231,6 +231,32 @@ class User extends BaseSQL
         parent::__construct();
     }
 
+    public function getPasswordForgotten(): array
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Mettre à jour",
+                'name' => "mettre_a_jour",
+                'title' => "Mot de Passe Oublié",
+            ],
+            'inputs' => [
+                'email' => [
+                    'type' => 'email',
+                    'placeholder' => 'Votre email',
+                    'label' => 'Email',
+                    'id' => 'emailPwdForgotten',
+                    'class' => 'inputPwdForgotten',
+                    'required' => false,
+                    'error' => 'Email incorrect',
+                    'errorUnicity' => 'Email existe déjà en bdd',
+                    'unicity' => true,
+                ]
+            ],
+        ];
+    }
+
     public function getFormLogin(): array
     {
         return [
