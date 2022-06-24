@@ -25,3 +25,7 @@
 /verify_account:
   controller: user
   action: verifyAccount
+
+/password_forgotten:
+  controller: user
+  action: passwordForgotten

@@ -97,4 +97,30 @@ class User{
         }
     }
 
+    public function passwordForgotten()
+    {
+        $user = new UserModel();
+        $view = new View("passwordForgotten");
+        $view->assign("user", $user);
+        
+    
+        $mail = new PHPMailer(); 
+        $options = [
+            'subject' => 'Réinitialisation du votre mot de passe de votre compte Animade ',
+            'body' => "Bonjour, veuillez modifier votre mot de passe en cliquant sur le lien suivant : http:localhost/Core/PHPMailer/verifyAccount.php?email=".$user->getEmail()."&emailToken=".$tokenVerification,
+        ];
+        $mail->sendEmail($_POST["email"], $options);
+        
+        
+        // $mail = new PHPMailer();
+        //         $options = [
+        //             'subject' => 'Réinitialisation du votre mot de passe de votre compte Animade ',
+        //             'body' => "Bonjour, veuillez valider la réinitialisation de votre mot de passe en cliquant sur le lien suivant : http:localhost/Core/PHPMailer/verifyAccount.php?email=".$user->getEmail()."&emailToken=".$tokenVerification,
+        //         ];
+        //         $mail->sendEmail($_POST["email"], $options);
+        
+
+
+    }
+
 }

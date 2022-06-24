@@ -53,7 +53,14 @@
 
     <?php endswitch; endforeach; ?>
     <div class="row">
-        <button  class="button" type="submit" value="<?= $config['config']['submit']?>">Connexion
+        <button  class="button" type="submit" value="<?= $config['config']['submit']?>"><?= $config['config']['submit']?>
     </div>
+
+        <div class="row">
+            <a href="password_forgotten">Mot de passe oublié</a>
+        </div>
+        
+
+    
     
 </form>
