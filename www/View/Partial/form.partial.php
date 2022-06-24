@@ -28,11 +28,23 @@
                 placeholder="<?= $input['placeholder']?>" 
                 <?= empty($input['required'])?:'required=required'?>
             >
-            </input>
         </div>
     </div>
 
-    <?php break; 
+    <?php break;
+        case 'wysiwyg':
+?>
+        <div id="editor"></div>
+        <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+        <script>
+            ClassicEditor
+                .create( document.querySelector( '#editor' ) )
+                .catch( error => {
+                    console.error( error );
+                } );
+        </script>
+
+            <?php break;
     default : ?>
 
    <!-- Input MDP -->
