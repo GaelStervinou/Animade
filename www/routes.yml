@@ -3,7 +3,7 @@
   action: home
   security:
     rule: default
-puis la route /dashbaord par :
+
 /admin/dashboard:
   controller: admin
   action: dashboard
