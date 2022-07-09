@@ -15,11 +15,4 @@ class General{
     {
         $view = new View("contact");
     }
-
-    public function verifyAccount()
-    {
-        echo 'test verify account';
-    }
 }
-
-

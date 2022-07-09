@@ -1,35 +1,37 @@
 /:
   controller: general
   action: home
-
-/me-contacter:
-  controller: general
-  action: contact
-
-/login:
-  controller: user
-  action: login
-
-/logout:
-  controller: user
-  action: logout
-
-/register:
-  controller: user
-  action: register
-
-/dashboard:
+  security:
+    rule: default
+puis la route /dashbaord par :
+/admin/dashboard:
   controller: admin
   action: dashboard
   security:
-    role: admin
+    rule: admin
+puis rajouter à la suite :
+# catégorie
 
-/verify_account:
-  controller: user
-  action: verifyAccount
-
-/new_page:
-  controller: page
-  action: newPage
+/categorie/new:
+  controller: categorie
+  action: create
   security:
-    role: author
+    rule: admin
+
+/categorie:
+  controller: categorie
+  action: read
+  security:
+    rule : default
+
+/categorie/categories:
+  controller: categorie
+  action: listCategories
+  security:
+    rule: default
+
+/categorie/delete:
+  controller: categorie
+  action: delete
+  security:
+    rule: admin
