@@ -40,14 +40,29 @@ if( empty($routes[$uri]) || empty($routes[$uri]["controller"])  || empty($routes
         die("Page 404");
 }
 if(!empty($routes[$uri]["security"])){
-    if($routes[$uri]["security"]["role"] == 'author'){
-        Security::isAuthor();
-    }elseif($routes[$uri]["security"]["role"] == 'admin'){
-        Security::isAdmin();
+    $security = $routes[$uri]["security"]['rule'];
+    if(is_array($security)){
+        if(isset($security['delete'])){
+            $response = Security::canDelete($security['delete']);
+        }elseif(isset($security['update'])){
+            $response = Security::canUpdate($security['update']);
+        }else{
+            $response = false;
+        }
+    }else{
+        $response = match ($security) {
+            'user' => Security::isUser(),
+            'author' => Security::isAuthor(),
+            'admin' => Security::isAdmin(),
+            ['delete'] => Security::canDelete($security['delete']),
+            ['update'] => Security::canUpdate($security['update']),
+            default => Security::isConnected(),
+        };
     }
-
+    if($response !== true){
+        return $response;
+    }
 }
-
 $controller = ucfirst(strtolower($routes[$uri]["controller"]));
 $action = strtolower($routes[$uri]["action"]);
 

@@ -69,11 +69,16 @@ class Commentaire extends BaseSQL{
     }
 
     /**
-     * @return UserModel
+     * @return UserModel|null
      */
     public function getAuteur(): ?UserModel
     {
-        return $this->auteur;
+        if(!empty($this->getAuteurId())){
+            $user = new UserModel();
+            return $user->setId($this->getAuteurId());
+        }else{
+            return null;
+        }
     }
 
     /**
@@ -169,7 +174,17 @@ class Commentaire extends BaseSQL{
      */
     public function getMedia(): ?MediaModel
     {
-        return $this->media;
+        if(!empty($this->hasMedia())){
+            $media = new MediaModel();
+            return $media->setId($this->getMediaId());
+        }else{
+            return false;
+        }
+    }
+
+    public function hasMedia()
+    {
+        return !empty($this->getMediaId());
     }
 
     /**
@@ -245,4 +260,41 @@ class Commentaire extends BaseSQL{
     }
 
 
+    public function getFormNewCommentaire(): array
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '/commentaire/new',
+                'submit' => "Commenter",
+                'title' => "Nouveau commentaire",
+            ],
+            'inputs' => [
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaNewCommentaire',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Image :',
+                    'id' => 'mediaNewCommentaire',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                ],
+                'contenu' => [
+                    'type' => 'wysiwyg',
+                    'label' => 'Contenu :',
+                    'placeholder' => 'Vous pouvez rédiger votre commentaire ici.',
+                    'id' => 'contenuNewCommentaire',
+                    'required' => true,
+                    'error' => 'Contenu incorrect',
+                    'default_value' => '',
+                ],
+            ],
+        ];
+    }
 }

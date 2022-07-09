@@ -139,7 +139,7 @@ class Media extends BaseSQL{
 
     public function save()
     {
-        parent::save();
+        return parent::save();
     }
 
     public function delete()
