@@ -30,17 +30,12 @@
                             <h1>Toolbar</h1>
                             <div class="row">
                                 <div class="col-12">
-                                    <a href="#">Gérer vos pages</a>
+                                    <a href="/admin/users">Voir les utilisateurs</a>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a href="#">Gérer vos utilisateurs</a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <a href="#">Gérer vos articles</a>
+                                    <a href="/page/pages">Voir les articles</a>
                                 </div>
                             </div>
                             <div class="row">
@@ -127,8 +122,3 @@
         </main>
     </body>
 </html>
-
-
-
-
-
