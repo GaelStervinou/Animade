@@ -4,10 +4,12 @@
 namespace App\Core;
 
 use App\Core\QueryBuilder;
+use App\Helpers\UrlHelper;
+use App\Model\Commentaire;
 
-abstract class BaseSQL implements QueryBuilder
+class BaseSQL implements QueryBuilder
 {
-    protected $pdo;
+    private $pdo;
     protected $table;
     private $query;
 
@@ -45,6 +47,7 @@ abstract class BaseSQL implements QueryBuilder
         }
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute($columns);
+        return $this->pdo->lastInsertId();
     }
 
     public function setId($id)
@@ -64,6 +67,9 @@ abstract class BaseSQL implements QueryBuilder
     public function emailVerification()
     {
         ['emailToken' => $email_token, 'email' => $user_email ] = $_GET;
+        if(empty($email_token)){
+            http_response_code(404);
+        }
         $user = $this->pdo->prepare("SELECT * FROM ". $this->table ." WHERE email =:user_email AND emailToken =:email_token");
         $user->execute(['user_email' => $user_email, 'email_token' => $email_token]);
 
@@ -77,6 +83,11 @@ abstract class BaseSQL implements QueryBuilder
             return $userInfo['id'];
         }
         return false;
+    }
+
+    public function getUserFromEmail(string $email)
+    {
+        return $this->findOneBy($this->table, ['email' => $email]);
     }
 
     //modifier pour avoir une fonction générique à tous les modèles ( getOneBy() );
@@ -105,6 +116,30 @@ return $objectList;
         //return $this->setId($id, "App\Model\User");
     }
 
+    public function findPagesBy($parameters)
+    {
+        $where = [];
+        var_dump($_GET);die;
+    }
+
+    public function delete()
+    {
+        try {
+            $this->beginTransaction();
+            $this->setStatut(-1);
+            $this->save();
+            $this->commit();
+        }catch (Exception $e){
+            $this->rollback();
+            var_dump($e->getMessage());die;
+        }
+    }
+
+    public function getPageFromSlug($slug)
+    {
+        return $this->findOneBy($this->table, ['slug' => $slug]);
+    }
+
     public function findOneBy(string $table, array $where)
     {
         $this->select($table, ['*']);
@@ -113,6 +148,41 @@ return $objectList;
         }
         return $this->fetchQuery(get_called_class(), 'one');
     }
+
+    public function findManyBy(array $where)
+    {
+        $this->select($this->table, ['*']);
+        foreach ($where as $column => $value){
+            $this->where($column, $value);
+        }
+        return $this->fetchQuery(get_called_class());
+    }
+
+    public function hasMany($class, $foreignKey=null)
+    {
+        if($foreignKey === null){
+            $classExploded = explode("\\", get_called_class());
+            $foreignKey = strtolower(end($classExploded))."_id";
+        }
+        $table = $classExploded = explode("\\", $class);
+        $table = DBPREFIX.strtolower(end($table));
+
+        $this->select($table, ['*']);
+        $this->where($foreignKey, $this->getId());
+        return $this->fetchQuery($class);
+    }
+
+    public function getTableFromClass($class)
+    {
+        $classExploded = explode("\\", $class);
+        return DBPREFIX.strtolower(end($classExploded));
+    }
+
+
+
+
+
+
 
     public function init() {
         $this->query = new \StdClass;
@@ -188,6 +258,21 @@ return $objectList;
     {
         $res = $this->getQuery();
         return $this->pdo->prepare($res);
+    }
+
+    public function beginTransaction()
+    {
+        $this->pdo->beginTransaction();
+    }
+
+    public function commit()
+    {
+        $this->pdo->commit();
+    }
+
+    public function rollBack()
+    {
+        $this->pdo->rollBack();
     }
 
 }
