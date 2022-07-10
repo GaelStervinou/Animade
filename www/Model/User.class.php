@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Model;
+
 use App\Core\BaseSQL;
+use App\Core\Security;
 use App\Model\Role as RoleModel;
 use App\Model\Media as MediaModel;
 
-//TODO rajouter avatar_id et avatar en attributs pour la pp
-
 class User extends BaseSQL
 {
-    
+
     /** @var int|null $id */
     private $id = null;
-    
+
     /** @var int|null $role_id */
     protected $role_id = null;
 
@@ -65,7 +65,6 @@ class User extends BaseSQL
 
     public function getRole(): ?RoleModel
     {
-        // ne pas oublier de créer une fonction __toString() dans la table RoleModel pour pouvoir l'écrire ?
         if ($this->role instanceof RoleModel) {
             return $this->role;
         }
@@ -153,6 +152,11 @@ class User extends BaseSQL
         $this->status = $status;
     }
 
+    public function getFullName(): string
+    {
+        return $this->getFirstname() . " " . strtoupper($this->getLastname());
+    }
+
     /**
      * @return string
      */
@@ -170,7 +174,7 @@ class User extends BaseSQL
     }
 
     public function getEmailVerifToken(): string
-    {     
+    {
         return $this->email_verif_token;
     }
 
@@ -194,12 +198,11 @@ class User extends BaseSQL
     public function verifyToken($id, $token)
     {
         $this->select($this->table, ['*'])->where('id', $id);
-        if($token == $this->fetchQuery(get_called_class(), 'one')->getToken()){
+        if ($token == $this->fetchQuery(get_called_class(), 'one')->getToken()) {
             return true;
-        }else{
+        } else {
             return false;
         }
-
     }
 
     public function getUserFromEmail($email)
@@ -207,14 +210,20 @@ class User extends BaseSQL
         return parent::getUserFromEmail($email);
     }
 
-    public function storeUser(array $skip){
+    public function storeUser(array $skip)
+    {
         $storedObject = [];
-        foreach(get_object_vars($this) as $attribute => $value){
-            if(!in_array($attribute, $skip)){
+        foreach (get_object_vars($this) as $attribute => $value) {
+            if (!in_array($attribute, $skip)) {
                 $storedObject[$attribute] = $value;
             }
         }
         return $storedObject;
+    }
+
+    public function toString(): string
+    {
+        return $this->getFullName();
     }
 
     public function __construct()
@@ -250,7 +259,6 @@ class User extends BaseSQL
                     'id' => 'pwdRegister',
                     'class' => 'inputRegister',
                     'required' => true,
-                    // changer la taille minimale du password
                     'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
                 ]
             ],
@@ -306,7 +314,6 @@ class User extends BaseSQL
                     'id' => 'pwdRegister',
                     'class' => 'inputRegister',
                     'required' => true,
-                    // changer la taille minimale du password
                     'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
                 ],
                 'passwordConfirmation' => [
@@ -317,7 +324,93 @@ class User extends BaseSQL
                     'class' => 'inputRegister',
                     'required' => true,
                     'confirm' => 'password',
-                    // changer la taille minimale du password
+                    'error' => 'Votre mot de passe de confirmation ne correspond pas',
+                ],
+            ],
+        ];
+    }
+
+    public function getFormUpdate($user_id = null): array
+    {
+        $this->setId($user_id);
+        $admin_fields = $_SESSION['user']['role_id'] >= 3;
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '/user/update?user_id=' . $this->getId(),
+                'submit' => "Mettre à jour",
+                'title' => "Mettre à jour",
+            ],
+            'inputs' => [
+                'firstname' => [
+                    'type' => 'text',
+                    'label' => 'Prénom :',
+                    'placeholder' => 'Prénom',
+                    'id' => 'firstnameUpdate',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 50,
+                    'error' => "Votre prénom n'est pas correct",
+                    'default_value' => $this->getFirstname(),
+                ],
+                'lastname' => [
+                    'type' => 'text',
+                    'label' => 'Nom :',
+                    'placeholder' => 'Nom',
+                    'id' => 'nameUpdate',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 100,
+                    'error' => "Votre nom n'est pas correct",
+                    'default_value' => $this->getLastname(),
+                ],
+                'role_id' => [
+                    'type' => 'select',
+                    'authorized' => $admin_fields,
+                    'label' => 'Role :',
+                    'options' =>
+                    [
+                        'Utilisateur' => 1,
+                        'Auteur' => 2,
+                        'Administrateur' => 3,
+                    ],
+                    'id' => 'roleIdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer ce rôle",
+                    'default_value' => $this->getRoleId(),
+                ],
+                'status' => [
+                    'type' => 'select',
+                    'authorized' => $admin_fields,
+                    'label' => 'Statut :',
+                    'options' =>
+                    [
+                        'Supprimé' => -1,
+                        'En attente de validation par mail' => 1,
+                        'Actif' => 2,
+                    ],
+                    'id' => 'roleIdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer ce statut",
+                    'default_value' => $this->getStatus(),
+                ],
+                'password' => [
+                    'type' => 'password',
+                    'authorized' => $this->getId() == $_SESSION['user']['id'],
+                    'label' => 'Mot de passe :',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'pwdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ],
+                'passwordConfirmation' => [
+                    'type' => 'password',
+                    'authorized' => $this->getId() == $_SESSION['user']['id'],
+                    'label' => 'Mot de passe ( confirmation ) :',
+                    'placeholder' => 'Confirmation du mot de passe',
+                    'id' => 'pwdConfirmationUpdate',
+                    'class' => 'inputRegister',
+                    'confirm' => 'password',
                     'error' => 'Votre mot de passe de confirmation ne correspond pas',
                 ],
             ],

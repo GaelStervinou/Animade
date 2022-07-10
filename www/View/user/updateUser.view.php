@@ -9,7 +9,7 @@
 <header id="site-header">
     <div class="container">
         <a href="#">
-            <img src="../../assets/images/logo_animade.jpg" alt="Logo Animade">
+            <img src="../assets/images/logo_animade.jpg" alt="Logo Animade">
         </a>
         <button id="menu-button"></button>
         <nav id="site-nav">
@@ -27,9 +27,10 @@
         <div class="grid">
             <div id="login-form">
                 <div class="row">
-                    <div class="col-3">
-                        <?php $this->includePartial('form', $page->getFormNewPage());
-                        //TODO insérer les select de chapitre?>
+                    <div class="col-4">
+
+                    <?php
+                        $this->includePartial('form', $user->getFormUpdate($user->getId())); ?>
 
                     </div>
 
