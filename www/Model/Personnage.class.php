@@ -5,18 +5,19 @@ namespace App\Model;
 use App\Core\BaseSQL;
 use App\Model\Media as MediaModel;
 
-class Personnage extends BaseSQL{
+class Personnage extends BaseSQL
+{
     /** @var int|null $id */
     private $id = null;
 
     /** @var string|null $nom */
-    private $nom = null;
+    protected $nom = null;
 
     /** @var int|null $media_id */
-    private $media_id = null;
+    protected $media_id = null;
 
     /** @var MediaModel|null $media */
-    private $media = null;
+    protected $media = null;
 
     /** @var int|null $statut */
     protected $statut = null;
@@ -27,11 +28,11 @@ class Personnage extends BaseSQL{
     }
 
     /**
-     * @param int|null $id
+     * @return int|null
      */
-    public function setId(?int $id): void
+    public function getId(): ?int
     {
-        $this->id = $id;
+        return $this->id;
     }
 
     /**
@@ -107,5 +108,30 @@ class Personnage extends BaseSQL{
     {
         $this->setStatut(-1);
         $this->save();
+    }
+
+    public function getFormNewPersonnage()
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Nouveau personnage",
+                'title' => "Nouveau personnage",
+            ],
+            'inputs' => [
+                'nom' => [
+                    'type' => 'text',
+                    'label' => 'Nom :',
+                    'placeholder' => 'Nom',
+                    'id' => 'nomNewPersonnage',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'min' => 2,
+                    'max' => 65,
+                    'error' => "Le nom est incorrect",
+                ],
+            ],
+        ];
     }
 }

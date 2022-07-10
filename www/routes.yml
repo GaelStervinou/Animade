@@ -57,3 +57,23 @@ puis rajouter à la suite :
   security:
     rule:
       update: user
+
+# personnage
+
+/personnage/new:
+  controller: personnage
+  action: create
+  security:
+    rule: admin
+
+/personnage:
+  controller: personnage
+  action: read
+  security:
+    rule: default
+
+/personnage/delete:
+  controller: personnage
+  action: delete
+  security:
+    rule: admin
