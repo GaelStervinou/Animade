@@ -10,6 +10,7 @@ puis la route /dashbaord par :
   security:
     rule: admin
 puis rajouter à la suite :
+
 # catégorie
 
 /categorie/new:
@@ -35,3 +36,24 @@ puis rajouter à la suite :
   action: delete
   security:
     rule: admin
+
+#user
+
+/admin/users:
+  controller: admin
+  action: listUsers
+  security:
+    rule: admin
+
+/user/delete:
+  controller: user
+  action: delete
+  security:
+    rule: admin
+
+/user/update:
+  controller: user
+  action: update
+  security:
+    rule:
+      update: user
