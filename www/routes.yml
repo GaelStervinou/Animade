@@ -26,12 +26,6 @@
   security:
     rule: admin
 
-/categorie/new:
-  controller: categorie
-  action: create
-  security:
-    rule: admin
-
 
 
 # page
