@@ -1,12 +1,15 @@
 <?php
 namespace App\Core;
 
+use App\Model\Commentaire as CommentaireModel;
+use App\Model\Signalement;
+
 class Validator{
     // modifier les messages d'erreurs par la clé error renseigné dans config
-    public static function run($config, $data): array
+    public static function run($config, $data, $hiddenFields=0): array
     {
         $result = [];
-        $inputs_nb = self::countAuthorizedFields($config['inputs']);
+        $inputs_nb = self::countAuthorizedFields($config['inputs'], $hiddenFields);
 
         if(count($data) != $inputs_nb){
             $result[] = "Formulaire modifié pas l'utilistaeur";
@@ -58,7 +61,7 @@ class Validator{
         return str_replace(" ", "_",trim($slug));
     }
 
-    public static function countAuthorizedFields($inputs): int
+    public static function countAuthorizedFields($inputs, $hiddenFields=0): int
     {
         $inputs_nb = 0;
         foreach($inputs as $name => $input){
@@ -69,7 +72,40 @@ class Validator{
                 $inputs_nb += 1;
             }
         }
-        return $inputs_nb;
+        return $inputs_nb+$hiddenFields;
+    }
+
+    public static function checkIfCommentExists($commentaire_id)
+    {
+        $commentaire = new CommentaireModel();
+        if($commentaire->findOneBy($commentaire->getTable(), ['id' => $commentaire_id])->getAuteurId() ===
+            Security::getUser()->getId()){
+            return "Vous ne pouvez pas signaler votre commentaire";
+        }elseif($commentaire->findOneBy($commentaire->getTable(), ['id' => $commentaire_id])){
+            return true;
+        }else{
+            return "Commentaire introuvable";
+        }
+
+    }
+
+    public static function checkIfNotAlreadySignaled($commentaire_id)
+    {
+        $signalement = new Signalement();
+        if($signalement->findOneBy($signalement->getTable(), ['commentaire_id' => $commentaire_id, 'user_id' => Security::getUser()->getid()])) {
+            return "Commentaire déjà signalé";
+        }
+
+        return true;
+    }
+
+    public static function canSignalComment($commentaire_id)
+    {
+        if(self::checkIfCommentExists($commentaire_id) === true
+            && self::checkIfNotAlreadySignaled($commentaire_id) === true){
+            return true;
+        }
+        return 'error';
     }
 }
 ?>

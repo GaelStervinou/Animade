@@ -1,6 +1,8 @@
 <?php
 namespace App\Model;
 use App\Core\BaseSQL;
+use App\Core\Security;
+use App\Model\Commentaire;
 use App\Model\Media as MediaModel;
 
 class Page extends BaseSQL
@@ -23,8 +25,8 @@ class Page extends BaseSQL
     /** @var int|null $auteur_id */
     protected $auteur_id = null;
 
-    /** @var int|null $peronnsage_id */
-    protected $peronnsage_id = null;
+    /** @var int|null $personnage_id */
+    protected $personnage_id = null;
 
     /** @var int|null $media_id */
     protected $media_id = null;
@@ -38,20 +40,41 @@ class Page extends BaseSQL
     /** @var int|null $statut */
     protected $statut = null;
 
+    /** @var int|null $chapitre_id */
+    protected $chapitre_id = null;
+
+    /** @var int|null $categorie_id */
+    protected $categorie_id = null;
+
+    /**
+     * @return int|null
+     */
+    public function getCategorieId(): ?int
+    {
+        return $this->categorie_id;
+    }
+
+    /**
+     * @param int|null $categorie_id
+     */
+    public function setCategorieId(?int $categorie_id): void
+    {
+
+        $this->categorie_id = $categorie_id;
+    }
+
+    public function getCategorie()
+    {
+        $categorie = new Categorie();
+        $categorie = $categorie->setId($this->getCategorieId());
+        return $categorie;
+    }
     /**
      * @return int|null
      */
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int|null $id
-     */
-    public function setId(?int $id): void
-    {
-        $this->id = $id;
     }
 
     /**
@@ -126,6 +149,13 @@ class Page extends BaseSQL
         return $this->auteur_id;
     }
 
+    public function getAuteur()
+    {
+        $user = new User();
+        $user = $user->setId($this->getAuteurId());
+        return $user;
+    }
+
     /**
      * @param int|null $auteur_id
      */
@@ -134,20 +164,27 @@ class Page extends BaseSQL
         $this->auteur_id = $auteur_id;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getPeronnsageId(): ?int
+    public function getPersonnage()
     {
-        return $this->peronnsage_id;
+        $personnage = new Personnage();
+        $personnage = $personnage->setId($this->getPersonnageId());
+        return $personnage;
     }
 
     /**
-     * @param int|null $peronnsage_id
+     * @return int|null
      */
-    public function setPeronnsageId(?int $peronnsage_id): void
+    public function getPersonnageId(): ?int
     {
-        $this->peronnsage_id = $peronnsage_id;
+        return $this->personnage_id;
+    }
+
+    /**
+     * @param int|null $personnage_id
+     */
+    public function setPersonnageId(?int $personnage_id): void
+    {
+        $this->personnage_id = $personnage_id;
     }
 
     /**
@@ -156,6 +193,23 @@ class Page extends BaseSQL
     public function getMediaId(): ?int
     {
         return $this->media_id;
+    }
+
+    public function getMedia()
+    {
+        if(!empty($this->hasMedia())){
+            $media = new MediaModel();
+            $media = $media->setId($this->getMediaId());
+            return $media;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function hasMedia()
+    {
+        return !empty($this->getMediaId());
     }
 
     /**
@@ -214,6 +268,34 @@ class Page extends BaseSQL
         $this->statut = $statut;
     }
 
+    /**
+     * @return int|null
+     */
+    public function getChapitreId(): ?int
+    {
+        return $this->chapitre_id;
+    }
+
+    public function getChapitre()
+    {
+        $chapitre = new Chapitre();
+        $chapitre = $chapitre->setId($this->getChapitreId());
+        return $chapitre;
+    }
+
+    /**
+     * @param int|null $chapitre_id
+     */
+    public function setChapitreId(?int $chapitre_id): void
+    {
+        $this->chapitre_id = $chapitre_id;
+    }
+
+    public function getCommentaires()
+    {
+        return $this->hasMany(Commentaire::class);
+    }
+
     public function save()
     {
         parent::save();
@@ -230,8 +312,10 @@ class Page extends BaseSQL
         parent::__construct();
     }
 
-    public function getFormRegister(): array
+    public function getFormNewPage(): array
     {
+        $categorie = new Categorie();
+        $categories_options = $categorie->getCategorieSelectOptions();
         return [
             'config' => [
                 'method' => 'POST',
@@ -250,6 +334,7 @@ class Page extends BaseSQL
                     'min' => 2,
                     'max' => 100,
                     'error' => "Le titre est incorrect",
+                    'default_value' => $this->getTitre(),
                 ],
                 'description' => [
                     'type' => 'text',
@@ -260,6 +345,7 @@ class Page extends BaseSQL
                     'min' => 2,
                     'max' => 250,
                     'error' => "Votre description est incorrect",
+                    'default_value' => $this->getDescription(),
                 ],
                 'slug' => [
                     'type' => 'text',
@@ -271,8 +357,56 @@ class Page extends BaseSQL
                     'error' => 'Slug incorrect',
                     'errorUnicity' => 'Ce slug existe déjà',
                     'unicity' => true,
+                    'default_value' => $this->getSlug(),
                 ],
-                ''
+                'statut' => [
+                    'type' => 'select',
+                    'label' => 'Statut :',
+                    'options' =>
+                        [
+                            'Supprimée' => -1,
+                            'Accès restreint' => 1,
+                            'Active' => 2,
+                        ],
+                    'id' => 'statutNewPage',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'error' => "Impossible d'attribuer ce statut",
+                    'default_value' => $this->getStatut(),
+                ],
+                'categorie_id' => [
+                    'type' => 'select',
+                    'label' => 'Catégorie :',
+                    'options' => $categories_options,
+                    'id' => 'categorieIdNewPage',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer cette catégorie",
+                    'default_value' => $this->getCategorieId(),
+                ],
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaNewPage',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Avatar :',
+                    'id' => 'mediaNewPage',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                ],
+                'contenu' => [
+                    'type' => 'wysiwyg',
+                    'label' => 'Contenu :',
+                    'placeholder' => 'Vous pouvez rédiger votre article ici.',
+                    'id' => 'contenuNewPage',
+                    'required' => true,
+                    'error' => 'Contenu incorrect',
+                    'default_value' => $this->getContenu(),
+                ],
             ],
         ];
     }

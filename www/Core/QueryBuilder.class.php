@@ -11,6 +11,8 @@ interface QueryBuilder {
 
     public function limit (int $from, int $offset): QueryBuilder;
 
+    public function orderBy (string $column, string $order): QueryBuilder;
+
     public function getQuery ();
 
 }

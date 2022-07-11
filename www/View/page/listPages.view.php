@@ -1,5 +1,11 @@
 <meta charset="utf-8">
-<?php     if(!empty($pages)):
+<?php
+if(!empty($pages)):
+    if(!empty($titre)):
+?>
+        <h2><?=$titre?></h2>
+        <?php
+        endif;
     if(!empty($recherche)): ?>
         <div>
             <h2>

@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-3">
                         <?php $this->includePartial('form', $categorie->getFormNewCategorie());
-                        //TODO insÃ©rer les select de chapitre?>
+                        //TODO insérer les select de chapitre?>
 
                     </div>
 
