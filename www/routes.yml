@@ -3,13 +3,118 @@
   action: home
   security:
     rule: default
-puis la route /dashbaord par :
+
+/me-contacter:
+  controller: general
+  action: contact
+
+/login:
+  controller: user
+  action: login
+
+/logout:
+  controller: user
+  action: logout
+
+/register:
+  controller: user
+  action: register
+
 /admin/dashboard:
   controller: admin
   action: dashboard
   security:
     rule: admin
-puis rajouter à la suite :
+
+/categorie/new:
+  controller: categorie
+  action: create
+  security:
+    rule: admin
+
+
+
+# page
+
+/page/new:
+  controller: page
+  action: create
+  security:
+    rule: author
+
+/page:
+  controller: page
+  action: read
+  security:
+    rule: default
+
+/page/pages:
+  controller: page
+  action: listPages
+  security:
+    rule: default
+
+/page/delete:
+  controller: page
+  action: delete
+  security:
+    rule:
+      delete:
+        page
+
+/page/update:
+  controller: page
+  action: update
+  security:
+    rule:
+      update: page
+
+
+
+# personnage
+
+/personnage/new:
+  controller: personnage
+  action: create
+  security:
+    rule: admin
+
+/personnage:
+  controller: personnage
+  action: read
+  security:
+    rule: default
+
+/personnage/delete:
+  controller: personnage
+  action: delete
+  security:
+    rule: admin
+
+
+
+# user
+
+/admin/users:
+  controller: admin
+  action: listUsers
+  security:
+    rule: admin
+
+/user/delete:
+  controller: user
+  action: delete
+  security:
+    rule: admin
+
+/user/update:
+  controller: user
+  action: update
+  security:
+    rule:
+      update: user
+
+
 
 # catégorie
 
@@ -37,43 +142,48 @@ puis rajouter à la suite :
   security:
     rule: admin
 
-#user
 
-/admin/users:
-  controller: admin
-  action: listUsers
-  security:
-    rule: admin
 
-/user/delete:
-  controller: user
-  action: delete
-  security:
-    rule: admin
+# commentaire
 
-/user/update:
-  controller: user
-  action: update
-  security:
-    rule:
-      update: user
-
-# personnage
-
-/personnage/new:
-  controller: personnage
+/commentaire/new:
+  controller: commentaire
   action: create
   security:
-    rule: admin
+    rule: user
 
-/personnage:
-  controller: personnage
-  action: read
+/commentaire/signaler:
+  controller: signalement
+  action: signaler
   security:
     rule: default
 
-/personnage/delete:
-  controller: personnage
-  action: delete
+/admin/signalements:
+  controller: admin
+  action: listSignalements
   security:
     rule: admin
+
+/commentaire:
+  controller: commentaire
+  action: read
+  security:
+    rule :
+      delete : commentaire
+
+/commentaire/delete:
+  controller: commentaire
+  action: delete
+  security:
+    rule :
+      delete : commentaire
+
+
+
+
+# recherche
+/recherche:
+  controller: recherche
+  action: recherche
+  security:
+    rule: default

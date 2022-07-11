@@ -2,8 +2,11 @@
     <meta charset="utf-8">
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="dist/main.css">
+
 </head>
-<h1><?php echo $page->getTitre(); ?></h1>
+<h1><?php use App\Core\Security;
+
+    echo $page->getTitre(); ?></h1>
 <h2><?php echo $page->getDescription(); ?></h2>
 
 <?php
@@ -51,9 +54,23 @@
     <br>
     Commentaires :
     <?php
-        foreach($page->getCommentaires() as $commentaire):
+    $commentaireList = $page->getCommentaires();
+        foreach($commentaireList as $commentaire):
+            $replies = [];
+            if(empty($commentaire->getCommentaireId())){
+                foreach($commentaireList as $reply_key => $reply){
+                    if($reply->getCommentaireId() == $commentaire->getId()){
+                        $replies[] = $reply;
+                        unset($commentaireList[$reply_key]);
+                    }
+                }
+            }
+            $commentaire->replies = $replies;
+            endforeach;
+        foreach ($commentaireList as $commentaire):
+            if($commentaire->getStatut() === 2):
     ?>
-        <div>
+        <div style="border: dashed red;">
             <?=$commentaire->getContenu()?>
             <?=$commentaire->getAuteur()->getFullName()?>
             <?php
@@ -64,19 +81,73 @@
                  height="150" >
             <?php
                 endif;
-                if(\App\Core\Security::displayEditButton($commentaire)):
-            ?>
-<a href="/commentaire/update?commentaire_id=<?= $commentaire->getId()?>">Modifier</a>
-            <?php
-                endif;
-                if(\App\Core\Security::isUser()):
+                if($user->getRoleId() == 1 && empty($commentaire->getCommentaireId()) && $user->getId() !== $commentaire->getAuteurId()):
             ?>
                     <a href="#" class="commentaire_response" data-auteur="<?=$commentaire->getAuteur()->getFullName()?>" data-id="<?=$commentaire->getId()?>">Répondre</a>
             <?php
                 endif;
+                if($commentaire->isSignaledByCurrentUser() === false && $user->getId() !== $commentaire->getAuteurId()):
+            ?>
+                <a href="#" data-id="<?=$commentaire->getId()?>" class="signaler" style="color:red">Signaler le commentaire</a>
+            <?php
+                elseif($user->getId() !== $commentaire->getAuteurId()):
+            ?>
+                <p style="color:grey; font-style: italic">Commentaire signalé</p>
+            <?php
+                    else:
+            ?>
+                        <a href="commentaire/delete?commentaire_id=<?= $commentaire->getId()?>">Supprimer</a>
+            <?php
+                endif;
             ?>
         </div>
+        <?php
+            else:
+                ?>
+            <div style="border: dashed red;">
+                <p style="color:grey; font-style: italic">Commentaire supprimé</p>
+            </div>
     <?php
+            endif;
+        foreach ($commentaire->replies as $reply):
+            if($reply->getStatut() === 2):
+        ?>
+            <div style="border: dashed black; margin-left: 30px;margin-top:10px;margin-bottom:10px;">
+                <?=$reply->getContenu()?>
+                <?=$reply->getAuteur()->getFullName()?>
+                <?php
+                if($reply->hasMedia()):
+                    ?>
+                    <img src="<?= $reply->getMedia()->getChemin()?>" alt="Image de l'article"
+                         width="100"
+                         height="150" >
+                <?php
+                endif;
+                if($reply->isSignaledByCurrentUser() === false && $user->getId() !== $reply->getAuteurId()):
+                    ?>
+                    <a href="#" data-id="<?=$reply->getId()?>" class="signaler" style="color:red">Signaler le commentaire</a>
+                <?php
+                elseif($user->getId() !== $reply->getAuteurId()):
+                    ?>
+                    <p style="color:grey; font-style: italic">Commentaire signalé</p>
+                <?php
+                else:
+                    ?>
+                    <a href="commentaire/delete?commentaire_id<?= $reply->getId()?>">Supprimer</a>
+                <?php
+                endif;
+                ?>
+            </div>
+    <?php
+        else:
+            ?>
+            <div style="border: dashed black; margin-left: 30px;margin-top:10px;margin-bottom:10px;">
+                <p style="color:grey; font-style: italic">Commentaire supprimé</p>
+            </div>
+        <?php
+            endif;
+            endforeach;
+
         endforeach;
         ?>
     <br>
@@ -93,34 +164,6 @@
         $this->includePartial('form', $commentaire->getFormNewCommentaire());
     endif;
     ?>
-    <input type="hidden" name="page_id" value="<?=$page->getId()?>">
-    <input type="hidden" id="commentaire_id" name="commentaire_id" value="">
+    <input type="hidden" form="form" name="page_id" value="<?=$page->getId()?>">
+    <input type="hidden" form="form" id="commentaire_id" name="commentaire_id" value="">
 </div>
-
-<script>
-    window.onload = function(){
-        var commentaire = document.querySelectorAll('.commentaire_response');
-        for (var i = 0 ; i < commentaire.length; i++) {
-            commentaire[i].addEventListener("click", loadCommentaireId, false);
-        }
-        document.querySelector('#comment_page').addEventListener("click",
-            commentPage, false);
-    }
-
-    function loadCommentaireId(e){
-        e.preventDefault();
-        var titreFormulaire = document.querySelector('form');
-        titreFormulaire.childNodes[1].textContent = 'Répondre à '+e.target.dataset.auteur;
-        document.querySelector('#commentaire_id').setAttribute('value', e.target.dataset.id);
-        document.querySelector('#comment_page').removeAttribute('hidden');
-
-    }
-
-    function commentPage(e){
-        e.preventDefault();
-        var titreFormulaire = document.querySelector('form');
-        titreFormulaire.childNodes[1].textContent = 'Répondre à l\'article';
-        document.querySelector('#commentaire_id').setAttribute('value', '');
-        document.querySelector('#comment_page').setAttribute('hidden', '');
-    }
-</script>

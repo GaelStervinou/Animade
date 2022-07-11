@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Helpers\UrlHelper;
 use App\Model\Categorie;
+use App\Model\Commentaire;
 use App\Model\Page as PageModel;
 use App\Model\Personnage;
 use App\Model\User as UserModel;
@@ -12,10 +13,13 @@ use App\Core\View;
 class Security
 {
 
-    public static function return403()
+    public static function return403(string $message=null)
     {
         http_response_code(403);
         $view = new View("security/403");
+        if($message !== null){
+            $view->assign("message", $message);
+        }
         die;
     }
 
@@ -28,7 +32,7 @@ class Security
                 return true;
             }
         }
-        header('Location:login');
+        header('Location:/login');
         die();
     }
 
@@ -93,6 +97,18 @@ class Security
         self::return403();
     }
 
+    public static function canAccessCommentaire(Commentaire $commentaire, UserModel $user)
+    {
+        if(self::verifyStatut($commentaire->getStatut() && self::canDelete('commentaire'))
+            || self::isAdmin()){
+            return true;
+        }elseif($commentaire->getStatut() == 1){
+            http_response_code(404);
+            die();
+        }
+        self::return403();
+    }
+
     public static function canAccessPersonnage(Personnage $personnage, UserModel $user)
     {
         if(self::verifyStatut($personnage->getStatut()) || self::isAdmin()){
@@ -114,6 +130,9 @@ class Security
         switch ($object){
             case 'page':
                 return Security::canDeletePage();
+                break;
+            case  'commentaire':
+                return Security::canDeleteCommentaire();
                 break;
             default:
                 return Security::isSuperAdmin();
@@ -137,6 +156,15 @@ class Security
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
         if($page->getAuteurId() == $_SESSION['user']['id'] || Security::isAdmin()){
+            return true;
+        }
+        self::return403();
+    }
+
+    public static function canDeleteCommentaire()
+    {
+        $commentaire = UrlHelper::getUrlParameters($_GET)['object'];
+        if($commentaire->getAuteurId() == $_SESSION['user']['id'] || Security::isAdmin()){
             return true;
         }
         self::return403();
@@ -176,7 +204,7 @@ class Security
     }
     public static function displayCommentCreation()
     {
-        if(Security::isUser()){
+        if(Security::getUser()->getRoleId() == 1){
             return "yes";
         }else{
             return "no";

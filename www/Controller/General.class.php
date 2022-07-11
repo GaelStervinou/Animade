@@ -15,4 +15,5 @@ class General{
     {
         $view = new View("contact");
     }
+
 }

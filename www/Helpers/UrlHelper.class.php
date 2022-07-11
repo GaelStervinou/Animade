@@ -41,6 +41,7 @@ class UrlHelper
     public static function getObjectToString($param, $value)
     {
         $class = ucfirst("App\Model\\".str_replace("_id", "", $param));
+
         if(class_exists($class)){
             $object = new $class();
             $object = $object->setId((int)$value);

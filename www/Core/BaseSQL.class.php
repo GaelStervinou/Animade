@@ -13,6 +13,10 @@ class BaseSQL implements QueryBuilder
     protected $table;
     private $query;
 
+    public function getTable()
+    {
+        return $this->table;
+    }
     public function __construct()
     {
         // Intégrer singleton
@@ -149,11 +153,18 @@ return $objectList;
         return $this->fetchQuery(get_called_class(), 'one');
     }
 
-    public function findManyBy(array $where)
+    public function findManyBy(array $where, array $orderBy = null)
     {
         $this->select($this->table, ['*']);
         foreach ($where as $column => $value){
-            $this->where($column, $value);
+            if(is_array($value)) {
+                $this->where($column, $value['value'], $value['operator']);
+            }else{
+                $this->where($column, $value);
+            }
+        }
+        if($orderBy !== null){
+            $this->orderBy($orderBy[0], $orderBy[1]);
         }
         return $this->fetchQuery(get_called_class());
     }
@@ -176,6 +187,20 @@ return $objectList;
     {
         $classExploded = explode("\\", $class);
         return DBPREFIX.strtolower(end($classExploded));
+    }
+
+    public function checkIfCanResponseToComment($comment_id)
+    {
+        $this
+            ->select(DBPREFIX.'commentaire', ['commentaire_id'])
+            ->where('id', $comment_id);
+        $query = $this->prepareQuery();
+        $query->execute();
+        $commentaire = $query->fetch();
+        if($commentaire['commentaire_id'] !== null || $commentaire['auteur_id'] !== Security::getUser()->getId()){
+            return Security::return403("Vous ne pouvez pas répondre à ce commentaire");
+        }
+        return true;
     }
 
 
@@ -215,6 +240,12 @@ return $objectList;
     public function where (string $column, string $value, string $operator = '='): QueryBuilder {
 
         $this->query->where[] = ' ' . $column . $operator . "'" . $value . "'" ;
+
+        return $this;
+    }
+
+    public function orderBy (string $column, string $order): QueryBuilder {
+        $this->query->orderBy = ' ORDER BY ' . $column . ' ' . $order;
         return $this;
     }
 
@@ -229,6 +260,10 @@ return $objectList;
 
         if(!empty($this->query->where)) {
             $sql .= " WHERE " . implode(" AND ",$this->query->where);
+        }
+
+        if(isset($this->query->orderBy)){
+            $sql .= " " . $this->query->orderBy;
         }
 
         if(isset($this->query->limit)) {

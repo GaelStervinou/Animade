@@ -27,13 +27,22 @@ class View
         $this->data[$key] = $value;
     }
 
-    public function includePartial($name, $config)
+    public function includePartial($name)
     {
         if(!file_exists('View/Partial/'.$name.'.partial.php'))
         {
             die('partial : '. $name . ' 404' );
         }
         include('View/Partial/'.$name.'.partial.php');
+    }
+
+    public function includeView($name)
+    {
+        if(!file_exists('View/'.$name.'.view.php'))
+        {
+            die('partial : '. $name . ' 404' );
+        }
+        include('View/'.$name.'.view.php');
     }
 
     public function __toString():string

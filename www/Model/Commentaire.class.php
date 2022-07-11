@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Core\BaseSQL;
+use App\Core\Security;
 use App\Model\Page as PageModel;
 use App\Model\User as UserModel;
 use App\Model\Media as MediaModel;
@@ -35,14 +36,14 @@ class Commentaire extends BaseSQL{
     /** @var MediaModel $media */
     protected $media = null;
 
-    /** @var string|null $nom */
-    protected $nom = null;
-
     /** @var string|null $contenu */
     protected $contenu = null;
 
     /** @var int|null $statut */
     protected $statut = null;
+
+    /** @var $date_creation */
+    protected $date_creation = null;
 
     /**
      * @return int|null
@@ -106,11 +107,26 @@ class Commentaire extends BaseSQL{
     }
 
     /**
-     * @return Commentaire
+     * @return Commentaire|null
      */
     public function getCommentaire(): ?Commentaire
     {
-        return $this->commentaire;
+        if(!empty($this->hasCommentaire())){
+            $commentaire = new Commentaire();
+            return $commentaire->setId($this->getCommentaireId());
+        }
+
+        return null;
+    }
+
+    public function getCommentaires()
+    {
+        return $this->hasMany(Commentaire::class);
+    }
+
+    public function hasCommentaire()
+    {
+        return !empty($this->getCommentaireId());
     }
 
     /**
@@ -198,22 +214,6 @@ class Commentaire extends BaseSQL{
     /**
      * @return string|null
      */
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    /**
-     * @param string|null $nom
-     */
-    public function setNom(?string $nom): void
-    {
-        $this->nom = $nom;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getContenu(): ?string
     {
         return $this->contenu;
@@ -243,6 +243,14 @@ class Commentaire extends BaseSQL{
         $this->statut = $statut;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDateCreation()
+    {
+        return $this->date_creation;
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -259,6 +267,27 @@ class Commentaire extends BaseSQL{
         $this->save();
     }
 
+    public function getLastCommentaire()
+    {
+        $listCommentaires = [];
+
+        if(!empty($this->getCommentaires())){
+            /*foreach ($this->getCommentaires() as $commentaire){
+                $listCommentaires[$commentaire->getId()] = $commentaire->getLastCommentaire();
+            }*/
+
+        }
+        return $listCommentaires;
+    }
+
+    public function isSignaledByCurrentUser()
+    {
+        $signalement = new Signalement();
+        if($signalement->findOneBy($signalement->getTable(), ['commentaire_id' => $this->getId(), 'user_id' => Security::getUser()->getid()])) {
+            return true;
+        }
+        return false;
+    }
 
     public function getFormNewCommentaire(): array
     {

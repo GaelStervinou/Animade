@@ -32,9 +32,7 @@ $routeFile = "routes.yml";
 if(!file_exists($routeFile)){
     die("Le fichier ".$routeFile." n'existe pas");
 }
-
 $routes = yaml_parse_file($routeFile);
-
 
 if( empty($routes[$uri]) || empty($routes[$uri]["controller"])  || empty($routes[$uri]["action"]) ){
         die("Page 404");
@@ -63,8 +61,10 @@ if(!empty($routes[$uri]["security"])){
         return $response;
     }
 }
+
 $controller = ucfirst(strtolower($routes[$uri]["controller"]));
 $action = strtolower($routes[$uri]["action"]);
+
 
 // $controller = User ou $controller = Global
 // $action = login ou $action = logout ou $action = home
@@ -76,6 +76,7 @@ if(!file_exists($controllerFile)){
 include $controllerFile;
 
 $controller = "App\\Controller\\".$controller;
+
 if( !class_exists($controller) ){
    die("La classe ".$controller." n'existe pas");
 }

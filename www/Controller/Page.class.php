@@ -69,12 +69,13 @@ class Page{
     {
         $page = new PageModel();
         $view = new View("page/listPages");
-
         if(!empty($_GET)){
             $parameters = $_GET;
+
             $parameters['statut'] = 2;
             $pages = $page->findManyBy($parameters);
             $query = UrlHelper::getSearch($_GET);
+
             $recherche = [];
             foreach ($query as $param => $value){
                 $recherche[] = ucfirst($param). ': ' .$value;
@@ -89,7 +90,6 @@ class Page{
 
     public function read()
     {
-        //TODO récupérer automatiquement le user depuis la session en faisant une fonction dans la table security
         $user = Security::getUser();
         $parameters = UrlHelper::getUrlParameters($_GET);
         Security::canAccessPage($parameters['page'], $user);
@@ -100,6 +100,13 @@ class Page{
         $view->assign("page", $parameters['page']);
         $view->assign("can_edit", Security::displayEditButton($parameters['page']));
         $view->assign("can_comment", $can_comment);
+        $view->assign("user", $user);
+        if($user->getRoleId() == 1) {
+            $view->assign("meta", [
+                'script' => "../dist/js/displayPage.js",
+            ]);
+        }
+
         if($can_comment === "yes"){
             $view->assign("commentaire", new CommentaireModel());
         }

@@ -110,6 +110,11 @@ class Personnage extends BaseSQL
         $this->save();
     }
 
+    public function toString()
+    {
+        return $this->getNom();
+    }
+
     public function getFormNewPersonnage()
     {
         return [
