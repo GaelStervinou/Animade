@@ -1,4 +1,12 @@
+php_value upload_max_filesize 100M
+php_value post_max_size 100M
+
 RewriteEngine on
+
+Options -Indexes +FollowSymLinks
+
+ErrorDocument 403 /View/Security/403.view.php
+ErrorDocument 500 /View/Security/errors.view.php
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

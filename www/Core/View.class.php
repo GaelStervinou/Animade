@@ -36,6 +36,15 @@ class View
         include('View/Partial/'.$name.'.partial.php');
     }
 
+    public function includeView($name)
+    {
+        if(!file_exists('View/'.$name.'.view.php'))
+        {
+            die('partial : '. $name . ' 404' );
+        }
+        include('View/'.$name.'.view.php');
+    }
+
     public function __toString():string
     {
         return "Ceci est la classe View";

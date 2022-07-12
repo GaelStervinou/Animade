@@ -29,35 +29,8 @@
                 <div class="row">
                     <div class="col-3">
 
-                        <?php $this->includePartial('form', $user->getFormLogin()); ?>
-                        
-                        <!-- <form method="POST" action="/login">
-                            <h1>Se connecter</h1>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label for="identifiant">Email ou Pseudo :</label>
-                                </div>
-                            </div>
-                            <div class="row field">
-                                <div class="col-6">
-                                    <input type="text" id="identifiant">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label for="password">Mot de passe :</label>
-                                </div>
-                            </div>
-                            <div class="row field">
-                                <div class="col-6">
-                                    <input type="test" id="password">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <button class="button" type="submit">Connexion</button>
-
-                            </div>
-                        </form> -->
+                        <?php
+                        $this->includePartial('form', $user->getFormLogin()); ?>
                     </div>
 
                 </div>

@@ -1,6 +1,12 @@
 /:
   controller: general
   action: home
+  security:
+    rule: default
+
+/sitemap:
+  controller: general
+  action: sitemap
 
 /me-contacter:
   controller: general
@@ -18,11 +24,194 @@
   controller: user
   action: register
 
-/dashboard:
+/admin/dashboard:
   controller: admin
   action: dashboard
+  security:
+    rule: admin
 
-/verify_account:
+
+
+# page
+
+/page/new:
+  controller: page
+  action: create
+  security:
+    rule: author
+
+/page:
+  controller: page
+  action: read
+  security:
+    rule: default
+
+/page/pages:
+  controller: page
+  action: listPages
+  security:
+    rule: default
+
+/page/delete:
+  controller: page
+  action: delete
+  security:
+    rule:
+      delete:
+        page
+
+/page/update:
+  controller: page
+  action: update
+  security:
+    rule:
+      update: page
+
+/page/countLikes:
+  controller: page
+  action: getCountLikes
+  security:
+    rule: default
+
+/page/countUnlikes:
+  controller: page
+  action: getCountUnlikes
+  security:
+    rule: default
+
+
+# personnage
+
+/personnage/new:
+  controller: personnage
+  action: create
+  security:
+    rule: admin
+
+/personnage:
+  controller: personnage
+  action: read
+  security:
+    rule: default
+
+/personnage/update:
+  controller: personnage
+  action: update
+  security:
+    rule: admin
+
+/personnage/delete:
+  controller: personnage
+  action: delete
+  security:
+    rule: admin
+
+
+
+# user
+
+/admin/users:
+  controller: admin
+  action: listUsers
+  security:
+    rule: admin
+
+/user/delete:
+  controller: user
+  action: delete
+  security:
+    rule: admin
+
+/user/update:
+  controller: user
+  action: update
+  security:
+    rule:
+      update: user
+
+
+
+# catégorie
+
+/categorie/new:
+  controller: categorie
+  action: create
+  security:
+    rule: admin
+
+/categorie:
+  controller: categorie
+  action: read
+  security:
+    rule : default
+
+/categorie/categories:
+  controller: categorie
+  action: listCategories
+  security:
+    rule: default
+
+/categorie/delete:
+  controller: categorie
+  action: delete
+  security:
+    rule: admin
+
+
+
+# commentaire
+
+/commentaire/new:
+  controller: commentaire
+  action: create
+  security:
+    rule: user
+
+/commentaire/signaler:
+  controller: signalement
+  action: signaler
+  security:
+    rule: default
+
+/admin/signalements:
+  controller: admin
+  action: listSignalements
+  security:
+    rule: admin
+
+/commentaire:
+  controller: commentaire
+  action: read
+  security:
+    rule :
+      delete : commentaire
+
+/commentaire/delete:
+  controller: commentaire
+  action: delete
+  security:
+    rule :
+      delete : commentaire
+
+
+
+#likes
+/like:
+  controller: like
+  action: like
+  security:
+    rule: user
+
+
+
+# recherche
+/recherche:
+  controller: recherche
+  action: recherche
+  security:
+    rule: default
+
+verify_account:
   controller: user
   action: verifyAccount
 
