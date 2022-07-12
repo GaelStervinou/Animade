@@ -10,6 +10,7 @@ use App\Helpers\MediaManager;
 use App\Helpers\UrlHelper;
 use App\Model\User as UserModel;
 use App\Model\Page as PageModel;
+use App\Model\Personnage;
 use App\Model\Commentaire as CommentaireModel;
 
 class Page{
@@ -43,7 +44,7 @@ class Page{
                     $page->setChapitreId($_POST['chapitre_id']);
                     $page->setCategorieId(($_POST['categorie_id']));
 
-                    if(!empty($_POST['media'])){
+                    if(!empty($_POST['media']['tmp_name'])){
                         $page->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $page));
                     }
 
@@ -67,25 +68,36 @@ class Page{
 
     public function listPages()
     {
-        $page = new PageModel();
-        $view = new View("page/listPages");
-        if(!empty($_GET)){
-            $parameters = $_GET;
+        try{
+            $page = new PageModel();
+            $view = new View("page/listPages");
+            if(!empty($_GET)){
+                if(!empty($_GET['personnage'])){
+                    $personnage = new Personnage();
+                    $_GET['personnage_id'] = $personnage->getPersonnageFromNom($_GET['personnage'])->getId();
+                    unset($_GET['personnage']);
+                }
 
-            $parameters['statut'] = 2;
-            $pages = $page->findManyBy($parameters);
-            $query = UrlHelper::getSearch($_GET);
+                $parameters = $_GET;
 
-            $recherche = [];
-            foreach ($query as $param => $value){
-                $recherche[] = ucfirst($param). ': ' .$value;
+
+                $parameters['statut'] = 2;
+                $pages = $page->findManyBy($parameters);
+                $query = UrlHelper::getSearch($_GET);
+
+                $recherche = [];
+                foreach ($query as $param => $value){
+                    $recherche[] = ucfirst($param). ': ' .$value;
+                }
+                $recherche = implode(', ', $recherche);
+                $view->assign("recherche", $recherche);
+            }else{
+                $pages = $page->findManyBy(['statut' => 2]);
             }
-            $recherche = implode(', ', $recherche);
-            $view->assign("recherche", $recherche);
-        }else{
-            $pages = $page->findManyBy(['statut' => 2]);
+            $view->assign("pages", $pages);
+        }catch(Exception $e){
+            die('test');
         }
-        $view->assign("pages", $pages);
     }
 
     public function read()
@@ -101,11 +113,16 @@ class Page{
         $view->assign("can_edit", Security::displayEditButton($parameters['page']));
         $view->assign("can_comment", $can_comment);
         $view->assign("user", $user);
+        $view->assign("user_like", $parameters['page']->currentUserLike());
+
+        $meta = [
+            'script' => ['../dist/js/displayPageSignalComment.js']
+        ];
         if($user->getRoleId() == 1) {
-            $view->assign("meta", [
-                'script' => "../dist/js/displayPage.js",
-            ]);
+            $meta['script'][] = "../dist/js/displayPage.js";
         }
+
+        $view->assign("meta", $meta);
 
         if($can_comment === "yes"){
             $view->assign("commentaire", new CommentaireModel());
@@ -121,7 +138,7 @@ class Page{
                 }
             }
             $page = UrlHelper::getUrlParameters($_GET)['object'];
-            $result = Validator::run($page->getFormNewPage($page->getId()), $_POST);
+            $result = Validator::run($page->getFormUpdatePage(), $_POST);
 
             if(empty($result)){
                 try{
@@ -140,9 +157,24 @@ class Page{
 
                     // new
                     $page->setStatut($_POST['statut']);
-                    $page->setPersonnageId($_POST['personnage_id']);
-                    $page->setChapitreId($_POST['chapitre_id']);
-                    $page->setCategorieId($_POST['categorie_id']);
+                    if (!empty($_POST['personnage_id'])) {
+                        $page->setPersonnageId($_POST[ 'personnage_id' ]);
+                    }
+                    if (!empty($_POST['chapitre_id'])) {
+                        $page->setChapitreId($_POST[ 'chapitre_id' ]);
+                    }
+                    if (!empty($_POST['categorie_id'])) {
+                        $page->setCategorieId($_POST[ 'categorie_id' ]);
+                    }
+
+                    if(!empty($_POST['media']['tmp_name'])){
+                        if(!empty($page->getMediaId())){
+                            MediaManager::deleteFile($page->getMediaId());
+                        }
+                        $page->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $page));
+                    }elseif(!empty($_POST['select_media'])){
+                        $page->setMediaId($_POST['select_media']);
+                    }
 
                     $page->save();
                     $page->commit();
@@ -155,9 +187,23 @@ class Page{
             }
         }else{
             $page = UrlHelper::getUrlParameters($_GET)['object'];
-            $view = new View("page/newPage");
+            $view = new View("page/updatePage");
             $view->assign("page", $page);
         }
+    }
+
+    public function getCountLikes()
+    {
+        $page = new PageModel();
+        $page->setId($_GET['page_id']);
+        echo $page->countLikes();
+    }
+
+    public function getCountUnlikes()
+    {
+        $page = new PageModel();
+        $page->setId($_GET['page_id']);
+        echo $page->countUnlikes();
     }
 
     public function delete()

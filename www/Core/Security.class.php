@@ -2,13 +2,13 @@
 
 namespace App\Core;
 
+use App\Core\View;
 use App\Helpers\UrlHelper;
 use App\Model\Categorie;
 use App\Model\Commentaire;
 use App\Model\Page as PageModel;
 use App\Model\Personnage;
 use App\Model\User as UserModel;
-use App\Core\View;
 
 class Security
 {
@@ -16,6 +16,26 @@ class Security
     public static function return403(string $message=null)
     {
         http_response_code(403);
+        $view = new View("security/403");
+        if($message !== null){
+            $view->assign("message", $message);
+        }
+        die;
+    }
+
+    public static function return415(string $message=null)
+    {
+        http_response_code(415);
+        $view = new View("security/403");
+        if($message !== null){
+            $view->assign("message", $message);
+        }
+        die;
+    }
+
+    public static function return422(string $message=null)
+    {
+        http_response_code(422);
         $view = new View("security/403");
         if($message !== null){
             $view->assign("message", $message);
@@ -72,6 +92,15 @@ class Security
         self::return403();
     }
 
+    public static function canAsAdmin(): bool
+    {
+        self::isConnected();
+        if($_SESSION['user']['role_id'] >= 3){
+            return true;
+        }
+        return false;
+    }
+
 
     public static function login($user=null): void
     {
@@ -84,6 +113,13 @@ class Security
                 'role_id' => $user->getRoleId(),
                 'status' => $user->getStatus(),
             ];
+    }
+
+    public static function logout(): void
+    {
+        session_destroy();
+        header('Location:/login');
+        die();
     }
 
     public static function canAccessPage(PageModel $page, UserModel $user)

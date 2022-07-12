@@ -20,7 +20,7 @@ class Validator{
                 $input['authorized'] = true;
             }
             if($input['authorized'] == true){
-                if(!isset($data[$name]) && $input['required'] == true){
+                if(!isset($data[$name]) && $input['required'] === true){
                     $result[] = "Il manque des champs";
                 }
                 if(!empty($input['required']) && empty($data[$name])){
@@ -68,7 +68,7 @@ class Validator{
             if(!isset($input['authorized'])){
                 $input['authorized'] = true;
             }
-            if($input['authorized'] == true){
+            if($input['authorized'] === true){
                 $inputs_nb += 1;
             }
         }

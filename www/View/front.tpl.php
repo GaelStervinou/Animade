@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<?php
+
+use App\Helpers\UrlHelper;
+
+if(!UrlHelper::isAjaxRequest()):
+?>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +15,12 @@
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8" src="<?= $meta["script"]?>"></script>
+    <?php
+    if(isset($meta)):
+        foreach($meta['script'] as $script):
+    ?>
+    <script type="text/javascript" charset="utf8" src="<?= $script?>"></script>
+    <?php endforeach; endif; ?>
     <meta name="description" content="ceci est la description de ma page">
 </head>
 <body>
@@ -22,7 +33,9 @@
     </form>
 </div>
 
-<?php include $this->view.".view.php";?>
+<?php
+endif;
+include $this->view.".view.php";?>
 
 </body>
 </html>

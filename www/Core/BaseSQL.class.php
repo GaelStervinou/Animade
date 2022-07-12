@@ -144,6 +144,11 @@ return $objectList;
         return $this->findOneBy($this->table, ['slug' => $slug]);
     }
 
+    public function getPersonnageFromNom($nom)
+    {
+        return $this->findOneBy($this->table, ['nom' => $nom]);
+    }
+
     public function findOneBy(string $table, array $where)
     {
         $this->select($table, ['*']);
@@ -155,18 +160,23 @@ return $objectList;
 
     public function findManyBy(array $where, array $orderBy = null)
     {
-        $this->select($this->table, ['*']);
-        foreach ($where as $column => $value){
-            if(is_array($value)) {
-                $this->where($column, $value['value'], $value['operator']);
-            }else{
-                $this->where($column, $value);
+        try{
+            $this->select($this->table, ['*']);
+            foreach ($where as $column => $value){
+                if(is_array($value)) {
+                    $this->where($column, $value['value'], $value['operator']);
+                }else{
+                    $this->where($column, $value);
+                }
             }
+            if($orderBy !== null){
+                $this->orderBy($orderBy[0], $orderBy[1]);
+            }
+            $objects =  $this->fetchQuery(get_called_class());
+            return $objects;
+        }catch(\Error $e){
+            die('test');
         }
-        if($orderBy !== null){
-            $this->orderBy($orderBy[0], $orderBy[1]);
-        }
-        return $this->fetchQuery(get_called_class());
     }
 
     public function hasMany($class, $foreignKey=null)
@@ -192,12 +202,12 @@ return $objectList;
     public function checkIfCanResponseToComment($comment_id)
     {
         $this
-            ->select(DBPREFIX.'commentaire', ['commentaire_id'])
+            ->select(DBPREFIX.'commentaire', ['commentaire_id', 'auteur_id'])
             ->where('id', $comment_id);
         $query = $this->prepareQuery();
         $query->execute();
         $commentaire = $query->fetch();
-        if($commentaire['commentaire_id'] !== null || $commentaire['auteur_id'] !== Security::getUser()->getId()){
+        if($commentaire['commentaire_id'] !== null || $commentaire['auteur_id'] === Security::getUser()->getId()){
             return Security::return403("Vous ne pouvez pas répondre à ce commentaire");
         }
         return true;

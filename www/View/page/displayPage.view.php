@@ -3,6 +3,11 @@
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="dist/main.css">
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
 </head>
 <h1><?php use App\Core\Security;
 
@@ -31,7 +36,7 @@
 ?>
 <div>
 
-    <img src="<?= $page->getMedia()->getChemin()?>" alt="Image de l'article"
+    <img src="../assets/images/<?= $page->getMedia()->getChemin()?>" alt="Image de l'article"
          width="100"
          height="150" >
 </div>
@@ -44,6 +49,51 @@
 
 <div>
     <?php echo $page->getDateCreation()
+    ?>
+</div>
+<div>
+    <?php 
+        if($can_comment === "yes"):
+    ?>
+            <br>
+        <span class="like_action" id="like"
+              <?php
+                if($user_like->getAime() === 1):
+              ?>
+                style="border: dotted green; cursor: pointer;"
+              <?php
+                else:
+                    ?>
+    style="cursor: pointer;"
+                <?php
+                endif;
+                ?>
+              data-page_id="<?= $page->getId()?>" data-like="1">
+            <i class="fa-solid fa-thumbs-up fa-lg"></i>
+        </span>
+            <span style="margin-right: 30px; margin-left: 5px;" id="likesCount">
+                <?= $page->countLikes()?>
+            </span>
+            <span class="like_action" id="unlike"
+                  <?php
+                  if($user_like->getAime() === -1):
+                  ?>
+                style="border: dotted green; cursor: pointer;"
+                  <?php
+                  else:
+                  ?>
+    style="cursor: pointer;"
+                  <?php
+                  endif;
+                  ?>data-page_id="<?= $page->getId()?>" data-like="-1">
+            <i class="fa-solid fa-thumbs-down fa-lg"></i>
+         </span>
+            <span style="margin-right: 30px; margin-left: 5px;" id="unlikesCount">
+                <?= $page->countUnlikes()?>
+            </span>
+
+    <?php
+        endif;
     ?>
 </div>
 
@@ -76,7 +126,7 @@
             <?php
                 if($commentaire->hasMedia()):
             ?>
-            <img src="<?= $commentaire->getMedia()->getChemin()?>" alt="Image de l'article"
+            <img src="../<?= $commentaire->getMedia()->getChemin()?>" alt="Image de l'article"
                  width="100"
                  height="150" >
             <?php
@@ -118,7 +168,7 @@
                 <?php
                 if($reply->hasMedia()):
                     ?>
-                    <img src="<?= $reply->getMedia()->getChemin()?>" alt="Image de l'article"
+                    <img src="../<?= $reply->getMedia()->getChemin()?>" alt="Image de l'article"
                          width="100"
                          height="150" >
                 <?php
@@ -133,7 +183,7 @@
                 <?php
                 else:
                     ?>
-                    <a href="commentaire/delete?commentaire_id<?= $reply->getId()?>">Supprimer</a>
+                    <a href="commentaire/delete?commentaire_id=<?= $reply->getId()?>">Supprimer</a>
                 <?php
                 endif;
                 ?>

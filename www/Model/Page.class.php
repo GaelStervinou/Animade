@@ -3,6 +3,7 @@ namespace App\Model;
 use App\Core\BaseSQL;
 use App\Core\Security;
 use App\Model\Commentaire;
+use App\Model\Like;
 use App\Model\Media as MediaModel;
 
 class Page extends BaseSQL
@@ -296,15 +297,39 @@ class Page extends BaseSQL
         return $this->hasMany(Commentaire::class);
     }
 
+    public function countLikes()
+    {
+        $like = new Like();
+        return count($like->findManyBy(['aime' => 1]));
+    }
+
+    public function countUnlikes()
+    {
+        $like = new Like();
+        return count($like->findManyBy(['aime' => -1]));
+    }
+
+    public function currentUserLike()
+    {
+        $like = new Like();
+        return $like->findOneBy($like->getTable(), ['user_id' => Security::getUser()->getId()]);
+    }
+    public function getMediaSelectOptions()
+    {
+        $media = new Media();
+        $medias = $media->findManyBy(['user_id' => Security::getUser()->getId(), 'statut' => 2]);
+
+        $medias_options = [];
+        foreach ($medias as $media){
+            $medias_options[$media->getNom()] = $media->getId();
+        }
+
+        return $medias_options;
+    }
+
     public function save()
     {
         parent::save();
-    }
-
-    public function delete()
-    {
-        $this->setStatut(-1);
-        $this->save();
     }
 
     public function __construct()
@@ -409,5 +434,25 @@ class Page extends BaseSQL
                 ],
             ],
         ];
+    }
+
+    public function getFormUpdatePage()
+    {
+        $form = $this->getFormNewPage();
+
+        $form['config']['submit'] = "Modifier la page";
+        $form['config']['title'] = "Modifier la page";
+
+        $form['inputs']['select_media'] =
+            [
+                'type' => 'select',
+                'label' => 'Image :',
+                'options' => $this->getMediaSelectOptions(),
+                'id' => 'selectMediaUpdatePage',
+                'class' => 'inputRegister',
+                'error' => 'Image incorrecte',
+                'default_value' => $this->getMediaId(),
+            ];
+        return $form;
     }
 }

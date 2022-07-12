@@ -39,7 +39,7 @@ class Commentaire{
                         $commentaire->setCommentaireId($_POST['commentaire_id']);
                     }
 
-                    if(!empty($_POST['media']["tpm_name"])){
+                    if(!empty($_POST['media']["tmp_name"])){
                         $commentaire->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $commentaire));
                     }
 
@@ -73,54 +73,6 @@ class Commentaire{
         $view->assign("commentaire", $commentaires);
     }
 
-    public function update()
-    {
-        if(!empty($_POST)){
-            if(!empty($_FILES)){
-                foreach($_FILES as $name => $info){
-                    $_POST[$name] = $info;
-                }
-            }
-            $page = UrlHelper::getUrlParameters($_GET)['object'];
-            $result = Validator::run($page->getFormNewPage($page->getId()), $_POST);
-
-            if(empty($result)){
-                try{
-                    $page->beginTransaction();
-                    foreach ($_POST as $attribute => $value){
-                        if(empty($value)){
-                            $_POST[$attribute] = null;
-                        }
-                    }
-                    $page->setTitre($_POST['titre']);
-                    $page->setDescription($_POST['description']);
-                    $page->setSlug(Validator::sanitizeSlug($_POST['slug']));
-                    $page->setContenu(Validator::sanitizeWysiwyg($_POST['contenu']));
-                    $page->setStatut(1);
-                    $page->setAuteurId($_SESSION['user']['id']);
-
-                    // new
-                    $page->setStatut($_POST['statut']);
-                    $page->setPersonnageId($_POST['personnage_id']);
-                    $page->setChapitreId($_POST['chapitre_id']);
-                    $page->setCategorieId($_POST['categorie_id']);
-
-                    $page->save();
-                    $page->commit();
-
-                    header('Location:/page?page='.$page->getSlug());
-                }catch (Exception $e) {
-                    $page->rollback();
-                    var_dump($e->getMessage());die;
-                }
-            }
-        }else{
-            $page = UrlHelper::getUrlParameters($_GET)['object'];
-            $view = new View("page/newPage");
-            $view->assign("page", $page);
-        }
-    }
-
     public function read()
     {
         $user = Security::getUser();
@@ -145,7 +97,6 @@ class Commentaire{
         foreach($signalements as $signalement){
             $signalement->delete();
         }
-
-        header('Location:/');
+        header("Location:{$_SERVER['HTTP_REFERER']}");
     }
 }

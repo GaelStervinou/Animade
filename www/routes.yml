@@ -4,6 +4,10 @@
   security:
     rule: default
 
+/sitemap:
+  controller: general
+  action: sitemap
+
 /me-contacter:
   controller: general
   action: contact
@@ -63,6 +67,17 @@
     rule:
       update: page
 
+/page/countLikes:
+  controller: page
+  action: getCountLikes
+  security:
+    rule: default
+
+/page/countUnlikes:
+  controller: page
+  action: getCountUnlikes
+  security:
+    rule: default
 
 
 # personnage
@@ -78,6 +93,12 @@
   action: read
   security:
     rule: default
+
+/personnage/update:
+  controller: personnage
+  action: update
+  security:
+    rule: admin
 
 /personnage/delete:
   controller: personnage
@@ -172,6 +193,14 @@
     rule :
       delete : commentaire
 
+
+
+#likes
+/like:
+  controller: like
+  action: like
+  security:
+    rule: user
 
 
 
