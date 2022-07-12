@@ -29,3 +29,7 @@
 /password_forgotten:
   controller: user
   action: passwordForgotten
+
+/password_confirm:
+  controller: user
+  action: passwordConfirm

@@ -62,6 +62,14 @@ abstract class BaseSQL
         return password_verify($password, $res);
     }
 
+    public function newPassword($email,$NewPassword, $pwdConfirm)
+    {
+        $sql = "UPDATE zdek_user SET password=:NewPassword WHERE email=:email";
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->execute(['email' => $email], ['NewPassword' => $NewPassword], ['NewPassword' => $pwdConfirm]);
+        return password_verify($password);
+    }
+
     public function emailVerification()
     {
         ['emailToken' => $email_token, 'email' => $user_email ] = $_GET;
