@@ -28,10 +28,8 @@
             <div id="login-form">
                 <div class="row">
                     <div class="col-3">
-
-                    
-                        <?php $this->includePartial('form', $user->getPasswordForgotten()); ?>
                         
+                        <?php $this->includePartial('form', $user->getPasswordConfirm()); ?>
                         
                     </div>
 

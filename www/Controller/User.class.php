@@ -189,24 +189,40 @@ class User
         $view = new View("passwordForgotten");
         $view->assign("user", $user);
         
-    
+       
         $mail = new PHPMailer(); 
         $options = [
             'subject' => 'Réinitialisation du votre mot de passe de votre compte Animade ',
-            'body' => "Bonjour, veuillez modifier votre mot de passe en cliquant sur le lien suivant : http:localhost/Core/PHPMailer/verifyAccount.php?email=".$user->getEmail()."&emailToken=".$tokenVerification,
+            'body' => "Bonjour, veuillez modifier votre mot de passe en cliquant sur le lien suivant : http://localhost/password_confirm?email=".$_POST["email"],
         ];
         $mail->sendEmail($_POST["email"], $options);
+    }
+
+    public function PasswordConfirm()
+    {
+        $user = new UserModel();
+        $view = new View("passwordConfirmed");
+        $view->assign("user", $user);
         
-        
-        // $mail = new PHPMailer();
-        //         $options = [
-        //             'subject' => 'Réinitialisation du votre mot de passe de votre compte Animade ',
-        //             'body' => "Bonjour, veuillez valider la réinitialisation de votre mot de passe en cliquant sur le lien suivant : http:localhost/Core/PHPMailer/verifyAccount.php?email=".$user->getEmail()."&emailToken=".$tokenVerification,
-        //         ];
-        //         $mail->sendEmail($_POST["email"], $options);
-        
+
+        if(!empty($_POST["NewPassword"]) && !empty($_POST["pwdConfirm"])){
+            $check_password = $user->newPassword($_POST["email"], $_POST["NewPassword"], $_POST["pwdConfirm"]);
+            if($check_password == true){
+                echo "Votre mdp est a jour";
+                
+            }else{
+                echo " mot de passe incorrect";
+            }
+        }
+
+
+
+
 
 
     }
+
+
+
 
 }

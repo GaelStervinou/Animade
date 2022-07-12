@@ -257,6 +257,44 @@ class User extends BaseSQL
         ];
     }
 
+
+    public function getPasswordConfirm(): array
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Mettre à jour",
+                'name' => "password_change",
+                'title' => "Changement de votre mot de passe",
+            ],
+            'inputs' => [
+                'password' => [
+                    'type' => 'password',
+                    'label' => 'Nouveau mot de passe :',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'NewPassword',
+                    'class' => 'inputNewPassword',
+                    'required' => true,
+                    // changer la taille minimale du password
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ],
+                'password_confirm' => [
+                    'type' => 'password',
+                    'label' => 'Confirmation de votre nouveau mot de passe',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'pwdConfirm',
+                    'class' => 'inputPasswordConfirm',
+                    'required' => true,
+                    // changer la taille minimale du password
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ]
+            ],
+        ];
+    }
+
+    
+
     public function getFormLogin(): array
     {
         return [
