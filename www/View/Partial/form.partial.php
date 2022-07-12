@@ -33,9 +33,11 @@
                 name="<?= $name?>" 
                 id="<?= $input['id']?>"
                 class="<?= $input['class']?>"
-                <?=
-                    empty($input['required'])?'>':'required=required >';
+                <?php
+                if(!empty($input['required'])):
                     ?>
+                    required='required'
+                <?php endif;?>
                 <option></option>
                 <?php
 
@@ -78,8 +80,16 @@
                               cols="<?= $input['cols']?>"
                               class="<?= $input['class']?>"
                               placeholder="<?= $input['placeholder']?>"
-                    <?= empty($input['required'])?:'required=required'?>
-                    <?= empty($input['default_value'])?:"value={$input['default_value']}"?>
+                     <?php
+                     if(!empty($input['required'])):
+                         ?>
+                         required='required'
+                     <?php endif;?>
+                        <?php
+                        if(!empty($input['default_value'])):
+                            ?>
+                            value="<?= $input['default_value']?>"
+                        <?php endif;?>
                     >
         </textarea>
                 </div>
@@ -95,8 +105,11 @@
                         type="<?= $input['type']?>"
                         class="<?= $input['class']?>"
                         accept="image/jpeg, image/jpg"
-                    <?= empty($input['required'])?:'required=required'?>
-                    <?= empty($input['default_value'])?:"value={$input['default_value']}"?>
+                    <?php
+                    if(!empty($input['required'])):
+                        ?>
+                        required='required'
+                    <?php endif;?>
                 />
             </div>
         </div>
@@ -110,8 +123,16 @@
             type="<?= $input['type']?>"
             class="<?= $input['class']?>"
             placeholder="<?= $input['placeholder']?>"
-            <?= empty($input['required'])?:'required=required'?>
-            <?= empty($input['default_value'])?:"value={$input['default_value']}"?>
+                <?php
+                if(!empty($input['required'])):
+                    ?>
+                    required='required'
+                <?php endif;?>
+                <?php
+                if(!empty($input['default_value'])):
+                ?>
+                    value="<?= $input['default_value']?>"
+            <?php endif;?>
             />
         </div>
     </div>

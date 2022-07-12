@@ -25,7 +25,8 @@ class User
                 $user = $user->getUserFromEmail($_POST["email"]);
                 $user->generateToken();
                 Security::login($user);
-                if (Security::isAdmin()) {
+
+                if (Security::canAsAdmin() === true) {
                     header('Location:/admin/dashboard');
                 } else {
                     header('Location:/');
@@ -42,7 +43,7 @@ class User
 
     public function logout()
     {
-        echo "Se deco";
+        Security::logout();
     }
 
     public function register()

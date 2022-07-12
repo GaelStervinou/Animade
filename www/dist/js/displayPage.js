@@ -6,11 +6,28 @@ window.onload = function(){
     document.querySelector('#comment_page').addEventListener("click",
         commentPage, false);
 
-    var signaler = document.querySelectorAll('.signaler');
-    for (var i = 0 ; i < signaler.length; i++) {
-        signaler[i].addEventListener("click", signalerCommentaire, false);
-    }
+    $('.like_action').on('click', function(e){
+        element = $(this);
+        $.get("/like?page_id="+element.data('page_id')+"&like="+element.data('like'), function (data){
 
+            if(element.data('like') === 1){
+                var color = 'green';
+                $('#unlike').removeAttr('style').css('cursor', 'pointer');
+
+            }else{
+                var color = 'red';
+                $('#like').removeAttr('style').css('cursor', 'pointer');
+            }
+            if(data === "reset like"){
+                element.removeAttr('style').css('cursor', 'pointer');
+            }else{
+                element.css('border-style', 'dotted').css('border-color',color).css('cursor', 'pointer');
+            }
+
+            getCountLikes(element.data('page_id'))
+            getCountUnlikes(element.data('page_id'))
+        });
+    });
 }
 
 function loadCommentaireId(e){
@@ -31,20 +48,14 @@ function commentPage(e){
     window.location.href = '#form';
 }
 
-function signalerCommentaire(e){
-    e.preventDefault();
-    var element = $(this);
-    $.post("/commentaire/signaler",
-        {
-            commentaire_id: $(this).data('id'),
-        },
-        function(data, status){
-            if(status === "success") {
-                element.after("<p style='color:grey; font-style: italic'>Commentaire signalé</p>")
-                element.remove();
-            }else{
-                alert('tst');
-            }
-            alert( data );
-        })
+function getCountLikes(page_id){
+    $.get("/page/countLikes?page_id="+page_id, function(data){
+        $('#likesCount').text(data);
+    });
+}
+
+function getCountUnlikes(page_id){
+    $.get("/page/countUnlikes?page_id="+page_id, function(data){
+        $('#unlikesCount').text(data);
+    });
 }

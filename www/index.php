@@ -37,6 +37,7 @@ $routes = yaml_parse_file($routeFile);
 if( empty($routes[$uri]) || empty($routes[$uri]["controller"])  || empty($routes[$uri]["action"]) ){
         die("Page 404");
 }
+
 if(!empty($routes[$uri]["security"])){
     $security = $routes[$uri]["security"]['rule'];
     if(is_array($security)){
@@ -87,7 +88,12 @@ if( !method_exists($objectController, $action) ){
     die("La methode ".$action." n'existe pas");
 }
 
-$objectController->$action();
+try{
+    $objectController->$action();
+}catch(Exception $e){
+    die('test');
+}
+
 
 
 

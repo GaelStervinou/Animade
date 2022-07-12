@@ -60,19 +60,29 @@ class Personnage extends BaseSQL
     }
 
     /**
+     * @return MediaModel
+     */
+    public function getMedia(): ?MediaModel
+    {
+        if(!empty($this->hasMedia())){
+            $media = new MediaModel();
+            return $media->setId($this->getMediaId());
+        }else{
+            return false;
+        }
+    }
+
+    public function hasMedia()
+    {
+        return !empty($this->getMediaId());
+    }
+
+    /**
      * @param int|null $media_id
      */
     public function setMediaId(?int $media_id): void
     {
         $this->media_id = $media_id;
-    }
-
-    /**
-     * @return MediaModel|null
-     */
-    public function getMedia(): ?MediaModel
-    {
-        return $this->media;
     }
 
     /**
@@ -101,7 +111,7 @@ class Personnage extends BaseSQL
 
     public function save()
     {
-        parent::save();
+        return parent::save();
     }
 
     public function delete()
@@ -136,7 +146,59 @@ class Personnage extends BaseSQL
                     'max' => 65,
                     'error' => "Le nom est incorrect",
                 ],
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaNewPersonnage',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                    'required' => false,
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Image :',
+                    'id' => 'mediaNewPersonnage',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                    'required' => false,
+                ],
             ],
         ];
+    }
+
+    public function getFormUpdatePersonnage()
+    {
+        $this->setId($_GET['personnage_id']);
+
+        $form = [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Modifier personnage",
+                'title' => "Modifier personnage",
+            ],
+            'inputs' => $this->getFormNewPersonnage()['inputs'],
+        ];
+
+        $form['inputs']['nom']['default_value'] = $this->getNom();
+        $form['inputs']['media_name']['default_value'] = $this->getMedia()->getNom();
+        $form['inputs']['statut'] =
+            [
+                'type' => 'select',
+                'label' => 'Statut :',
+                'options' =>
+                    [
+                        'Supprimé' => -1,
+                        'Privé' => 1,
+                        'Public' => 2,
+                    ],
+                'id' => 'statutUpdatePersonnage',
+                'class' => 'inputRegister',
+                'error' => "Impossible d'attribuer ce statut",
+                'default_value' => $this->getStatut(),
+            ];
+
+        return $form;
     }
 }

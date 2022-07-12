@@ -69,51 +69,73 @@
                             </div>
                             <div class="row block-stat ">
                                 <div class="col-2 stat-nombre">
-                                    <p>Nombre d'articles</p>
-                                    <h1>18</h1>
+                                    <p>Nombre d'articles publiés</p>
+                                    <h1><?= count($pages) ?></h1>
                                 </div>
                                 <div class="col-2 stat-nombre">
-                                    <p>Nombre de visiteurs ce mois</p>
-                                    <h1>3894</h1>
+                                    <p>Nombre d'utilisateurs inscrits</p>
+                                    <h1><?= count($users) ?></h1>
                                 </div>
                                 <div class="col-2 stat-nombre">
-                                    <p>Nombre d'utilisateurs</p>
-                                    <h1>745</h1>
-                                </div>
-                                <div class="col-2 stat-nombre">
-                                    <p>Fréquentation par rapport au mois dernier</p>
-                                    <h1>+ 18% !</h1>
+                                    <p>Nombre de commentaires signalés</p>
+                                    <h1><?= count($signalements) ?></h1>
                                 </div>
                             </div>
                             <div class="articles-dashboard">
-                                <h2>Vos derniers articles</h2>
-                                <h3>Le voyage</h3>
-                                <p>
-                                    Cet article parle du dernier épisode, vu le 02.03.2022 pour la première fois sur la chaîne XXXX.
-                                    Version française uniquement.
-                                </p>
-                                <p>
-                                    À l'arrivée sur l'île de XXXX, ......
+                                <h1>Articles :</h1>
+                                <table id="table_id" class="display" style="width: 1200px;">
+                                    <thead>
+                                    <tr>
+                                        <th>Catégorie</th>
+                                        <th>Titre</th>
+                                        <th>Description</th>
+                                        <th>Personnage</th>
+                                        <th>Chapitre</th>
+                                        <th>Auteur</th>
+                                        <th>Date de publication</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    foreach ($pages as $page):
+                                        ?>
+                                        <tr style="text-align: center">
+                                            <!-- TODO: rendre les infos cliquables ( on clique sur le nom du perso et on arrive sur sa fiche par ex)!-->
+                                            <td><a href="/categorie?categorie_id=<?= $page->getCategorieId()?>"><?= $page->getCategorie()->getNom()?></a></td>
+                                            <td><a href="/page?page=<?= $page->getSlug()?>"><?= $page->getTitre()?></a></td>
+                                            <td><?= substr($page->getDescription(), 0, 40)?></td>
+                                            <td>
+                                                <?php
+                                                if(!empty($page->getPersonnageId())): ?>
+                                                    <a href="/personnage?personnage_id=<?= $page->getPersonnageId()?>"><?= $page->getPersonnage()->getNom()?></a>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if(!empty($page->getChapitreId())): ?>
+                                                    <a href="/chapitre?chapitre_id=<?= $page->getChapitreId()?>"><?= $page->getChapitre()->getTitre()?></a>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><a href="/page/pages?auteur_id=<?= $page->getAuteurId()?>"><?= $page->getAuteur()->getFullName() ?></a></td>
+                                            <td><?= date('Y-m-d', strtotime($page->getDateCreation()))?></td>
+                                        </tr>
+                                    <?php
+                                    endforeach;
+                                    ?>
 
-                                </p>
-                                <h3>Le périple</h3>
-                                <p>
-                                    Cet article parle du dernier épisode, vu le 02.03.2022 pour la première fois sur la chaîne XXXX.
-                                    Version française uniquement.
-                                </p>
-                                <p>
-                                    À l'arrivée sur l'île de XXXX, ......
-
-                                </p>
-                                <h3>La fuite</h3>
-                                <p>
-                                    Cet article parle du dernier épisode, vu le 02.03.2022 pour la première fois sur la chaîne XXXX.
-                                    Version française uniquement.
-                                </p>
-                                <p>
-                                    À l'arrivée sur l'île de XXXX, ......
-
-                                </p>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>Catégorie</th>
+                                        <th>Titre</th>
+                                        <th>Description</th>
+                                        <th>Personnage</th>
+                                        <th>Chapitre</th>
+                                        <th>Auteur</th>
+                                        <th>Date de publication</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -122,3 +144,12 @@
         </main>
     </body>
 </html>
+
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            pagingType: 'full_numbers',
+        });
+    });
+</script>
