@@ -10,13 +10,19 @@ use App\Core\SMTP;
 use App\Core\Exception;
 use App\Core\Security;
 
+use App\Helpers\MediaManager;
 use App\Helpers\UrlHelper;
 use App\Model\User as UserModel;
+use App\Model\Media;
+use JetBrains\PhpStorm\NoReturn;
 
 class User
 {
 
-    public function login()
+    /**
+     * @return void
+     */
+    public function login(): void
     {
         $user = new UserModel();
         if (!empty($_POST["password"]) && !empty($_POST["email"])) {
@@ -41,14 +47,19 @@ class User
         }
     }
 
-    public function logout()
+    /**
+     * @return void
+     */
+    #[NoReturn] public function logout(): void
     {
         Security::logout();
     }
 
-    public function register()
+    /**
+     * @return void
+     */
+    public function register(): void
     {
-        $tokenVerification = "1536DHDCICuudz7";
         $user = new UserModel();
         if (!empty($_POST)) {
             if (!empty($_FILES)) {
@@ -59,23 +70,32 @@ class User
 
             $result = Validator::run($user->getFormRegister(), $_POST);
             if (empty($result)) {
-                $user->setEmail($_POST["email"]);
-                $user->setFirstname($_POST["firstname"]);
-                $user->setLastname($_POST["lastname"]);
-                $user->setPassword($_POST["password"]);
-                $user->setStatus(1);
-                $user->setRoleId(1);
-                $user->setEmailToken($tokenVerification);
-                $user->save();
+                try{
+                    $user->beginTransaction();
 
-                $mail = new PHPMailer();
-                $options = [
-                    'subject' => 'Validation de votre e-mail pour votre compte Animade',
-                    'body' => "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant : http:localhost/Core/PHPMailer/verifyAccount.php?email=" . $user->getEmail() . "&emailToken=" . $tokenVerification,
-                ];
-                $mail->sendEmail($_POST["email"], $options);
+                    $user->setEmail($_POST["email"]);
+                    $user->setFirstname($_POST["firstname"]);
+                    $user->setLastname($_POST["lastname"]);
+                    $user->setPassword($_POST["password"]);
+                    $user->setStatus(1);
+                    $user->setRoleId(1);
+                    $user->generateEmailToken();
+                    $mail = new PHPMailer();
+                    $options = [
+                        'subject' => 'Validation de votre e-mail pour votre compte Animade',
+                        'body' => "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant : http://{$_SERVER['HTTP_HOST']}/verifyAccount.php?email={$user->getEmail()}&emailToken={$user->getEmailToken()}",
+                    ];
+                    $mail->sendEmail($_POST["email"], $options);
 
-                $view = new View("verifyAccount");
+                    $user->save();
+                    $user->commit();
+
+                    $view = new View("verifyAccount");
+
+                }catch(Exception $e){
+                    echo $e->getMessage();
+                }
+
             } else {
                 echo "Formulaire invalide :<br>";
                 foreach ($result as $error) {
@@ -91,7 +111,10 @@ class User
         $view->assign('user', $user);
     }
 
-    public function verifyAccount()
+    /**
+     * @return void
+     */
+    public function verifyAccount(): void
     {
         $user = new UserModel();
 
@@ -103,7 +126,7 @@ class User
                 $user->setStatus(2);
                 $user->save();
                 $_SESSION['user']['status'] = 2;
-                $view = new View("dashboard");
+                $view = new View("/");
                 $view->assign("firstname", $user->getFirstname());
                 $view->assign("lastname", $user->getLastname());
                 $user->commit();
@@ -115,7 +138,10 @@ class User
         }
     }
 
-    public function update()
+    /**
+     * @return void
+     */
+    public function update(): void
     {
         if (!empty($_POST)) {
             if (!empty($_FILES)) {
@@ -126,6 +152,7 @@ class User
             $user = UrlHelper::getUrlParameters($_GET)['object'];
 
             $result = Validator::run($user->getFormUpdate($user->getId()), $_POST);
+
             if (empty($result)) {
                 try {
                     $user->beginTransaction();
@@ -142,16 +169,21 @@ class User
                     if (!empty($_POST['status'])) {
                         $user->setStatus($_POST['status']);
                     }
+
                     if (!empty($_POST['role_id'])) {
-                        if ($_POST['role_id'] == 4) {
-                            http_response_code(403);
-                            die;
-                        }
                         $user->setRoleId($_POST["role_id"]);
+                    }
+                    if(!empty($_POST['media']['tmp_name'])){
+                        if($user->hasMedia() === true){
+                            $user->getMedia()->delete();
+                        }
+                        $user->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $user));
+                    }elseif(!empty($_POST['select_media'])){
+                        $user->setMediaId($_POST['select_media']);
                     }
                     $user->save();
                     $user->commit();
-                    if (Security::isAdmin()) {
+                    if (Security::canAsAdmin() === true) {
                         header('Location:/admin/users');
                     } else {
                         header('Location:/');
@@ -169,7 +201,10 @@ class User
         }
     }
 
-    public function delete()
+    /**
+     * @return void
+     */
+    public function delete(): void
     {
         $user = UrlHelper::getUrlParameters($_GET)['object'];
         try {

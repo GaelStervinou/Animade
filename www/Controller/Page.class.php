@@ -11,6 +11,7 @@ use App\Helpers\UrlHelper;
 use App\Model\User as UserModel;
 use App\Model\Page as PageModel;
 use App\Model\Personnage;
+use App\Model\Chapitre;
 use App\Model\Commentaire as CommentaireModel;
 
 class Page{
@@ -50,6 +51,8 @@ class Page{
 
                     $page->save();
                     $page->commit();
+
+                    header("Location:/page?page={$page->getSlug()}");
                 }catch (Exception $e) {
                     $page->rollback();
                     var_dump($e->getMessage());die;
@@ -74,8 +77,12 @@ class Page{
             if(!empty($_GET)){
                 if(!empty($_GET['personnage'])){
                     $personnage = new Personnage();
-                    $_GET['personnage_id'] = $personnage->getPersonnageFromNom($_GET['personnage'])->getId();
+                    $_GET['personnage_id'] = $personnage->getPersonnageFromNom(urldecode($_GET['personnage']))->getId();
                     unset($_GET['personnage']);
+                }elseif(!empty($_GET['chapitre'])) {
+                    $chapitre = new Chapitre();
+                    $_GET[ 'chapitre_id' ] = $chapitre->getChapitreFromTitre(urldecode($_GET[ 'chapitre' ]))->getId();
+                    unset($_GET[ 'chapitre' ]);
                 }
 
                 $parameters = $_GET;
@@ -168,8 +175,8 @@ class Page{
                     }
 
                     if(!empty($_POST['media']['tmp_name'])){
-                        if(!empty($page->getMediaId())){
-                            MediaManager::deleteFile($page->getMediaId());
+                        if($page->hasMedia() === true){
+                            $page->getMedia()->delete();
                         }
                         $page->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $page));
                     }elseif(!empty($_POST['select_media'])){

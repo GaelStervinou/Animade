@@ -25,6 +25,10 @@ class UrlHelper
                 $personnage = new Personnage();
                 $result['personnage'] = $personnage->getPersonnageFromNom($value);
             }
+            elseif($param === 'chapitre'){
+                $chapitre = new Chapitre();
+                $result['chapitre'] = $chapitre->getChapitreFromTitre($value);
+            }
             elseif(str_contains($param, '_id')){
                 $class = ucfirst("App\Model\\".str_replace("_id", "", $param));
                 $object = new $class();

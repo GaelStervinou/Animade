@@ -48,6 +48,9 @@
                                     case 'personnages':
                                         echo '<td><a href="/page/pages?personnage_id='.$res->getId().'">'.$res->getNom().'</a></td>';
                                         break;
+                                    case 'chapitres':
+                                        echo '<td><a href="/page/pages?chapitre_id='.$res->getId().'">'.$res->getTitre().'</a></td>';
+                                        break;
                                 }
                                 if(method_exists($res, "getDescription")){
                                     echo '<td>'.substr($res->getDescription(), 0, 40).'</td>';

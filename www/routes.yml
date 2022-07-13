@@ -195,6 +195,23 @@
 
 
 
+#chapitre
+
+/chapitre/new:
+  controller: chapitre
+  action: create
+  security:
+    rule: admin
+
+/chapitre:
+  controller: chapitre
+  action: read
+  security:
+    rule: default
+
+
+
+
 #likes
 /like:
   controller: like

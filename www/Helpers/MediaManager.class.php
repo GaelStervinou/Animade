@@ -11,11 +11,11 @@ class MediaManager{
     public static function saveFile(string $filename, mixed $data, object $object)
     {
         if(self::verifyImageType($data['type']) === false){
-            Security::return415("Le type de fichier n'est pas autorisé");
+            Security::returnError(415, "Le type de fichier n'est pas autorisé");
         }
 
-        if(self::veridyNameUnicrity($filename) === false){
-            Security::return422("Le nom du fichier n'est pas unique");
+        if(self::verifyNameUnicrity($filename) === false){
+            Security::returnError(422, "Le nom du fichier n'est pas unique");
         }
 
         $chemin = 'assets/images/'.str_replace(" ", "_",$filename).".".str_replace("image/", "",$data["type"]);
@@ -32,17 +32,17 @@ class MediaManager{
     {
         $media = new Media();
         $media->setId($media_id);
-
         $media->delete();
+
     }
 
     public static function verifyImageType(string $type): bool
     {
-        $allowed = array('image/jpeg', 'image/jpg');
+        $allowed = array('image/jpeg', 'image/jpg', 'image/png');
         return in_array($type, $allowed, true);
     }
 
-    public static function veridyNameUnicrity(string $name): bool
+    public static function verifyNameUnicrity(string $name): bool
     {
         $media = new Media();
         if($media->findOneBy($media->getTable(), ['nom' => $name])){

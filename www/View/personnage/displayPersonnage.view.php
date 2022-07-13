@@ -5,13 +5,17 @@
 </head>
 <h1><?php use App\Core\Security;
 
-    echo $personnage->getNom(); ?></h1>
+    echo $personnage->getNom();
 
-<img src="<?= $personnage->getMedia()->getChemin()?>" alt="Image de l'article"
+    if($personnage->hasMedia() === true):
+    ?></h1>
+
+<img src="<?= $personnage->getMedia()->getChemin()?>" alt="Image du personnage"
      width="300"
      height="300" >
 <?php
-    if(Security::isAdmin()):
+endif;
+    if(Security::canAsAdmin()):
 ?>
         <a href="/personnage/update?personnage_id=<?= $personnage->getId() ?>">Modifier</a>
 <?php

@@ -23,7 +23,7 @@ class BaseSQL implements QueryBuilder
         // cf exo design pattern
 
         try {
-            $this->pdo = new \PDO("mysql:host=" . DBHOST . ";port=" . DBPORT . ";dbname=" . DBNAME, DBUSER, DBPWD);
+            $this->pdo = new \PDO("mysql:host=" . DBHOST . ";port=" . DBPORT . ";dbname=" . DBNAME . ";charset=utf8mb4", DBUSER, DBPWD);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\Exception $e) {
             die("Erreur SQL " . $e->getMessage());
@@ -49,7 +49,9 @@ class BaseSQL implements QueryBuilder
             $sql = "INSERT INTO " . $this->table . "(" . implode(",", array_keys($columns)) . ")
         VALUES(:" . implode(",:", array_keys($columns)) . ")";
         }
+
         $queryPrepared = $this->pdo->prepare($sql);
+
         $queryPrepared->execute($columns);
         return $this->pdo->lastInsertId();
     }
@@ -153,6 +155,9 @@ return $objectList;
     {
         $this->select($table, ['*']);
         foreach ($where as $column => $value){
+            if(str_contains($value, "'")){
+                $value = str_replace("'", "\'", $value);
+            }
             $this->where($column, $value);
         }
         return $this->fetchQuery(get_called_class(), 'one');

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\Page;
 use App\Model\User;
+use App\Model\Chapitre;
 use App\Model\Personnage;
 use App\Model\Categorie;
 use App\Core\View;
@@ -19,6 +20,7 @@ class Recherche{
         $resultats['auteurs'] = $this->rechercheAuteurs($recherche);
         $resultats['personnages'] = $this->recherchePersonnages($recherche);
         $resultats['categories'] = $this->rechercheCategories($recherche);
+        $resultats['chapitres'] = $this->rechercheChapitres($recherche);
 
         $view = new View("recherche/displayRecherche");
         $view->assign("resultats", $resultats);
@@ -130,5 +132,19 @@ class Recherche{
             }
         }
         return $categorieList;
+    }
+
+    public function rechercheChapitres ($recherche)
+    {
+        $chapitre = new Chapitre();
+        $chapitres = $chapitre->findManyBy([
+            'titre' => [
+                "operator" =>' LIKE ',
+                "value" => '%'.$recherche.'%',
+            ],
+            'statut' => 2,
+        ]);
+
+        return $chapitres;
     }
 }
