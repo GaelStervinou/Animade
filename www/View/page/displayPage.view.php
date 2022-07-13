@@ -36,7 +36,7 @@
 ?>
 <div>
 
-    <img src="../assets/images/<?= $page->getMedia()->getChemin()?>" alt="Image de l'article"
+    <img src="../<?= $page->getMedia()->getChemin()?>" alt="Image de l'article"
          width="100"
          height="150" >
 </div>
@@ -48,7 +48,7 @@
 </div>
 
 <div>
-    <?php echo $page->getDateCreation()
+    <?= date('d M, Y', strtotime($page->getDateCreation()))
     ?>
 </div>
 <div>

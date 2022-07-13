@@ -1490,9 +1490,10 @@ class PHPMailer
             }
 
             return $this->postSend();
+            //return true;
         } catch (Exception $exc) {
             $this->mailHeader = '';
-            $this->setError($exc->getMessage());
+            //$this->setError($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
             }
@@ -2078,7 +2079,7 @@ class PHPMailer
 
         $this->smtp->setTimeout($this->Timeout);
         $this->smtp->setDebugLevel($this->SMTPDebug);
-        $this->smtp->setDebugOutput($this->Debugoutput);
+        //$this->smtp->setDebugOutput($this->Debugoutput);
         $this->smtp->setVerp($this->do_verp);
         $hosts = explode(';', $this->Host);
         $lastexception = null;
@@ -5042,17 +5043,14 @@ class PHPMailer
     public function sendEmail(string $receiver, array $options)
     {
         try {
-            //Configuration
-            $this->SMTPDebug = SMTP::DEBUG_SERVER; //Informations de debug
-
             // On configure le SMTP
-            // déclarer des constantes pour ça
+
             $this->isSMTP();
-            $this->Host ="ssl://smtp.gmail.com";
+            $this->Host = SMTP_HOST;
             $this->Port = 465;
             $this->SMTPAuth = true;
-            $this->Username = "thomasesgipa@gmail.com";
-            $this->Password = "fxopxxzbyzfbymmq";
+            $this->Username = SMTP_USERNAME;
+            $this->Password = SMTP_PASSWORD;
 
             //Charset
             $this->Charset = "utf-8";
@@ -5061,7 +5059,7 @@ class PHPMailer
             $this->addAddress($receiver);
 
             //Expéditeur ( déclarer une constante pour ça )
-            $this->setFrom("thomasesgipa@gmail.com");
+            $this->setFrom(SMTP_USERNAME);
 
             //Contenu
             $this->Subject = $options['subject'] ?? '';

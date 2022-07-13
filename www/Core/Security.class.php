@@ -5,50 +5,53 @@ namespace App\Core;
 use App\Core\View;
 use App\Helpers\UrlHelper;
 use App\Model\Categorie;
+use App\Model\Chapitre;
 use App\Model\Commentaire;
 use App\Model\Page as PageModel;
 use App\Model\Personnage;
 use App\Model\User as UserModel;
+use JetBrains\PhpStorm\NoReturn;
 
 class Security
 {
 
-    public static function return403(string $message=null)
+    /**
+     * @param int $errorCode
+     * @param string|null $message
+     * @return void
+     */
+    #[NoReturn] public static function returnError(int $errorCode, string $message=null): void
     {
+        http_response_code($errorCode);
+        $view = new View("security/{$errorCode}", "without");
+        if($message !== null){
+            $view->assign("message", $message);
+        }
+        die;
+    }
+
+
+    public static function return403(string $message=null): bool
+    {
+        //var_dump( debug_backtrace()[1]['function']);die;
         http_response_code(403);
         $view = new View("security/403");
-        if($message !== null){
-            $view->assign("message", $message);
+        if($message === null){
+            $message = "Vous n'avez pas les droits d'accès à cette page";
         }
-        die;
+        $view->assign("message", $message);
+        return false;
     }
 
-    public static function return415(string $message=null)
-    {
-        http_response_code(415);
-        $view = new View("security/403");
-        if($message !== null){
-            $view->assign("message", $message);
-        }
-        die;
-    }
-
-    public static function return422(string $message=null)
-    {
-        http_response_code(422);
-        $view = new View("security/403");
-        if($message !== null){
-            $view->assign("message", $message);
-        }
-        die;
-    }
-
+    /**
+     * @return bool|void
+     */
     public static function isConnected()
     {
         if(!empty($_SESSION['user']['id']) && !empty($_SESSION['user']['token']) && self::verifyStatut($_SESSION['user']['status'])){
             $user = new UserModel();
             $response = $user->verifyToken($_SESSION['user']['id'], $_SESSION['user']['token']);
-            if($response == true){
+            if($response){
                 return true;
             }
         }
@@ -56,52 +59,68 @@ class Security
         die();
     }
 
+    /**
+     * @return bool|void
+     */
     public static function isUser()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] == 1){
+        if($_SESSION['user']['role_id'] === 1){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool|void
+     */
     public static function isAuthor()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] == 2){
+        if($_SESSION['user']['role_id'] === 2){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool|void
+     */
     public static function isAdmin()
     {
         self::isConnected();
         if($_SESSION['user']['role_id'] >= 3){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool|void
+     */
     public static function isSuperAdmin()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] == 4){
+        if($_SESSION['user']['role_id'] === 4){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool
+     */
     public static function canAsAdmin(): bool
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] >= 3){
-            return true;
-        }
-        return false;
+        return $_SESSION[ 'user' ][ 'role_id' ] >= 3;
     }
 
 
+    /**
+     * @param null $user
+     * @return void
+     */
     public static function login($user=null): void
     {
         $user->save();
@@ -115,121 +134,170 @@ class Security
             ];
     }
 
-    public static function logout(): void
+    /**
+     * @return void
+     */
+    #[NoReturn] public static function logout(): void
     {
         session_destroy();
         header('Location:/login');
         die();
     }
 
+    /**
+     * @param PageModel $page
+     * @param UserModel $user
+     * @return void|bool
+     */
     public static function canAccessPage(PageModel $page, UserModel $user)
     {
-        if(self::verifyStatut($page->getStatut()) || $page->getAuteurId() == $user->getId()){
+        if (self::verifyStatut($page->getStatut()) || $page->getAuteurId() === $user->getId()) {
             return true;
-        }elseif($page->getStatut() == 1){
-            http_response_code(404);
-            die();
         }
-        self::return403();
+
+        if($page->getStatut() === 1) {
+            self::returnError(404);
+        }
+        self::returnError(403);
     }
 
-    public static function canAccessCommentaire(Commentaire $commentaire, UserModel $user)
+    /**
+     * @param Commentaire $commentaire
+     * @return void|bool
+     */
+    public static function canAccessCommentaire(Commentaire $commentaire)
     {
-        if(self::verifyStatut($commentaire->getStatut() && self::canDelete('commentaire'))
-            || self::isAdmin()){
+        if (self::isAdmin() || 
+            self::verifyStatut($commentaire->getStatut() && self::canDelete('commentaire'))) {
             return true;
-        }elseif($commentaire->getStatut() == 1){
-            http_response_code(404);
-            die();
         }
-        self::return403();
+
+        if($commentaire->getStatut() === 1) {
+            self::returnError(404);
+        }
+        self::returnError(403);
     }
 
-    public static function canAccessPersonnage(Personnage $personnage, UserModel $user)
+    /**
+     * @param Personnage $personnage
+     * @return void|bool
+     */
+    public static function canAccessPersonnage(Personnage $personnage)
     {
-        if(self::verifyStatut($personnage->getStatut()) || self::isAdmin()){
+        if( self::isAdmin() || self::verifyStatut($personnage->getStatut())){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
-    public static function canAccessCategorie(Categorie $categorie, UserModel $user)
+    /**
+     * @param Chapitre $chapitre
+     * @return void|bool
+     */
+    public static function canAccessChapitre(Chapitre $chapitre)
     {
-        if(self::verifyStatut($categorie->getStatut()) || self::isAdmin()){
+        if(self::isAdmin() || self::verifyStatut($chapitre->getStatut())){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @param Categorie $categorie
+     * @return void|bool
+     */
+    public static function canAccessCategorie(Categorie $categorie)
+    {
+        if(self::isAdmin() || self::verifyStatut($categorie->getStatut())){
+            return true;
+        }
+        self::returnError(403);
+    }
+
+    /**
+     * @param string $object
+     * @return bool|void
+     */
     public static function canDelete(string $object)
     {
-        switch ($object){
-            case 'page':
-                return Security::canDeletePage();
-                break;
-            case  'commentaire':
-                return Security::canDeleteCommentaire();
-                break;
-            default:
-                return Security::isSuperAdmin();
-        }
+        return match ($object) {
+            'page' => self::canDeletePage(),
+            'commentaire' => self::canDeleteCommentaire(),
+            default => self::isSuperAdmin(),
+        };
     }
 
+    /**
+     * @param string $object
+     * @return bool|void
+     */
     public static function canUpdate(string $object)
     {
-        switch ($object){
-            case 'user':
-                return Security::canUpdateUser();
-                break;
-            case 'page':
-                return Security::canUpdatePage();
-            default:
-                return Security::isSuperAdmin();
-        }
+        return match ($object) {
+            'user' => self::canUpdateUser(),
+            'page' => self::canUpdatePage(),
+            default => self::isSuperAdmin(),
+        };
     }
 
+    /**
+     * @return bool|void
+     */
     public static function canDeletePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
-        if($page->getAuteurId() == $_SESSION['user']['id'] || Security::isAdmin()){
+        if(self::isAdmin() || $page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool|void
+     */
     public static function canDeleteCommentaire()
     {
         $commentaire = UrlHelper::getUrlParameters($_GET)['object'];
-        if($commentaire->getAuteurId() == $_SESSION['user']['id'] || Security::isAdmin()){
+        if(self::isAdmin() || $commentaire->getAuteurId() === $_SESSION['user']['id'] ){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool|void
+     */
     public static function canUpdateUser()
     {
         $user = UrlHelper::getUrlParameters($_GET)['object'];
-        if($user->getId() == $_SESSION['user']['id'] || Security::isAdmin()){
+        if(self::isAdmin() || $user->getId() === $_SESSION['user']['id']){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
+    /**
+     * @return bool|void
+     */
     public static function canUpdatePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
-        if($page->getAuteurId() == $_SESSION['user']['id']){
+        if($page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
-        self::return403();
+        self::returnError(403);
     }
 
-    public static function displayEditButton(object $object)
+    /**
+     * @param object $object
+     * @return string
+     */
+    public static function displayEditButton(object $object): string
     {
         switch (str_replace("App\\Model\\", "", get_class($object))){
             case 'Commentaire':
             case 'Page':
-                if($object->getAuteurId() == $_SESSION['user']['id']){
+                if($object->getAuteurId() === $_SESSION['user']['id']){
                     return "yes";
                 }
                 break;
@@ -238,28 +306,34 @@ class Security
         }
         return "no";
     }
-    public static function displayCommentCreation()
+
+    /**
+     * @return string
+     */
+    public static function displayCommentCreation(): string
     {
-        if(Security::getUser()->getRoleId() == 1){
+        if(self::getUser()->getRoleId() === 1){
             return "yes";
-        }else{
-            return "no";
         }
+
+        return "no";
     }
 
-    public static function verifyStatut($statut)
+    /**
+     * @param int $statut
+     * @return bool|string
+     */
+    public static function verifyStatut(int $statut): bool|string
     {
-        if($statut == 2){
-            return true;
-        }else{
-            return false;
-        }
+        return $statut === 2;
     }
 
+    /**
+     * @return bool|void
+     */
     public static function getUser()
     {
-        $user = new UserModel();
-        return $user->setId($_SESSION['user']['id']);
+        return (new UserModel())->setId($_SESSION['user']['id']);
     }
 
 }

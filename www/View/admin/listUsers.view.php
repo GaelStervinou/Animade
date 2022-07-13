@@ -22,10 +22,17 @@
                 <td><?php echo $user->getRoleId() ?></td>
                 <?php if ($user->getRoleId() <= 2) : ?>
                     <td><a href="/user/update?user_id=<?php echo $user->getId() ?>">Modifier</a></td>
-                <?php endif; ?>
+                <?php else: ?>
+                    <td></td>
+                <?php
+                endif; ?>
                 <?php if ($user->getRoleId() <= 2) : ?>
                     <td><a href="/user/delete?user_id=<?php echo $user->getId() ?>">Supprimer</a></td>
-                <?php endif; ?>
+                <?php
+                else: ?>
+                    <td></td>
+                <?php
+                endif; ?>
             </tr>
         <?php endforeach; ?>
 

@@ -60,19 +60,29 @@ class Chapitre extends BaseSQL{
     }
 
     /**
+     * @return MediaModel
+     */
+    public function getMedia(): ?MediaModel
+    {
+        if(!empty($this->hasMedia())){
+            $media = new MediaModel();
+            return $media->setId($this->getMediaId());
+        }else{
+            return false;
+        }
+    }
+
+    public function hasMedia()
+    {
+        return !empty($this->getMediaId());
+    }
+
+    /**
      * @param int|null $media_id
      */
     public function setMediaId(?int $media_id): void
     {
         $this->media_id = $media_id;
-    }
-
-    /**
-     * @return Media
-     */
-    public function getMedia(): ?Media
-    {
-        return $this->media;
     }
 
     /**
@@ -101,12 +111,64 @@ class Chapitre extends BaseSQL{
 
     public function save()
     {
-        parent::save();
+        return parent::save();
     }
 
     public function delete()
     {
-        $this->setStatut(-1);
-        $this->save();
+        parent::save();
     }
+
+    public function getChapitreFromTitre(string $titre): ?Chapitre
+    {
+        return $this->findOneBy($this->getTable(), ['titre' => $titre]);
+    }
+
+    public function toString(): string
+    {
+        return $this->getTitre();
+    }
+
+    public function getNewChapitreForm()
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Nouveau chapitre",
+                'title' => "Nouveau chapitre",
+            ],
+            'inputs' => [
+                'titre' => [
+                    'type' => 'text',
+                    'label' => 'Titre :',
+                    'placeholder' => 'Nom',
+                    'id' => 'titreNewChapitre',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'min' => 2,
+                    'max' => 75,
+                    'error' => "Le titre est incorrect",
+                ],
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaNewChapitre',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                    'required' => false,
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Image :',
+                    'id' => 'mediaNewChapitre',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                    'required' => false,
+                ],
+            ],
+        ];
+    }
+
 }

@@ -5,13 +5,19 @@ use App\Model\Commentaire as CommentaireModel;
 use App\Model\Signalement;
 
 class Validator{
-    // modifier les messages d'erreurs par la clé error renseigné dans config
-    public static function run($config, $data, $hiddenFields=0): array
+    // TODO modifier les messages d'erreurs par la clé error renseignée dans config
+    /**
+     * @param array $config
+     * @param array $data
+     * @param int $hiddenFields
+     * @return array
+     */
+    public static function run(array $config, array $data, int $hiddenFields=0): array
     {
         $result = [];
         $inputs_nb = self::countAuthorizedFields($config['inputs'], $hiddenFields);
 
-        if(count($data) != $inputs_nb){
+        if(count($data) !== $inputs_nb){
             $result[] = "Formulaire modifié pas l'utilistaeur";
         }
         foreach($config['inputs'] as $name => $input){
@@ -19,21 +25,21 @@ class Validator{
             if(!isset($input['authorized'])){
                 $input['authorized'] = true;
             }
-            if($input['authorized'] == true){
+            if($input['authorized'] === true){
                 if(!isset($data[$name]) && $input['required'] === true){
                     $result[] = "Il manque des champs";
                 }
                 if(!empty($input['required']) && empty($data[$name])){
                     $result[] = "Vous devez remplir le champs ". $name;
                 }
-                if($input['type'] == 'password' && !self::checkPassword($data[$name])){
+                if($input['type'] === 'password' && !empty($data[$name]) && !self::checkPassword($data[$name])){
                     $result[] = "Mot de passe incorrect";
                 }
-                if($input['type'] == 'email' && !self::checkEmail($data[$name])){
+                if($input['type'] === 'email' && !self::checkEmail($data[$name])){
                     $result[] = "Email incorrect";
                 }
-                if($input['type'] == 'select' && !empty($data[$name]) && !in_array($data[$name], array_values($input['options']))){
-                    $result[] = "Valeur incorrecte pour le champs " . $name;
+                if($input['type'] === 'select' && !empty($data[$name]) && !in_array($data[ $name ], array_values($input[ 'options' ]), true)){
+                    Security::returnError(403, "Option non autorisée pour le champs ".$name);
                 }
             }
         }
@@ -42,26 +48,44 @@ class Validator{
 
     public static function checkPassword($pwd): bool
     {
-        return strlen($pwd) >=8 || $pwd <= 16
-            && preg_match("/[a-z]/i", $pwd, $result)
-            && preg_match("/[0-9]/", $pwd, $result);
+        return strlen($pwd) >=8 || ($pwd <= 16
+                //&& preg_match("/[a-z]/i", $pwd, $result)
+                && preg_match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", $pwd, $result));
     }
 
-    public static function checkEmail($email): bool
+    /**
+     * @param string $email
+     * @return bool
+     */
+    public static function checkEmail(string $email): bool
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    public static function sanitizeWysiwyg($content)
+    /**
+     * @param string $content
+     * @return string
+     */
+    public static function sanitizeWysiwyg(string $content): string
     {
         return trim($content);
     }
-    public static function sanitizeSlug($slug)
+
+    /**
+     * @param string $slug
+     * @return string
+     */
+    public static function sanitizeSlug(string $slug): string
     {
         return str_replace(" ", "_",trim($slug));
     }
 
-    public static function countAuthorizedFields($inputs, $hiddenFields=0): int
+    /**
+     * @param array $inputs
+     * @param int $hiddenFields
+     * @return int
+     */
+    public static function countAuthorizedFields(array $inputs, int $hiddenFields=0): int
     {
         $inputs_nb = 0;
         foreach($inputs as $name => $input){
@@ -69,13 +93,17 @@ class Validator{
                 $input['authorized'] = true;
             }
             if($input['authorized'] === true){
-                $inputs_nb += 1;
+                ++$inputs_nb;
             }
         }
         return $inputs_nb+$hiddenFields;
     }
 
-    public static function checkIfCommentExists($commentaire_id)
+    /**
+     * @param $commentaire_id
+     * @return bool|string
+     */
+    public static function checkIfCommentExists($commentaire_id): bool|string
     {
         $commentaire = new CommentaireModel();
         if($commentaire->findOneBy($commentaire->getTable(), ['id' => $commentaire_id])->getAuteurId() ===
@@ -89,7 +117,11 @@ class Validator{
 
     }
 
-    public static function checkIfNotAlreadySignaled($commentaire_id)
+    /**
+     * @param $commentaire_id
+     * @return bool|string
+     */
+    public static function checkIfNotAlreadySignaled($commentaire_id): bool|string
     {
         $signalement = new Signalement();
         if($signalement->findOneBy($signalement->getTable(), ['commentaire_id' => $commentaire_id, 'user_id' => Security::getUser()->getid()])) {
@@ -99,7 +131,11 @@ class Validator{
         return true;
     }
 
-    public static function canSignalComment($commentaire_id)
+    /**
+     * @param $commentaire_id
+     * @return bool|string
+     */
+    public static function canSignalComment($commentaire_id): bool|string
     {
         if(self::checkIfCommentExists($commentaire_id) === true
             && self::checkIfNotAlreadySignaled($commentaire_id) === true){
@@ -108,4 +144,3 @@ class Validator{
         return 'error';
     }
 }
-?>

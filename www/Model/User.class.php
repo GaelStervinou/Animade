@@ -36,7 +36,12 @@ class User extends BaseSQL
 
     /** @var string|null $token */
     protected $token = null;
-    protected $emailToken;
+
+    /** @var string|null $emailToken */
+    protected $emailToken = null;
+
+    /** @var int|null $media_id */
+    protected $media_id = null;
 
     /**
      * @return int|null
@@ -178,11 +183,46 @@ class User extends BaseSQL
         return $this->email_verif_token;
     }
 
-    public function setEmailToken($emailToken): void
+    public function generateEmailToken(): void
     {
-        $this->emailToken = $emailToken;
+        $this->emailToken = str_shuffle(md5(uniqid()));
+    }
+    public function getEmailToken()
+    {
+        return $this->emailToken;
+    }
 
-        //return $this;
+    /**
+     * @return int|null
+     */
+    public function getMediaId(): ?int
+    {
+        return $this->media_id;
+    }
+
+    public function getMedia()
+    {
+        if(!empty($this->hasMedia())){
+            $media = new MediaModel();
+            $media = $media->setId($this->getMediaId());
+            return $media;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function hasMedia()
+    {
+        return !empty($this->getMediaId());
+    }
+
+    /**
+     * @param int|null $media_id
+     */
+    public function setMediaId(?int $media_id): void
+    {
+        $this->media_id = $media_id;
     }
 
     public function save()
@@ -364,6 +404,23 @@ class User extends BaseSQL
                     'error' => "Votre nom n'est pas correct",
                     'default_value' => $this->getLastname(),
                 ],
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'authorized' => !$admin_fields,
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaUpdateUser',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Avatar :',
+                    'authorized' => !$admin_fields,
+                    'id' => 'mediaUpdateUser',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                ],
                 'role_id' => [
                     'type' => 'select',
                     'authorized' => $admin_fields,
@@ -396,7 +453,7 @@ class User extends BaseSQL
                 ],
                 'password' => [
                     'type' => 'password',
-                    'authorized' => $this->getId() == $_SESSION['user']['id'],
+                    'authorized' => $this->getId() === $_SESSION['user']['id'],
                     'label' => 'Mot de passe :',
                     'placeholder' => 'Votre mot de passe',
                     'id' => 'pwdUpdate',
@@ -405,7 +462,7 @@ class User extends BaseSQL
                 ],
                 'passwordConfirmation' => [
                     'type' => 'password',
-                    'authorized' => $this->getId() == $_SESSION['user']['id'],
+                    'authorized' => $this->getId() === $_SESSION['user']['id'],
                     'label' => 'Mot de passe ( confirmation ) :',
                     'placeholder' => 'Confirmation du mot de passe',
                     'id' => 'pwdConfirmationUpdate',

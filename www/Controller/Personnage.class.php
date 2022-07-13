@@ -41,7 +41,7 @@ class Personnage
                     $id = $personnage->save();
 
                     $personnage->commit();
-                    header('Location:/pirate?pirate_id='.$id);
+                    header('Location:/personnage?personnage_id='.$id);
                 } catch (Exception $e) {
                     $personnage->rollback();
                     var_dump($e->getMessage());
@@ -72,7 +72,10 @@ class Personnage
         $view->assign("lastname", $user->getLastname());
         $view->assign("personnage", $parameters['object']);
         $view->assign("meta", [
-            'script' => ["../dist/js/displayPersonnage.js"],
+            'script' => [
+                "../dist/js/getUrlParameters.js",
+                "../dist/js/displayPersonnage.js",
+            ],
         ]);
     }
 

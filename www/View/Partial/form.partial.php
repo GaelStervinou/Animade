@@ -104,7 +104,7 @@
                         id="<?= $input['id']?>"
                         type="<?= $input['type']?>"
                         class="<?= $input['class']?>"
-                        accept="image/jpeg, image/jpg"
+                        accept="image/jpeg, image/jpg, image/png"
                     <?php
                     if(!empty($input['required'])):
                         ?>

@@ -144,7 +144,6 @@ class Media extends BaseSQL{
 
     public function delete()
     {
-        $this->setStatut(-1);
-        $this->save();
+        parent::delete();
     }
 }
