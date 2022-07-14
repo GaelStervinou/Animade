@@ -38,7 +38,7 @@ class Validator{
                 if($input['type'] === 'email' && !self::checkEmail($data[$name])){
                     $result[] = "Email incorrect";
                 }
-                if($input['type'] === 'select' && !empty($data[$name]) && !in_array($data[ $name ], array_values($input[ 'options' ]), true)){
+                if($input['type'] === 'select' && !empty($data[$name]) && !in_array($data[ $name ], array_values($input[ 'options' ]), false)){
                     Security::returnError(403, "Option non autorisée pour le champs ".$name);
                 }
             }

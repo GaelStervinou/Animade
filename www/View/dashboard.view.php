@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Dashboard</title>
-        <link rel="stylesheet" type="text/css" href="dist/main.css">
+        <link rel="stylesheet" type="text/css" href="../dist/main.css">
     </head>
     <body>
         <header id="site-header">

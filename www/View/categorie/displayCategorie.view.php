@@ -1,8 +1,5 @@
-<head>
-    <meta charset="utf-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="dist/main.css">
-</head>
+<?php include "View/head.view.php";?>
+
 <h1><?= $categorie->getNom(); ?></h1>
 <h2><?= $categorie->getDescription(); ?></h2>
 <?php

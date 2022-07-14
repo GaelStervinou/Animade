@@ -140,7 +140,7 @@
 
     <?php endswitch; endif; endforeach; ?>
     <div class="row">
-        <button id="submit" class="button" type="submit" value="<?= $config['config']['submit']?>">Connexion
+        <button id="submit" class="button" type="submit" value="<?= $config['config']['submit']?>"><?= $config['config']['submit']?>
     </div>
 
     <?php if($wysiwyg == 1): ?>
