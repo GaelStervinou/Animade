@@ -40,6 +40,9 @@ class User extends BaseSQL
     /** @var string|null $emailToken */
     protected $emailToken = null;
 
+    /** @var string|null $mdpToken */
+    protected $mdpToken = null;
+
     /** @var int|null $media_id */
     protected $media_id = null;
 
@@ -178,18 +181,27 @@ class User extends BaseSQL
         $this->token = str_shuffle(md5(uniqid()));
     }
 
-    public function getEmailVerifToken(): string
-    {
-        return $this->email_verif_token;
-    }
-
+    /**
+     * @return void
+     */
     public function generateEmailToken(): void
     {
         $this->emailToken = str_shuffle(md5(uniqid()));
     }
+
     public function getEmailToken()
     {
         return $this->emailToken;
+    }
+
+    public function generateMdpToken(): void
+    {
+        $this->mdpToken = str_shuffle(md5(uniqid()));
+    }
+
+    public function getMdpToken()
+    {
+        return $this->mdpToken;
     }
 
     /**
@@ -250,17 +262,6 @@ class User extends BaseSQL
         return parent::getUserFromEmail($email);
     }
 
-    public function storeUser(array $skip)
-    {
-        $storedObject = [];
-        foreach (get_object_vars($this) as $attribute => $value) {
-            if (!in_array($attribute, $skip)) {
-                $storedObject[$attribute] = $value;
-            }
-        }
-        return $storedObject;
-    }
-
     public function toString(): string
     {
         return $this->getFullName();
@@ -300,7 +301,12 @@ class User extends BaseSQL
                     'class' => 'inputRegister',
                     'required' => true,
                     'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
-                ]
+                ],
+                'pwdForgotten' => [
+                    'type' => 'a',
+                    'href' => '/forgottenPassword',
+                    'placeholder' => 'Mot de passe oublié ?',
+                ],
             ],
         ];
     }
@@ -471,6 +477,63 @@ class User extends BaseSQL
                     'error' => 'Votre mot de passe de confirmation ne correspond pas',
                 ],
             ],
+        ];
+    }
+
+    public function getEmailPasswordForgottenForm()
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Envoyer le mail",
+                'title' => "Envoyer le mail",
+            ],
+            'inputs' => [
+                'email' => [
+                    'type' => 'email',
+                    'label' => 'Email :',
+                    'placeholder' => 'Votre email',
+                    'id' => 'emailRegister',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'error' => 'Email incorrect',
+                    'errorUnicity' => 'Email existe déjà en bdd',
+                ],
+            ]
+        ];
+    }
+
+    public function getUpdatePasswordForm()
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Envoyer le mail",
+                'title' => "Envoyer le mail",
+            ],
+            'inputs' => [
+                'password' => [
+                    'type' => 'password',
+                    'label' => 'Mot de passe :',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'pwdUpdate',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ],
+                'passwordConfirmation' => [
+                    'type' => 'password',
+                    'label' => 'Mot de passe ( confirmation ) :',
+                    'placeholder' => 'Confirmation du mot de passe',
+                    'id' => 'pwdConfirmationUpdate',
+                    'class' => 'inputRegister',
+                    'confirm' => 'password',
+                    'required' => true,
+                    'error' => 'Votre mot de passe de confirmation ne correspond pas',
+                ],
+            ]
         ];
     }
 }

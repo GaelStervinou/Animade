@@ -2,15 +2,41 @@
 
 namespace App\Controller;
 
+use App\Core\Security;
 use App\Core\View;
 use App\Helpers\UrlHelper;
 use App\Model\Page;
+use App\Model\Chapitre;
 
 class General{
 
     public function home()
     {
-        echo "Welcome";
+        $view = new View("accueil");
+        $view->assign("user", Security::getUser());
+
+        $page = new Page();
+        $pages = $page->findManyBy(['statut' => 2], ['date_creation', 'DESC'], [0, 5]);
+        $view->assign("pages", $pages);
+
+        $firstday = date('Y/m/d', strtotime("sunday -1 week"));
+
+        $pages = $page->findManyBy(['statut' => 2, 'date_creation' => [
+            "operator" =>' >= ',
+            "value" => $firstday,
+        ],]);
+        $mostLikedPage = "";
+        $likeCounter = 0;
+        foreach ($pages as $page) {
+            if ($page->countLikes() > $likeCounter) {
+                $likeCounter = $page->countLikes();
+                $mostLikedPage = $page;
+            }
+        }
+        $view->assign("mostLikedPage", $mostLikedPage);
+        $lastChapitre = new Chapitre();
+        $lastChapitre = $lastChapitre->findOneBy($lastChapitre->getTable(), ['statut' => 2], ['date_creation', 'DESC']);
+        $view->assign("lastChapitre", $lastChapitre);
     }
 
     public function contact()

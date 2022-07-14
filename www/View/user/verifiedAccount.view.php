@@ -1,0 +1,1 @@
+<h1>Votre compte a bien été vérifié. Vous allez être redirigé vers la page d'accueil du site.</h1>

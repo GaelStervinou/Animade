@@ -23,6 +23,14 @@
 
 
     switch($input['type']):
+    case 'a':
+        ?>
+    <div class="row field">
+        <div class="col-6">
+            <a href="<?= $input['href']?>"><?= $input['placeholder']?></a>
+        </div>
+        <?php
+        break;
     case 'select' :
 
     ?>
