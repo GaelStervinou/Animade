@@ -135,6 +135,22 @@ class Security
     }
 
     /**
+     * @param UserModel $user
+     * @return void
+     */
+    public static function updateCurrentUser(UserModel $user): void
+    {
+        $_SESSION['user'] =
+            [
+                'id' => $user->getId(),
+                'token' => $user->getToken(),
+                'email' => $user->getEmail(),
+                'role_id' => $user->getRoleId(),
+                'status' => $user->getStatus(),
+            ];
+    }
+
+    /**
      * @return void
      */
     #[NoReturn] public static function logout(): void
@@ -333,7 +349,10 @@ class Security
      */
     public static function getUser()
     {
-        return (new UserModel())->setId($_SESSION['user']['id']);
+        if(!empty($_SESSION['user']['id'])){
+            return (new UserModel())->setId($_SESSION['user']['id']);
+        }
+        return false;
     }
 
 }

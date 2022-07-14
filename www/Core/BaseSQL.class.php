@@ -74,21 +74,10 @@ class BaseSQL implements QueryBuilder
     {
         ['emailToken' => $email_token, 'email' => $user_email ] = $_GET;
         if(empty($email_token)){
-            http_response_code(404);
+            Security::returnError(404);
         }
-        $user = $this->pdo->prepare("SELECT * FROM ". $this->table ." WHERE email =:user_email AND emailToken =:email_token");
-        $user->execute(['user_email' => $user_email, 'email_token' => $email_token]);
 
-        if ($user->rowCount() > 0) {
-            $userInfo = $user->fetch();
-            if ($userInfo['status'] == 0) {
-
-                $updateStatus = $this->pdo->prepare("UPDATE ". $this->table ." SET status = 1 WHERE id =:user_id");
-                $updateStatus->execute(['user_id' => $userInfo['id']]);
-            }
-            return $userInfo['id'];
-        }
-        return false;
+        return $this->findOneBy($this->getTable(), ['email' => $user_email, 'emailToken' => $email_token]);
     }
 
     public function getUserFromEmail(string $email)
@@ -155,32 +144,37 @@ return $objectList;
     {
         $this->select($table, ['*']);
         foreach ($where as $column => $value){
-            if(str_contains($value, "'")){
-                $value = str_replace("'", "\'", $value);
+            if(is_array($value)) {
+                $this->where($column, str_replace("'", "\'", $value['value']), $value['operator']);
+            }else{
+                $this->where($column, str_replace("'", "\'", $value));
             }
             $this->where($column, $value);
         }
         return $this->fetchQuery(get_called_class(), 'one');
     }
 
-    public function findManyBy(array $where, array $orderBy = null)
+    public function findManyBy(array $where, array $orderBy = null, array $limit = null)
     {
         try{
             $this->select($this->table, ['*']);
             foreach ($where as $column => $value){
                 if(is_array($value)) {
-                    $this->where($column, $value['value'], $value['operator']);
+                    $this->where($column, str_replace("'", "\'", $value['value']), $value['operator']);
                 }else{
-                    $this->where($column, $value);
+                    $this->where($column, str_replace("'", "\'", $value));
                 }
             }
             if($orderBy !== null){
                 $this->orderBy($orderBy[0], $orderBy[1]);
             }
+            if($limit !== null){
+                $this->limit($limit[0], $limit[1]);
+            }
             $objects =  $this->fetchQuery(get_called_class());
             return $objects;
         }catch(\Error $e){
-            die('test');
+            die('Error');
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Core\Security;
+
 class View
 {
     private $view;
@@ -11,7 +13,12 @@ class View
     public function __construct($view, $template = "front")
     {
         $this->setView($view);
-        $this->setTemplate($template);
+        $user = Security::getUser();
+        if($user !== false && $user->getRoleId() >= 3){
+            $this->setTemplate("back");
+        } else {
+            $this->setTemplate("front");
+        }
     }
 
     public function setView($view){
