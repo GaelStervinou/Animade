@@ -166,7 +166,7 @@ h2 {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  margin: 0 -5%;
+  margin: 0;
 }
 .grid .col {
   display: flex;
@@ -176,50 +176,42 @@ h2 {
   margin: 0 -1%;
 }
 .grid .col-1 {
-  width: 8.3333333333%;
+  width: 10%;
   padding: 0 1%;
 }
 .grid .col-2 {
-  width: 16.6666666667%;
+  width: 20%;
   padding: 0 1%;
 }
 .grid .col-3 {
-  width: 25%;
+  width: 30%;
   padding: 0 1%;
 }
 .grid .col-4 {
-  width: 33.3333333333%;
+  width: 40%;
   padding: 0 1%;
 }
 .grid .col-5 {
-  width: 41.6666666667%;
-  padding: 0 1%;
-}
-.grid .col-6 {
   width: 50%;
   padding: 0 1%;
 }
+.grid .col-6 {
+  width: 60%;
+  padding: 0 1%;
+}
 .grid .col-7 {
-  width: 58.3333333333%;
+  width: 70%;
   padding: 0 1%;
 }
 .grid .col-8 {
-  width: 66.6666666667%;
+  width: 80%;
   padding: 0 1%;
 }
 .grid .col-9 {
-  width: 75%;
+  width: 90%;
   padding: 0 1%;
 }
 .grid .col-10 {
-  width: 83.3333333333%;
-  padding: 0 1%;
-}
-.grid .col-11 {
-  width: 91.6666666667%;
-  padding: 0 1%;
-}
-.grid .col-12 {
   width: 100%;
   padding: 0 1%;
 }
@@ -400,7 +392,7 @@ header .container #site-nav {
   background-size: 100%;
   height: 800px;
   background-image: url("../assets/images/one_piece.jpg");
-  background-repeat: no-repeat;
+  background-repeat: cover;
 }
 .grid .row {
   justify-content: space-around;
@@ -422,7 +414,7 @@ header .container #site-nav {
   margin-top: 5px;
 }
 .grid .row form .field {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .grid .row form h1 {
   text-align: center;

@@ -3,7 +3,6 @@
   #login-form{
     @include cover-bg(url("../assets/images/one_piece.jpg"), 0);
   }
-
   .row{
     justify-content: space-around;
 
@@ -23,8 +22,7 @@
         margin-top: 5px;
       }
       .field{
-        margin-bottom: 30px;
-
+        margin-bottom: 15px;
       }
 
 

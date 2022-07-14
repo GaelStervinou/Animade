@@ -1,26 +1,31 @@
-<head>
-    <meta charset="utf-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="dist/main.css">
-</head>
-<h1><?php use App\Core\Security;
+<?php include "View/head.view.php";?>
 
-    echo $chapitre->getTitre();
-    if($chapitre->hasMedia() === true):
-    ?></h1>
+<main>
+    <section id="login-form">
+        <div class="grid">
 
-<img src="<?= $chapitre->getMedia()->getChemin()?>" alt="Image du chapitre"
-     width="300"
-     height="300" >
-<?php
-endif;
-if(Security::canAsAdmin()):
-    ?>
-    <a href="/personnage/update?personnage_id=<?= $chapitre->getId() ?>">Modifier</a>
-<?php
-endif;
-?>
+            <h1><?php use App\Core\Security;
 
-<div id="list_pages">
+            echo $chapitre->getTitre();
+            if($chapitre->hasMedia() === true):
+            ?></h1>
 
-</div>
+            <img src="<?= $chapitre->getMedia()->getChemin()?>" alt="Image du chapitre"
+            width="300"
+            height="300" >
+            <?php
+            endif;
+            if(Security::canAsAdmin()):
+            ?>
+            <a href="/personnage/update?personnage_id=<?= $chapitre->getId() ?>">Modifier</a>
+            <?php
+            endif;
+            ?>
+
+            <div id="list_pages">
+
+            </div>
+ 
+        </div>
+    </section>
+</main>

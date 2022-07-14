@@ -1,4 +1,4 @@
-$col-nb: 12;
+$col-nb: 10 ;
 $gutter-width: 2%;
 
 .grid{
@@ -9,7 +9,8 @@ $gutter-width: 2%;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    margin: 0 ($gutter-width/2) * -5;
+    // margin: 0 ($gutter-width/2) * -5;
+    margin: 0;
   }
 
   .col{
