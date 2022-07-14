@@ -3,6 +3,6 @@ www/.DS_Store
 .DS_Store
 db_data/*
 .idea/*
-www/webpack/*
 /www/assets/
-/www/webpack/
+/www/webpack/node_modules/
+/www/dist/mix-manifest.json
