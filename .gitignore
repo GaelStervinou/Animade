@@ -6,3 +6,4 @@ db_data/*
 /www/assets/
 /www/webpack/node_modules/
 /www/dist/mix-manifest.json
+/www/assets/images/
