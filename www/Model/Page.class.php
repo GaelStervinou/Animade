@@ -420,7 +420,7 @@ class Page extends BaseSQL
                     'type' => 'file',
                     'label' => 'Avatar :',
                     'id' => 'mediaNewPage',
-                    'class' => 'inputRegister',
+                    'class' => 'inputRegisterMedia',
                     'error' => 'Image incorrecte',
                 ],
                 'contenu' => [

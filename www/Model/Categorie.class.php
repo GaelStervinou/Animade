@@ -138,7 +138,7 @@ class Categorie extends BaseSQL{
     public function getCategorieSelectOptions()
     {
         $categories = $this->findManyBy(['statut' => 2]);
-        $categories_options = [];
+        $categories_options = ['' => ''];
         foreach ($categories as $categorie){
             $categories_options[$categorie->getNom()] = $categorie->getId();
         }

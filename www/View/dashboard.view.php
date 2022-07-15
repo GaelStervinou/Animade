@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Dashboard</title>
+        <link rel="stylesheet" type="text/css" href="../dist/main.css">
+    </head>
+    <body>
+        <header id="site-header">
+            <div class="container">
+                <a href="#">
+                    <img src="../assets/images/logo_animade.jpg" alt="Logo Animade">
+                </a>
+                <button id="menu-button"></button>
+                <nav id="site-nav">
+                    <ul>
+                        <li><a href="#">Accueil</a></li>
+                        <li><a href="#">Mon Site</a></li>
+                        <li><a href="#">F.A.Q</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+=======
+>>>>>>> b5336a89f254f9b8884d43d634600ff1eb45ce0f
 
             <section id="dashboard">
                 <div class="grid">

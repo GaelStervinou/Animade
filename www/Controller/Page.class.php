@@ -41,9 +41,15 @@ class Page{
 
                     // new
                     $page->setStatut($_POST['statut']);
-                    $page->setPersonnageId($_POST['personnage_id']);
-                    $page->setChapitreId($_POST['chapitre_id']);
-                    $page->setCategorieId(($_POST['categorie_id']));
+                    if(!empty($_POST['personnage_id'])){
+                        $page->setPersonnageId($_POST['personnage_id']);
+                    }
+                    if(!empty($_POST['chapitre_id'])){
+                        $page->setChapitreId($_POST['chapitre_id']);
+                    }
+                    if(!empty($_POST['categorie_id'])){
+                        $page->setChapitreId($_POST['categorie_id']);
+                    }
 
                     if(!empty($_POST['media']['tmp_name'])){
                         $page->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $page));
