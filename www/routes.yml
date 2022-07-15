@@ -42,6 +42,12 @@
   security:
     rule: admin
 
+/admin/administration:
+  controller: admin
+  action: administration
+  security:
+    rule: admin
+
 
 
 # page

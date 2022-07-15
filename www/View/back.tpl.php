@@ -15,6 +15,17 @@
 <body>
     <header>
         <div class="container">
+            <?php
+            $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
+            $isMob = is_numeric(strpos($ua, "mobile"));
+            if($isMob):
+                ?>
+                <div class="mobile_access">
+                    <p>Nous vous recommandons d'accéder au site via un ordinateur pour une meilleure expérience.</p>
+                </div>
+            <?php
+            endif;
+            ?>
             <a href="#">
                 <img src="../assets/images/logo_animade.jpg" alt="Logo Animade">
             </a>

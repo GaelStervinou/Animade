@@ -65,4 +65,26 @@ class Admin
 
         return $signalements;
     }
+
+    public function administration()
+    {
+        $view = new View("admin/manager", "back");
+        $user = Security::getUser();
+        $view->assign("user", $user);
+    }
+
+    public static function getSettings()
+    {
+        $fileContent = file_get_contents('conf.inc.php');
+        $settings = [];
+        foreach (explode("\n", $fileContent) as $line) {
+            preg_match('/(".{0,150}"), (".{0,150}")/', $line, $matches);
+            if(!empty($matches)){
+                $settings[str_replace('"', '', $matches[1])] = str_replace('"', '', $matches[2]);
+            }
+        }
+        return $settings;
+
+
+    }
 }
