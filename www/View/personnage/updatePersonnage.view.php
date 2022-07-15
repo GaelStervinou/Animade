@@ -1,4 +1,3 @@
-<?php include "View/head.view.php";?>
 <main>
     <section id="login-form">
         <div class="grid">
@@ -19,6 +18,3 @@
         </div>
     </section>
 </main>
-</body>
-
-</html>

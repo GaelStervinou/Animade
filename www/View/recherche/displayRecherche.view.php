@@ -1,4 +1,3 @@
-<?php include "View/head.view.php";?>
 <main>
     <section id="login-form">
         <div class="grid">
@@ -81,13 +80,14 @@
                     </tr>
                     </tfoot>
                 </table>
-            <script>
-                $(document).ready(function () {
-                    $('#table_id').DataTable({
-                        pagingType: 'full_numbers',
-                    });
-                });
-            </script>
         </div>
     </section>
 </main>
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            pagingType: 'full_numbers',
+        });
+    });
+</script>

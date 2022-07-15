@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="dist/main.css">
 <form id="form" method="<?= $config['config']['method'] ?>" action="<?= $config['config']['action'] ?>" enctype="multipart/form-data">
 
 <h1><?= $config['config']['title']?></h1>
