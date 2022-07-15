@@ -65,7 +65,7 @@ if(!UrlHelper::isAjaxRequest()):
                     <li><a href="#">Nous contacter</a></li>
                 </ul>
             </nav>
-        <?
+        <?php
         endif;
         ?>
     </header>

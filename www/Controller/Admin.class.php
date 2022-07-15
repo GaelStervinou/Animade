@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\Security;
+use App\Core\Validator;
 use App\Core\View;
 use App\Model\Signalement as SignalementModel;
 use App\Model\User as UserModel;
@@ -66,11 +67,30 @@ class Admin
         return $signalements;
     }
 
-    public function administration()
+    public function administration(): void
     {
-        $view = new View("admin/manager", "back");
-        $user = Security::getUser();
-        $view->assign("user", $user);
+
+        if(!empty($_POST)){
+
+            $user = new UserModel();
+
+            $result = Validator::run($user->getSettingsForm(), $_POST);
+            if(empty($result)){
+                $configContent = "<?php\n";
+
+                foreach($_POST as $key => $value){
+                    $configContent .= "define(\"".$key."\", \"".$value."\");\n";
+                }
+                file_put_contents('conf.inc.php', $configContent);
+            }
+
+            header("Location:/admin/dashboard");
+        }else{
+            $view = new View("admin/manager", "back");
+            $user = Security::getUser();
+            $view->assign("user", $user);
+        }
+
     }
 
     public static function getSettings()
