@@ -46,7 +46,7 @@
   controller: admin
   action: administration
   security:
-    rule: admin
+    rule: superAdmin
 
 
 

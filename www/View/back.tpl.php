@@ -39,7 +39,14 @@ $user = Security::getUser();?>
             <nav id="site-nav">
                 <ul>
                     <li><a href="/">Accueil</a></li>
-                    <li><a href="#">Actualités</a></li>
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                    <?php
+                    if(Security::canAsSuperAdmin()):
+                    ?>
+                    <li><a href="/admin/administration">Paramètres</a></li>
+                    <?php
+                    endif;
+                    ?>
                     <li><a href="#">Nous contacter</a></li>
                 </ul>
             </nav>

@@ -116,6 +116,15 @@ class Security
         return self::getUser()->getRoleId() >= 3;
     }
 
+    /**
+     * @return bool
+     */
+    public static function canAsSuperAdmin(): bool
+    {
+        self::isConnected();
+        return self::getUser()->getRoleId() === 4;
+    }
+
 
     /**
      * @param null $user
