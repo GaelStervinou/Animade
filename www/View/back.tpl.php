@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+<?php
+use App\Core\Security;
+$user = Security::getUser();?>
 <head>
     <meta charset="UTF-8">
     <title>Template de back</title>
@@ -30,6 +33,9 @@
                 <img src="../assets/images/logo_animade.jpg" alt="Logo Animade">
             </a>
             <button id="menu-button"></button>
+            <?php
+            if($user !== false):
+            ?>
             <nav id="site-nav">
                 <ul>
                     <li><a href="/">Accueil</a></li>
@@ -37,6 +43,9 @@
                     <li><a href="#">Nous contacter</a></li>
                 </ul>
             </nav>
+            <?php
+            endif;
+            ?>
         </div>
 
         <div id="recherche">

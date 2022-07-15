@@ -1,4 +1,5 @@
-<div style="border: dashed red;">
+<main>
+    <div style="border: dashed red;">
         <?=$commentaire->getContenu()?>
         <?=$commentaire->getAuteur()->getFullName()?>
         <?php
@@ -10,13 +11,14 @@
         <?php
         endif;
         if($commentaire->getStatut() == 2):
-        ?>
+            ?>
             <a href="commentaire/delete?commentaire_id=<?= $commentaire->getId()?>">Supprimer</a>
-    <?php
+        <?php
         else:
-    ?>
-        <p>Commentaire supprimé</p>
-    <?php
+            ?>
+            <p>Commentaire supprimé</p>
+        <?php
         endif;
-    ?>
-</div>
+        ?>
+    </div>
+</main>

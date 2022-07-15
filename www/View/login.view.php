@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="dist/main.css">
-</head>
-<body>
-
-
 <main>
     <section id="login-form">
         <div class="grid">
@@ -25,8 +15,3 @@
         </div>
     </section>
 </main>
-
-
-</body>
-</html>
-

@@ -1,5 +1,3 @@
-<?php include "View/head.view.php";?>
-
 <h1><?= $categorie->getNom(); ?></h1>
 <h2><?= $categorie->getDescription(); ?></h2>
 <?php

@@ -3,6 +3,9 @@
 
 use App\Helpers\UrlHelper;
 
+use App\Core\Security;
+
+$user = Security::getUser();
 if(!UrlHelper::isAjaxRequest()):
 ?>
 <html lang="fr">
@@ -52,15 +55,17 @@ if(!UrlHelper::isAjaxRequest()):
                 </ul>
             </nav>
         </div>
-        <?php if(\App\Core\Security::getUser() !== false):?>
-        <div id="recherche">
-            <form action="/recherche" method="GET">
-                <input name="recherche" class="class_test" type="text" placeholder="Rechercher">
-
-                <input id="submit" type="submit" value="Search">
-            </form>
-        </div>
         <?php
+        if($user !== false):
+            ?>
+            <nav id="site-nav">
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="#">Actualités</a></li>
+                    <li><a href="#">Nous contacter</a></li>
+                </ul>
+            </nav>
+        <?
         endif;
         ?>
     </header>

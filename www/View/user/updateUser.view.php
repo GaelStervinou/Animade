@@ -1,6 +1,3 @@
-<?php include "View/head.view.php";?>
-
-
 <main>
     <section id="login-form">
         <div class="grid">
@@ -29,5 +26,3 @@ endif;
         </div>
     </section>
 </main>
-</body>
-</html>
