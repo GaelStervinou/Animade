@@ -13,7 +13,6 @@ use App\Core\Security;
 use App\Helpers\MediaManager;
 use App\Helpers\UrlHelper;
 use App\Model\User as UserModel;
-use App\Model\Media;
 use JetBrains\PhpStorm\NoReturn;
 
 class User
@@ -83,7 +82,7 @@ class User
                     $mail = new PHPMailer();
                     $options = [
                         'subject' => 'Validation de votre e-mail pour votre compte Animade',
-                        'body' => "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant : http://{$_SERVER['HTTP_HOST']}/verifyAccount.php?email={$user->getEmail()}&emailToken={$user->getEmailToken()}",
+                        'body' => "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant : http://{$_SERVER['HTTP_HOST']}/verifyAccount?email={$user->getEmail()}&emailToken={$user->getEmailToken()}",
                     ];
                     $mail->sendEmail($_POST["email"], $options);
 
@@ -118,18 +117,23 @@ class User
     {
         $user = new UserModel();
 
-        $id = $user->emailVerification();
-        if (!empty($id)) {
-            $user = $user->setId($id);
+        $user = $user->emailVerification();
+        if (!empty($user)) {
             try {
                 $user->beginTransaction();
                 $user->setStatus(2);
+                $user->generateEmailToken();
                 $user->save();
-                $_SESSION['user']['status'] = 2;
-                $view = new View("/");
-                $view->assign("firstname", $user->getFirstname());
-                $view->assign("lastname", $user->getLastname());
                 $user->commit();
+
+                Security::updateCurrentUser($user);
+
+                $view = new View("user/verifiedAccount");
+                $view->assign("meta", [
+                    'script' => [
+                        '../dist/js/verifiedAccount.js',
+                    ]
+                ]);
             } catch (Exception $e) {
                 $user->rollback();
                 var_dump($e->getMessage());
@@ -198,6 +202,89 @@ class User
             $user = UrlHelper::getUrlParameters($_GET)['object'];
             $view = new View("user/updateUser");
             $view->assign("user", $user);
+        }
+    }
+
+    public function forgottenPassword()
+    {
+        if (!empty($_POST)) {
+            $user = new UserModel();
+
+            $result = Validator::run($user->getEmailPasswordForgottenForm(), $_POST);
+            if(empty($result)){
+                $user = $user->getUserFromEmail($_POST["email"]);
+            }
+            if(!empty($user))
+            {
+                try{
+                    $user->beginTransaction();
+                    $user->generateMdpToken();
+                    $user->save();
+
+                    $mail = new PHPMailer();
+                    $options = [
+                        'subject' => 'Récupération de votre mot de passe pour votre compte Animade',
+                        'body' => "Bonjour, veuillez cliquer sur le lien suivant : http://{$_SERVER['HTTP_HOST']}/updatePassword?email={$user->getEmail()}&mdpToken={$user->getMdpToken()}
+                            afin de renouveler votre mot de passe Animade.",
+                    ];
+                    $mail->sendEmail($_POST["email"], $options);
+
+                    $user->commit();
+
+                    $view = new View("user/forgottenPassword");
+                    $view->assign("message", "Un email vous a été envoyé pour changer votre mot de passe.");
+
+                }catch (Exception $e) {
+                    $user->rollback();
+                    var_dump($e->getMessage());
+                    die;
+                }
+            }
+        } else {
+            $user = new UserModel();
+            $view = new View("user/forgottenPassword");
+            $view->assign("user", $user);
+        }
+    }
+
+    public function updatePassword()
+    {
+        if (!empty($_POST)) {
+            $user = new UserModel();
+
+            $result = Validator::run($user->getUpdatePasswordForm(), $_POST);
+            if(empty($result)){
+                $user = $user->getUserFromEmail($_GET["email"]);
+            }
+            if(!empty($user) && $user->getMdpToken() === $_GET["mdpToken"])
+            {
+                try{
+                    $user->beginTransaction();
+                    $user->setPassword($_POST["password"]);
+                    $user->generateMdpToken();
+                    $user->save();
+                    $user->commit();
+
+                    Security::login($user);
+
+                    header('Location:/');
+
+                }catch (Exception $e) {
+                    $user->rollback();
+                    var_dump($e->getMessage());
+                    die;
+                }
+            }
+        } else {
+            $user = new UserModel();
+            $user = $user->getUserFromEmail($_GET["email"]);
+            if(!empty($user) && $user->getMdpToken() === $_GET["mdpToken"]) {
+                $view = new View("user/updatePassword");
+                $view->assign("user", $user);
+            }else{
+                Security::returnError(403, "Le lien de réinitialisation de mot de passe n'est pas valide.");
+            }
+
         }
     }
 

@@ -24,9 +24,27 @@
   controller: user
   action: register
 
+/verifyAccount:
+  controller: user
+  action: verifyAccount
+
+/forgottenPassword:
+  controller: user
+  action: forgottenPassword
+
+/updatePassword:
+  controller: user
+  action: updatePassword
+
 /admin/dashboard:
   controller: admin
   action: dashboard
+  security:
+    rule: admin
+
+/admin/administration:
+  controller: admin
+  action: administration
   security:
     rule: admin
 

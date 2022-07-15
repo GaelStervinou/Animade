@@ -65,7 +65,7 @@ class Security
     public static function isUser()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] === 1){
+        if(self::getUser()->getRoleId() === 1){
             return true;
         }
         self::returnError(403);
@@ -77,7 +77,7 @@ class Security
     public static function isAuthor()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] === 2){
+        if(self::getUser()->getRoleId() === 2){
             return true;
         }
         self::returnError(403);
@@ -89,7 +89,7 @@ class Security
     public static function isAdmin()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] >= 3){
+        if(self::getUser()->getRoleId() >= 3){
             return true;
         }
         self::returnError(403);
@@ -101,7 +101,7 @@ class Security
     public static function isSuperAdmin()
     {
         self::isConnected();
-        if($_SESSION['user']['role_id'] === 4){
+        if(self::getUser()->getRoleId() === 4){
             return true;
         }
         self::returnError(403);
@@ -113,7 +113,7 @@ class Security
     public static function canAsAdmin(): bool
     {
         self::isConnected();
-        return $_SESSION[ 'user' ][ 'role_id' ] >= 3;
+        return self::getUser()->getRoleId() >= 3;
     }
 
 
@@ -124,6 +124,22 @@ class Security
     public static function login($user=null): void
     {
         $user->save();
+        $_SESSION['user'] =
+            [
+                'id' => $user->getId(),
+                'token' => $user->getToken(),
+                'email' => $user->getEmail(),
+                'role_id' => $user->getRoleId(),
+                'status' => $user->getStatus(),
+            ];
+    }
+
+    /**
+     * @param UserModel $user
+     * @return void
+     */
+    public static function updateCurrentUser(UserModel $user): void
+    {
         $_SESSION['user'] =
             [
                 'id' => $user->getId(),
@@ -333,7 +349,10 @@ class Security
      */
     public static function getUser()
     {
-        return (new UserModel())->setId($_SESSION['user']['id']);
+        if(!empty($_SESSION['user']['id'])){
+            return (new UserModel())->setId($_SESSION['user']['id']);
+        }
+        return false;
     }
 
 }

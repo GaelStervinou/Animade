@@ -40,6 +40,9 @@ class User extends BaseSQL
     /** @var string|null $emailToken */
     protected $emailToken = null;
 
+    /** @var string|null $mdpToken */
+    protected $mdpToken = null;
+
     /** @var int|null $media_id */
     protected $media_id = null;
 
@@ -178,18 +181,27 @@ class User extends BaseSQL
         $this->token = str_shuffle(md5(uniqid()));
     }
 
-    public function getEmailVerifToken(): string
-    {
-        return $this->email_verif_token;
-    }
-
+    /**
+     * @return void
+     */
     public function generateEmailToken(): void
     {
         $this->emailToken = str_shuffle(md5(uniqid()));
     }
+
     public function getEmailToken()
     {
         return $this->emailToken;
+    }
+
+    public function generateMdpToken(): void
+    {
+        $this->mdpToken = str_shuffle(md5(uniqid()));
+    }
+
+    public function getMdpToken()
+    {
+        return $this->mdpToken;
     }
 
     /**
@@ -250,17 +262,6 @@ class User extends BaseSQL
         return parent::getUserFromEmail($email);
     }
 
-    public function storeUser(array $skip)
-    {
-        $storedObject = [];
-        foreach (get_object_vars($this) as $attribute => $value) {
-            if (!in_array($attribute, $skip)) {
-                $storedObject[$attribute] = $value;
-            }
-        }
-        return $storedObject;
-    }
-
     public function toString(): string
     {
         return $this->getFullName();
@@ -300,7 +301,12 @@ class User extends BaseSQL
                     'class' => 'inputRegister',
                     'required' => true,
                     'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
-                ]
+                ],
+                'pwdForgotten' => [
+                    'type' => 'a',
+                    'href' => '/forgottenPassword',
+                    'placeholder' => 'Mot de passe oublié ?',
+                ],
             ],
         ];
     }
@@ -446,6 +452,166 @@ class User extends BaseSQL
                         'En attente de validation par mail' => 1,
                         'Actif' => 2,
                     ],
+                    'id' => 'roleIdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer ce statut",
+                    'default_value' => $this->getStatus(),
+                ],
+                'password' => [
+                    'type' => 'password',
+                    'authorized' => $this->getId() === $_SESSION['user']['id'],
+                    'label' => 'Mot de passe :',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'pwdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ],
+                'passwordConfirmation' => [
+                    'type' => 'password',
+                    'authorized' => $this->getId() === $_SESSION['user']['id'],
+                    'label' => 'Mot de passe ( confirmation ) :',
+                    'placeholder' => 'Confirmation du mot de passe',
+                    'id' => 'pwdConfirmationUpdate',
+                    'class' => 'inputRegister',
+                    'confirm' => 'password',
+                    'error' => 'Votre mot de passe de confirmation ne correspond pas',
+                ],
+            ],
+        ];
+    }
+
+    public function getEmailPasswordForgottenForm()
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Envoyer le mail",
+                'title' => "Envoyer le mail",
+            ],
+            'inputs' => [
+                'email' => [
+                    'type' => 'email',
+                    'label' => 'Email :',
+                    'placeholder' => 'Votre email',
+                    'id' => 'emailRegister',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'error' => 'Email incorrect',
+                    'errorUnicity' => 'Email existe déjà en bdd',
+                ],
+            ]
+        ];
+    }
+
+    public function getUpdatePasswordForm()
+    {
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Envoyer le mail",
+                'title' => "Envoyer le mail",
+            ],
+            'inputs' => [
+                'password' => [
+                    'type' => 'password',
+                    'label' => 'Mot de passe :',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'pwdUpdate',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ],
+                'passwordConfirmation' => [
+                    'type' => 'password',
+                    'label' => 'Mot de passe ( confirmation ) :',
+                    'placeholder' => 'Confirmation du mot de passe',
+                    'id' => 'pwdConfirmationUpdate',
+                    'class' => 'inputRegister',
+                    'confirm' => 'password',
+                    'required' => true,
+                    'error' => 'Votre mot de passe de confirmation ne correspond pas',
+                ],
+            ]
+        ];
+    }
+
+    public function getSettingsForm()
+    {
+        var_dump(\App\Controller\Admin::getSettings());die;
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Mettre à jour",
+                'title' => "Mettre à jour",
+            ],
+            'inputs' => [
+                'db_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom de la base de données:',
+                    'placeholder' => 'Nom de la base de données',
+                    'id' => 'dbNameAdmin',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 70,
+                    'error' => "Le nom n'est pas conrrect",
+                    'default_value' => $this->getFirstname(),
+                ],
+                'lastname' => [
+                    'type' => 'text',
+                    'label' => 'Nom :',
+                    'placeholder' => 'Nom',
+                    'id' => 'nameUpdate',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 100,
+                    'error' => "Votre nom n'est pas correct",
+                    'default_value' => $this->getLastname(),
+                ],
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'authorized' => !$admin_fields,
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaUpdateUser',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Avatar :',
+                    'authorized' => !$admin_fields,
+                    'id' => 'mediaUpdateUser',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                ],
+                'role_id' => [
+                    'type' => 'select',
+                    'authorized' => $admin_fields,
+                    'label' => 'Role :',
+                    'options' =>
+                        [
+                            'Utilisateur' => 1,
+                            'Auteur' => 2,
+                            'Administrateur' => 3,
+                        ],
+                    'id' => 'roleIdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer ce rôle",
+                    'default_value' => $this->getRoleId(),
+                ],
+                'status' => [
+                    'type' => 'select',
+                    'authorized' => $admin_fields,
+                    'label' => 'Statut :',
+                    'options' =>
+                        [
+                            'Supprimé' => -1,
+                            'En attente de validation par mail' => 1,
+                            'Actif' => 2,
+                        ],
                     'id' => 'roleIdUpdate',
                     'class' => 'inputRegister',
                     'error' => "Impossible d'attribuer ce statut",

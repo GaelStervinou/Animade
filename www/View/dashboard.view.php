@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -21,8 +22,9 @@
                 </nav>
             </div>
         </header>
+=======
+>>>>>>> b5336a89f254f9b8884d43d634600ff1eb45ce0f
 
-        <main>
             <section id="dashboard">
                 <div class="grid">
                     <div class="row">
@@ -141,9 +143,6 @@
                     </div>
                 </div>
             </section>
-        </main>
-    </body>
-</html>
 
 
 <script>

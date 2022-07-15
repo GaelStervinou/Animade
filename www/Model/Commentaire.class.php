@@ -288,6 +288,12 @@ class Commentaire extends BaseSQL{
         return false;
     }
 
+    public function countSignalements()
+    {
+        $signalement = new Signalement();
+        return count($signalement->findManyBy(['commentaire_id' => $this->getId()]));
+    }
+
     public function getFormNewCommentaire(): array
     {
         return [
