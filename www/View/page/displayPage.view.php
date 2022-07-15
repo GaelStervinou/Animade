@@ -1,18 +1,15 @@
 <main>
+            <section id="login-form">
+                <div class="grid">
+                    <div id="login-form">
+                    <div class="table">
+                       
     <h1>
 
-        echo $page->getTitre(); ?></h1>
+        <?php echo $page->getTitre(); ?></h1>
     <h2><?php echo $page->getDescription(); ?></h2>
 
-    <?php
-    if($can_edit == "yes"):
-        ?>
-        <h3>
-            <a href="/page/update?page_id=<?= $page->getId()?>">Modifier la page</a>
-        </h3>
-    <?php
-    endif;
-    ?>
+    
 
     <h3>
 
@@ -32,6 +29,7 @@
         </div>
     <?php
     endif; ?>
+    <br><br>
     <div>
         By : <?php echo $page->getAuteur()->getFullName();
         ?>
@@ -41,6 +39,15 @@
         <?= date('d M, Y', strtotime($page->getDateCreation()))
         ?>
     </div>
+    <?php
+    if($can_edit == "yes"):
+        ?>
+        <h4>
+            <a href="/page/update?page_id=<?= $page->getId()?>">Modifier la page</a>
+        </h4>
+    <?php
+    endif;
+    ?>
     <div>
         <?php
         if($can_comment === "yes"):
@@ -92,6 +99,7 @@
         <br>
         <br>
         <br>
+        
         Commentaires :
         <?php
         $commentaireList = $page->getCommentaires();
@@ -207,4 +215,8 @@
         <input type="hidden" form="form" name="page_id" value="<?=$page->getId()?>">
         <input type="hidden" form="form" id="commentaire_id" name="commentaire_id" value="">
     </div>
-</main>
+    </div>
+                    </div>
+                </div>
+            </section>
+        </main>

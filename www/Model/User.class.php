@@ -511,8 +511,8 @@ class User extends BaseSQL
             'config' => [
                 'method' => 'POST',
                 'action' => '',
-                'submit' => "Envoyer le mail",
-                'title' => "Envoyer le mail",
+                'submit' => "Confirmer",
+                'title' => "Changement du mot de passe",
             ],
             'inputs' => [
                 'password' => [
