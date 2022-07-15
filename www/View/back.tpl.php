@@ -55,7 +55,7 @@ $user = Security::getUser();?>
             ?>
         </div>
 
-        <div id="recherche">
+        <div id="recherche" class="recherche">
             <form action="/recherche" method="GET">
                 <input name="recherche" class="class_test" type="text" placeholder="Rechercher">
 
