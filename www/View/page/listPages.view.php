@@ -34,7 +34,13 @@
             foreach ($pages as $page):
                 ?>
                 <tr style="text-align: center">
+                    <?php
+                    if(!empty($page->getCategorieId())):
+                        ?>
                     <td><a href="/categorie?categorie_id=<?= $page->getCategorieId()?>"><?= $page->getCategorie()->getNom()?></a></td>
+                    <?php
+                    endif;
+                    ?>
                     <td><a href="/page?page=<?= $page->getSlug()?>"><?= $page->getTitre()?></a></td>
                     <td><?= substr($page->getDescription(), 0, 40)?></td>
                     <td>
