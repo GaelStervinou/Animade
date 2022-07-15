@@ -536,4 +536,107 @@ class User extends BaseSQL
             ]
         ];
     }
+
+    public function getSettingsForm()
+    {
+        var_dump(\App\Controller\Admin::getSettings());die;
+        return [
+            'config' => [
+                'method' => 'POST',
+                'action' => '',
+                'submit' => "Mettre à jour",
+                'title' => "Mettre à jour",
+            ],
+            'inputs' => [
+                'db_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom de la base de données:',
+                    'placeholder' => 'Nom de la base de données',
+                    'id' => 'dbNameAdmin',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 70,
+                    'error' => "Le nom n'est pas conrrect",
+                    'default_value' => $this->getFirstname(),
+                ],
+                'lastname' => [
+                    'type' => 'text',
+                    'label' => 'Nom :',
+                    'placeholder' => 'Nom',
+                    'id' => 'nameUpdate',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 100,
+                    'error' => "Votre nom n'est pas correct",
+                    'default_value' => $this->getLastname(),
+                ],
+                'media_name' => [
+                    'type' => 'text',
+                    'label' => 'Nom image :',
+                    'authorized' => !$admin_fields,
+                    'placeholder' => 'Nom image',
+                    'id' => 'nomMediaUpdateUser',
+                    'class' => 'inputRegister',
+                    'error' => 'nom incorrect',
+                ],
+                'media' => [
+                    'type' => 'file',
+                    'label' => 'Avatar :',
+                    'authorized' => !$admin_fields,
+                    'id' => 'mediaUpdateUser',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                ],
+                'role_id' => [
+                    'type' => 'select',
+                    'authorized' => $admin_fields,
+                    'label' => 'Role :',
+                    'options' =>
+                        [
+                            'Utilisateur' => 1,
+                            'Auteur' => 2,
+                            'Administrateur' => 3,
+                        ],
+                    'id' => 'roleIdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer ce rôle",
+                    'default_value' => $this->getRoleId(),
+                ],
+                'status' => [
+                    'type' => 'select',
+                    'authorized' => $admin_fields,
+                    'label' => 'Statut :',
+                    'options' =>
+                        [
+                            'Supprimé' => -1,
+                            'En attente de validation par mail' => 1,
+                            'Actif' => 2,
+                        ],
+                    'id' => 'roleIdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => "Impossible d'attribuer ce statut",
+                    'default_value' => $this->getStatus(),
+                ],
+                'password' => [
+                    'type' => 'password',
+                    'authorized' => $this->getId() === $_SESSION['user']['id'],
+                    'label' => 'Mot de passe :',
+                    'placeholder' => 'Votre mot de passe',
+                    'id' => 'pwdUpdate',
+                    'class' => 'inputRegister',
+                    'error' => 'Votre mot de passe doit faire entre 8 et 16 caractères et contenir des chiffres et des lettres',
+                ],
+                'passwordConfirmation' => [
+                    'type' => 'password',
+                    'authorized' => $this->getId() === $_SESSION['user']['id'],
+                    'label' => 'Mot de passe ( confirmation ) :',
+                    'placeholder' => 'Confirmation du mot de passe',
+                    'id' => 'pwdConfirmationUpdate',
+                    'class' => 'inputRegister',
+                    'confirm' => 'password',
+                    'error' => 'Votre mot de passe de confirmation ne correspond pas',
+                ],
+            ],
+        ];
+    }
 }

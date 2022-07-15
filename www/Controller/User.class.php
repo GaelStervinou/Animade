@@ -13,7 +13,6 @@ use App\Core\Security;
 use App\Helpers\MediaManager;
 use App\Helpers\UrlHelper;
 use App\Model\User as UserModel;
-use App\Model\Media;
 use JetBrains\PhpStorm\NoReturn;
 
 class User
@@ -278,8 +277,14 @@ class User
             }
         } else {
             $user = new UserModel();
-            $view = new View("user/updatePassword");
-            $view->assign("user", $user);
+            $user = $user->getUserFromEmail($_GET["email"]);
+            if(!empty($user) && $user->getMdpToken() === $_GET["mdpToken"]) {
+                $view = new View("user/updatePassword");
+                $view->assign("user", $user);
+            }else{
+                Security::returnError(403, "Le lien de réinitialisation de mot de passe n'est pas valide.");
+            }
+
         }
     }
 
