@@ -25,7 +25,9 @@ class Categorie{
                     $categorie->setNom($_POST['nom']);
                     $categorie->setDescription($_POST['description']);
                     $categorie->setStatut($_POST['statut']);
-                    $categorie->setParentId($_POST['parent_id']);
+                    if(!empty($_POST['parent_id'])){
+                        $categorie->setParentId($_POST['parent_id']);
+                    }
 
                     $id = $categorie->save();
 
