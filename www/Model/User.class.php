@@ -146,7 +146,7 @@ class User extends BaseSQL
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getStatus(): int
     {
@@ -154,9 +154,9 @@ class User extends BaseSQL
     }
 
     /**
-     * @param null $status
+     * @param int|null $status
      */
-    public function setStatus($status): void
+    public function setStatus(?int $status): void
     {
         $this->status = $status;
     }
@@ -326,7 +326,6 @@ class User extends BaseSQL
                     'type' => 'text',
                     'label' => 'Prénom :',
                     'placeholder' => 'Prénom',
-                    'label' => 'Prénom',
                     'id' => 'firstnameRegister',
                     'class' => 'inputRegister',
                     'min' => 2,

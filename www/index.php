@@ -52,6 +52,7 @@ if(!empty($routes[$uri]["security"])){
             'author' => Security::isAuthor(),
             'admin' => Security::isAdmin(),
             'superAdmin' => Security::isSuperAdmin(),
+            'boot' => Security::canBoot(),
             ['delete'] => Security::canDelete($security['delete']),
             ['update'] => Security::canUpdate($security['update']),
             default => Security::isConnected(),
@@ -61,6 +62,7 @@ if(!empty($routes[$uri]["security"])){
         return $response;
     }
 }
+
 
 $controller = ucfirst(strtolower($routes[$uri]["controller"]));
 $action = strtolower($routes[$uri]["action"]);

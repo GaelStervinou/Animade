@@ -364,4 +364,36 @@ class Security
         return false;
     }
 
+    /**
+     * @return bool|void
+     */
+    public static function checkIfConfigExists()
+    {
+        if(empty(self::getConfig())){
+            header('Location:/install');
+            die();
+        }
+        return true;
+    }
+
+    /**
+     * @return bool|void
+     */
+    public static function canBoot()
+    {
+        if(empty(self::getConfig())){
+            return true;
+        }
+
+        self::return403("Cette page n'est pas accessible");
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getConfig(): ?string
+    {
+        return file_get_contents('conf.inc.php');
+    }
+
 }
