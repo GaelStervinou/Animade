@@ -28,8 +28,10 @@ class UrlHelper
             elseif($param === 'chapitre'){
                 $chapitre = new Chapitre();
                 $result['chapitre'] = $chapitre->getChapitreFromTitre($value);
-            }
-            elseif(str_contains($param, '_id')){
+            }elseif($param === 'categorie') {
+                $categorie = new Categorie();
+                $result[ 'categorie' ] = $categorie->findOneBy($categorie->getTable(), ['nom' => $value]);
+            }elseif(str_contains($param, '_id')){
                 $class = ucfirst("App\Model\\".str_replace("_id", "", $param));
                 $object = new $class();
                 $result['object'] = $object->setId((int)$value);

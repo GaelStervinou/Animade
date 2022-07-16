@@ -7,10 +7,11 @@ $(document).ready(function(){
 
     if(personnageId !== false){
         $.get("/page/pages?personnage_id="+personnageId, function(data){
-            $('#list_pages').html(data);
+            $('#list_pages').html($(data).find("#table_id"));
+            updateDataTable();
         });
 
-        const nomPersonnage = $('h1').text();
+        const nomPersonnage = $('#nom_personnage').text();
         const nextURL = '/personnage?personnage='+encodeURIComponent(nomPersonnage);
         const nextTitle = nomPersonnage;
         const nextState = { additionalInformation: 'Updated the URL with JS' };
@@ -20,8 +21,8 @@ $(document).ready(function(){
         window.history.replaceState(nextState, nextTitle, nextURL);
     }else{
         $.get("/page/pages?personnage="+personnageNom, function(data){
-            $('#list_pages').html(data);
+            $('#list_pages').html($(data).find("#table_id"));
+            updateDataTable();
         });
     }
-
 });

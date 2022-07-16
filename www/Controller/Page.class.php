@@ -12,6 +12,7 @@ use App\Model\User as UserModel;
 use App\Model\Page as PageModel;
 use App\Model\Personnage;
 use App\Model\Chapitre;
+use App\Model\Categorie;
 use App\Model\Commentaire as CommentaireModel;
 
 class Page{
@@ -89,25 +90,35 @@ class Page{
                     $chapitre = new Chapitre();
                     $_GET[ 'chapitre_id' ] = $chapitre->getChapitreFromTitre(urldecode($_GET[ 'chapitre' ]))->getId();
                     unset($_GET[ 'chapitre' ]);
+                }elseif(!empty($_GET['categorie'])) {
+                    $categorie = new Categorie();
+                    $_GET[ 'categorie_id' ] = $categorie->findOneBy($categorie->getTable(), ['nom' => urldecode($_GET[ 'categorie' ])])->getId();
+                    unset($_GET[ 'categorie' ]);
                 }
-
                 $parameters = $_GET;
-
 
                 $parameters['statut'] = 2;
                 $pages = $page->findManyBy($parameters);
-                $query = UrlHelper::getSearch($_GET);
-
-                $recherche = [];
-                foreach ($query as $param => $value){
-                    $recherche[] = ucfirst($param). ': ' .$value;
+                if(!empty($pages)){
+                    $query = UrlHelper::getSearch($_GET);
+                    $recherche = [];
+                    foreach ($query as $param => $value){
+                        $recherche[] = ucfirst($param). ': ' .$value;
+                    }
+                    $recherche = implode(', ', $recherche);
+                    $view->assign("recherche", $recherche);
                 }
-                $recherche = implode(', ', $recherche);
-                $view->assign("recherche", $recherche);
+
+
             }else{
                 $pages = $page->findManyBy(['statut' => 2]);
             }
             $view->assign("pages", $pages);
+            $view->assign("meta", [
+                'script' => [
+                    "../dist/js/dataTable.js",
+                ],
+            ]);
         }catch(Exception $e){
             die('test');
         }

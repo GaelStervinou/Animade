@@ -73,6 +73,7 @@ class Personnage
         $view->assign("personnage", $parameters['object']);
         $view->assign("meta", [
             'script' => [
+                "../dist/js/dataTable.js",
                 "../dist/js/getUrlParameters.js",
                 "../dist/js/displayPersonnage.js",
             ],
@@ -103,7 +104,7 @@ class Personnage
                     $personnage->save();
 
                     $personnage->commit();
-                    header('Location:/pirate?pirate_id='.$personnage->getId());
+                    header('Location:/personnage?personnage_id='.$personnage->getId());
                 } catch (Exception $e) {
                     $personnage->rollback();
                     var_dump($e->getMessage());

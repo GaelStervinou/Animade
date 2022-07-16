@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Core\BaseSQL;
+use App\Core\Security;
 use App\Model\User as UserModel;
 
 class Media extends BaseSQL{
@@ -130,6 +131,19 @@ class Media extends BaseSQL{
     public function setStatut(?int $statut): void
     {
         $this->statut = $statut;
+    }
+
+    public static function getMediaSelectOptions()
+    {
+        $media = new Media();
+        $medias = $media->findManyBy(['user_id' => Security::getUser()->getId(), 'statut' => 2]);
+
+        $medias_options = ['' => ''];
+        foreach ($medias as $media){
+            $medias_options[$media->getNom()] = $media->getId();
+        }
+
+        return $medias_options;
     }
 
     public function __construct()

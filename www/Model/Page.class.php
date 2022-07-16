@@ -210,7 +210,11 @@ class Page extends BaseSQL
 
     public function hasMedia()
     {
-        return !empty($this->getMediaId());
+        if(!empty($this->getMediaId())) {
+            return (new MediaModel())->setId($this->getMediaId())->getStatut() === 2;
+        }
+
+        return false;
     }
 
     /**
@@ -319,7 +323,7 @@ class Page extends BaseSQL
         $media = new Media();
         $medias = $media->findManyBy(['user_id' => Security::getUser()->getId(), 'statut' => 2]);
 
-        $medias_options = [];
+        $medias_options = ['' => ''];
         foreach ($medias as $media){
             $medias_options[$media->getNom()] = $media->getId();
         }

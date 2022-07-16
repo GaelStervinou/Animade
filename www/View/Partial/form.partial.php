@@ -92,12 +92,8 @@
                          ?>
                          required='required'
                      <?php endif;?>
-                        <?php
-                        if(!empty($input['default_value'])):
-                            ?>
-                            value="<?= $input['default_value']?>"
+                    ><?php if(!empty($input['default_value'])):?><?=$input['default_value']?>
                         <?php endif;?>
-                    >
         </textarea>
                 </div>
             </div>

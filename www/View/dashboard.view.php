@@ -2,39 +2,7 @@
     <section id="dashboard">
         <div class="grid">
             <div class="row">
-                <div class="col-2 grid" id="side-bar">
-                    <h1>Toolbar</h1>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="/admin/users">Voir les utilisateurs</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="/page/pages">Voir les articles</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="#">Gérer vos statistiques</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="#">Gérer votre dashboard</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="#">Espace modération</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="#">Gérer vos statistiques</a>
-                        </div>
-                    </div>
-                </div>
+                <?php include('View/admin/sidebar.view.php'); ?>
                 <div class="col-10">
                     <h1>ANIMADE ONE PIECE</h1>
                     <div class="row block-stat">

@@ -40,7 +40,7 @@ class Categorie extends BaseSQL{
     }
 
     /**
-     * @return Categorie
+     * @return null|Categorie
      */
     public function getParent(): ?Categorie
     {
@@ -53,9 +53,9 @@ class Categorie extends BaseSQL{
     }
 
     /**
-     * @param Categorie $parent_id
+     * @param int $parent_id
      */
-    public function setParentId(?Categorie $parent_id): void
+    public function setParentId(int $parent_id): void
     {
         $this->parent_id = $parent_id;
     }
@@ -204,5 +204,18 @@ class Categorie extends BaseSQL{
                 ],
             ],
         ];
+    }
+
+    public function getFormUpdateCategorie()
+    {
+        $form = $this->getFormNewCategorie();
+
+        $form['config']['submit'] = "Modifier la catégorie";
+        $form['config']['title'] = "Modifier la catégorie";
+        $form['inputs']['nom']['default_value'] = $this->getNom();
+        $form['inputs']['description']['default_value'] = $this->getDescription();
+        $form['inputs']['parent_id']['default_value'] = $this->getParentId();
+        $form['inputs']['statut']['default_value'] = $this->getStatut();
+        return $form;
     }
 }

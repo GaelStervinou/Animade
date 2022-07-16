@@ -16,12 +16,13 @@
         <?php
             else:
                 ?>
-                <table id="table_id" class="display" style="width: 1200px;">
+                <table id="table_id" class="display" style="width: 100%;">
                 <thead>
                 <tr>
                     <th>Type</th>
                     <th>Nom</th>
                     <th>Description</th>
+                    <th>Date de publication</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,6 +61,12 @@
                                         else{
                                             echo '<td>Aucune description</td>';
                                         }
+                                    if(method_exists($res, "getDateCreation")){
+                                        echo '<td>'.$res->getDateCreation().'</td>';
+                                    }
+                                    else{
+                                        echo '<td>Aucune</td>';
+                                    }
                                     ?>
 
                                 </tr>
@@ -77,6 +84,7 @@
                         <th>Type</th>
                         <th>Nom</th>
                         <th>Description</th>
+                        <th>Date de publication</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -90,4 +98,6 @@
             pagingType: 'full_numbers',
         });
     });
+
+
 </script>

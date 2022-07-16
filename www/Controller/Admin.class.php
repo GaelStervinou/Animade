@@ -31,6 +31,12 @@ class Admin
             ]
         ]);
         $view->assign("users", $users);
+        $view->assign("meta",
+        [
+            'script' => ['../dist/js/dataTable.js'],
+            'titre' => 'Dashboard',
+
+        ]);
 
         $signalements = $this->getSignalementsCommentaireUnique();
         $view->assign("signalements", $signalements);
@@ -42,6 +48,12 @@ class Admin
         $users = $user->findManyBy([]);
         $view = new View("admin/listUsers", "back");
         $view->assign("users", $users);
+        $view->assign("meta", [
+            'script' => [
+                "../dist/js/dataTable.js",
+            ],
+            'titre' => 'Modération des utilsateurs',
+        ]);
     }
 
     public function listSignalements()
@@ -49,6 +61,12 @@ class Admin
         $signalements = $this->getSignalementsCommentaireUnique();
         $view = new View("admin/listSignalements");
         $view->assign("signalements", $signalements);
+        $view->assign("meta", [
+            'script' => [
+                "../dist/js/dataTable.js",
+            ],
+            'titre' => 'Modération des commentaires',
+        ]);
     }
 
     public function getSignalementsCommentaireUnique()

@@ -84,10 +84,6 @@
     endif;
     ?>
     <script>
-        $(document).ready(function () {
-            $('#table_id').DataTable({
-                pagingType: 'full_numbers',
-            });
-        });
+        updateDataTable();
     </script>
 </main>

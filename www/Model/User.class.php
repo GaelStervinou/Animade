@@ -227,7 +227,11 @@ class User extends BaseSQL
 
     public function hasMedia()
     {
-        return !empty($this->getMediaId());
+        if(!empty($this->getMediaId())) {
+            return (new MediaModel())->setId($this->getMediaId())->getStatut() === 2;
+        }
+
+        return false;
     }
 
     /**
@@ -558,7 +562,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues["DBNAME"],
+                    'default_value' => $settingValues["DBNAME"] ?? '',
                 ],
                 'DBUSER' => [
                     'type' => 'text',
@@ -570,7 +574,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['DBUSER'],
+                    'default_value' => $settingValues['DBUSER'] ?? '',
                 ],
                 'DBPWD' => [
                     'type' => 'text',
@@ -582,7 +586,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['DBPWD'],
+                    'default_value' => $settingValues['DBPWD'] ?? '',
                 ],
                 'DBDRIVER' => [
                     'type' => 'text',
@@ -594,7 +598,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['DBDRIVER'],
+                    'default_value' => $settingValues['DBDRIVER'] ?? '',
                 ],
                 'DBPORT' => [
                     'type' => 'text',
@@ -606,7 +610,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['DBPORT'],
+                    'default_value' => $settingValues['DBPORT'] ?? '',
                 ],
                 'DBHOST' => [
                     'type' => 'text',
@@ -618,7 +622,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['DBHOST'],
+                    'default_value' => $settingValues['DBHOST'] ?? '',
                 ],
                 'DBPREFIX' => [
                     'type' => 'text',
@@ -630,7 +634,19 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['DBPREFIX'],
+                    'default_value' => $settingValues['DBPREFIX'] ?? '',
+                ],
+                'DBLINK' => [
+                    'type' => 'text',
+                    'label' => 'Lien de la base de données:',
+                    'placeholder' => 'Lien de la base de données',
+                    'id' => 'dbLinkAdmin',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 150,
+                    'required' => true,
+                    'error' => "Le nom n'est pas conrrect",
+                    'default_value' => $settingValues['DBLINK'] ?? '',
                 ],
                 'SMTP_USERNAME' => [
                     'type' => 'text',
@@ -642,7 +658,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['SMTP_USERNAME'],
+                    'default_value' => $settingValues['SMTP_USERNAME'] ?? '',
                 ],
                 'SMTP_PASSWORD' => [
                     'type' => 'text',
@@ -654,7 +670,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['SMTP_PASSWORD'],
+                    'default_value' => $settingValues['SMTP_PASSWORD'] ?? '',
                 ],
                 'SMTP_HOST' => [
                     'type' => 'text',
@@ -666,7 +682,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['SMTP_HOST'],
+                    'default_value' => $settingValues['SMTP_HOST'] ?? '',
                 ],
                 'CONTACT_MAIL' => [
                     'type' => 'text',
@@ -678,7 +694,7 @@ class User extends BaseSQL
                     'max' => 150,
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
-                    'default_value' => $settingValues['CONTACT_MAIL'],
+                    'default_value' => $settingValues['CONTACT_MAIL'] ?? '',
                 ],
             ],
         ];

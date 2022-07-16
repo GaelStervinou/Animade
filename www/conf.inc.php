@@ -6,6 +6,7 @@ define("DBDRIVER", "mysql");
 define("DBPORT", "3306");
 define("DBHOST", "database");
 define("DBPREFIX", "zdek_");
+define("DBLINK", "http://localhost:8888/index.php?route=/sql&server=1&db=mvcdocker2");
 define("SMTP_USERNAME", "thomasesgipa@gmail.com");
 define("SMTP_PASSWORD", "fxopxxzbyzfbymmq");
 define("SMTP_HOST", "ssl://smtp.gmail.com");

@@ -149,7 +149,6 @@ return $objectList;
             }else{
                 $this->where($column, str_replace("'", "\'", $value));
             }
-            $this->where($column, $value);
         }
         if($orderBy !== null){
             $this->orderBy($orderBy[0], $orderBy[1]);
@@ -294,11 +293,11 @@ return $objectList;
             $query->setFetchMode(\PDO::FETCH_CLASS, $class);
         }
         $query->execute();
-        if($fetch_type == 'one'){
+        if($fetch_type === 'one'){
             return $query->fetch();
-        }else{
-            return $query->fetchAll();
         }
+        return $query->fetchAll();
+
     }
 
     public function prepareQuery()

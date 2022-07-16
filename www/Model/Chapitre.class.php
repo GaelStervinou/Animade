@@ -60,21 +60,27 @@ class Chapitre extends BaseSQL{
     }
 
     /**
-     * @return MediaModel
+     * @return bool|MediaModel
      */
     public function getMedia(): ?MediaModel
     {
-        if(!empty($this->hasMedia())){
-            $media = new MediaModel();
-            return $media->setId($this->getMediaId());
-        }else{
-            return false;
+        if($this->hasMedia() === true){
+            return (new MediaModel())->setId($this->getMediaId());
         }
+        return false;
     }
 
-    public function hasMedia()
+
+    /**
+     * @return bool
+     */
+    public function hasMedia(): bool
     {
-        return !empty($this->getMediaId());
+        if($this->getMediaId() !== null) {
+            return (new MediaModel())->setId($this->getMediaId())->getStatut() === 2;
+        }
+
+        return false;
     }
 
     /**
@@ -169,6 +175,27 @@ class Chapitre extends BaseSQL{
                 ],
             ],
         ];
+    }
+
+    public function getUpdateChapitreForm()
+    {
+        $form = $this->getNewChapitreForm();
+        $form['config']['submit'] = "Modifier chapitre";
+        $form['config']['title'] = "Modifier chapitre";
+
+        $form['inputs']['titre']['default_value'] = $this->getTitre();
+
+        $form['inputs']['select_media'] =
+            [
+                'type' => 'select',
+                'label' => 'Image :',
+                'options' => Media::getMediaSelectOptions(),
+                'id' => 'selectMediaUpdatePage',
+                'class' => 'inputRegister',
+                'error' => 'Image incorrecte',
+                'default_value' => $this->getMediaId(),
+            ];
+        return $form;
     }
 
 }
