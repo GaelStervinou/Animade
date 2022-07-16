@@ -13,11 +13,15 @@ class View
     public function __construct($view, $template = "front")
     {
         $this->setView($view);
-        $user = Security::getUser();
-        if($user !== false && $user->getRoleId() >= 3){
-            $this->setTemplate("back");
-        } else {
-            $this->setTemplate("front");
+        if($template === "without"){
+            $this->setTemplate($template);
+        }else{
+            $user = Security::getUser();
+            if($user !== false && $user->getRoleId() >= 3){
+                $this->setTemplate("back");
+            } else {
+                $this->setTemplate("front");
+            }
         }
     }
 

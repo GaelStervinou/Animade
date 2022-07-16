@@ -140,7 +140,7 @@ return $objectList;
         return $this->findOneBy($this->table, ['nom' => $nom]);
     }
 
-    public function findOneBy(string $table, array $where)
+    public function findOneBy(string $table, array $where, array $orderBy=null)
     {
         $this->select($table, ['*']);
         foreach ($where as $column => $value){
@@ -150,6 +150,9 @@ return $objectList;
                 $this->where($column, str_replace("'", "\'", $value));
             }
             $this->where($column, $value);
+        }
+        if($orderBy !== null){
+            $this->orderBy($orderBy[0], $orderBy[1]);
         }
         return $this->fetchQuery(get_called_class(), 'one');
     }

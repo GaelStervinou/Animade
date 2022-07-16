@@ -35,7 +35,7 @@ class General{
         }
         $view->assign("mostLikedPage", $mostLikedPage);
         $lastChapitre = new Chapitre();
-        $lastChapitre = $lastChapitre->findOneBy($lastChapitre->getTable(), ['statut' => 2], ['date_creation', 'DESC']);
+        $lastChapitre = $lastChapitre->findOneBy($lastChapitre->getTable(), ['statut' => 2], ['id', 'DESC']);
         $view->assign("lastChapitre", $lastChapitre);
     }
 

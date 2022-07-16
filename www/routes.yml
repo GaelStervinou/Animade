@@ -48,6 +48,12 @@
   security:
     rule: superAdmin
 
+/install:
+  controller: admin
+  action: install
+  security:
+    rule: boot
+
 
 
 # page
