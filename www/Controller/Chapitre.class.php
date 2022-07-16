@@ -47,11 +47,8 @@ class Chapitre{
                 }
             }
         } else {
-            $user = Security::getUser();
             $view = new View("chapitre/newChapitre");
             $chapitre = new ChapitreModel();
-            $view->assign("firstname", $user->getFirstname());
-            $view->assign("lastname", $user->getLastname());
             $view->assign("chapitre", $chapitre);
         }
     }
@@ -70,10 +67,57 @@ class Chapitre{
         $view->assign("chapitre", $parameters['object']);
         $view->assign("meta", [
             'script' => [
+                "../dist/js/dataTable.js",
                 "../dist/js/getUrlParameters.js",
                 "../dist/js/displayChapitre.js"
             ],
         ]);
+    }
+
+    public function update()
+    {
+        if (!empty($_POST)) {
+
+            if(!empty($_FILES)){
+                foreach($_FILES as $name => $info){
+                    $_POST[$name] = $info;
+                }
+            }
+
+            $chapitre = (new ChapitreModel())->setId($_GET['chapitre_id']);
+            $result = Validator::run($chapitre->getUpdateChapitreForm(), $_POST);
+            if (empty($result)) {
+                try {
+                    $chapitre->beginTransaction();
+                    $chapitre->setTitre($_POST['titre']);
+                    $chapitre->setStatut(2);
+                    if(!empty($_POST['media']['tmp_name'])){
+                        if($chapitre->hasMedia() === true){
+                            $chapitre->getMedia()->delete();
+                        }
+
+                        $chapitre->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $chapitre));
+                    }elseif(!empty($_POST['select_media'])){
+                        if($chapitre->hasMedia() === true){
+                            $chapitre->getMedia()->delete();
+                        }
+                        $chapitre->setMediaId($_POST['select_media']);
+                    }
+
+                    $chapitre->save();
+                    $chapitre->commit();
+                    header('Location:/chapitre?chapitre='.$chapitre->getTitre());
+                } catch (Exception $e) {
+                    $chapitre->rollback();
+                    var_dump($e->getMessage());
+                    die;
+                }
+            }
+        } else {
+            $view = new View("chapitre/updateChapitre");
+            $chapitre = (new ChapitreModel())->setId($_GET['chapitre_id']);
+            $view->assign("chapitre", $chapitre);
+        }
     }
 
 }

@@ -16,8 +16,7 @@
                             <tbody>
                             <?php foreach ($categories as $categorie):?>
                                 <tr style="text-align: center">
-                                    <!-- TODO: rendre les infos cliquables ( on clique sur le nom du perso et on arrive sur sa fiche par ex)!-->
-                                    <td><?= $categorie->getNom()?></td>
+                                    <td><a href="/categorie?categorie_id=<?=$categorie->getId()?>"><?= $categorie->getNom()?></a></td>
                                     <td><?= substr($categorie->getDescription(), 0, 40)?></td>
                                     <td>
                                         <?php

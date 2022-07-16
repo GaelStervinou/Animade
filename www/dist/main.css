@@ -3,10 +3,6 @@
   font-family: "Montserrat", sans-serif;
 }
 
-a:not([href]) {
-  pointer-events: none;
-}
-
 body {
   font-family: "Montserrat", sans-serif;
   background-color: #EEEEEE;

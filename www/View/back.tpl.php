@@ -5,7 +5,7 @@ use App\Core\Security;
 $user = Security::getUser();?>
 <head>
     <meta charset="UTF-8">
-    <title>Template de back</title>
+    <title><?=$meta['titre'] ?? 'Template de back'?></title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -13,7 +13,14 @@ $user = Security::getUser();?>
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     <meta name="description" content="ceci est la description de ma page">
+    <?php
+    if(isset($meta)):
+        foreach($meta['script'] as $script):
+            ?>
+            <script type="text/javascript" charset="utf8" src="<?= $script?>"></script>
+        <?php endforeach; endif; ?>
     <script type="text/javascript" charset="utf8" src="../dist/js/loadCss.js"></script>
+
 </head>
 <body>
     <header>
@@ -44,7 +51,12 @@ $user = Security::getUser();?>
                     if(Security::canAsSuperAdmin()):
                     ?>
                     <li><a href="/admin/administration">Paramètres</a></li>
+                        <?php
+                    if(DBLINK !== null):
+                        ?>
+                    <li><a href="<?=DBLINK?>">Base de données</a></li>
                     <?php
+                    endif;
                     endif;
                     ?>
                     <li><a href="#">Nous contacter</a></li>

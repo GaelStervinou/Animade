@@ -58,13 +58,9 @@
                         </table>
 
 
-                        <script>
-                            $(document).ready(function() {
-                                $('#table_id').DataTable({
-                                    pagingType: 'full_numbers',
-                                });
-                            });
-                        </script>
+                            <script>
+                                updateDataTable();
+                            </script>
                         </div>
                     </div>
                 </div>  

@@ -37,6 +37,12 @@ class General{
         $lastChapitre = new Chapitre();
         $lastChapitre = $lastChapitre->findOneBy($lastChapitre->getTable(), ['statut' => 2], ['id', 'DESC']);
         $view->assign("lastChapitre", $lastChapitre);
+        $view->assign("meta",
+            [
+                'script' => ['../dist/js/dataTable.js'],
+                'titre' => 'Accueil',
+
+            ]);
     }
 
     public function contact()

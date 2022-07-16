@@ -74,7 +74,11 @@ class Personnage extends BaseSQL
 
     public function hasMedia()
     {
-        return !empty($this->getMediaId());
+        if(!empty($this->getMediaId())) {
+            return (new MediaModel())->setId($this->getMediaId())->getStatut() === 2;
+        }
+
+        return false;
     }
 
     /**

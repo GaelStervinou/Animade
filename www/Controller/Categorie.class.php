@@ -54,13 +54,59 @@ class Categorie{
         $user = new UserModel();
         $user = $user->setId($_SESSION['user']['id']);
         $parameters = UrlHelper::getUrlParameters($_GET);
-
+        if(!empty($parameters['categorie'])){
+            $parameters['object'] = $parameters['categorie'];
+        }
         Security::canAccessCategorie($parameters['object'], $user);
         $view = new View("categorie/displayCategorie");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
         $view->assign("categorie", $parameters['object']);
-        $view->assign("pages", $parameters['object']->getPages());
+        $view->assign("meta", [
+            'script' => [
+                "../dist/js/dataTable.js",
+                "../dist/js/getUrlParameters.js",
+                "../dist/js/displayCategorie.js"
+            ],
+        ]);
+    }
+
+    public function update()
+    {
+        if (!empty($_POST)) {
+            if (!empty($_FILES)) {
+                foreach ($_FILES as $name => $info) {
+                    $_POST[$name] = $info;
+                }
+            }
+            $categorie = UrlHelper::getUrlParameters($_GET)['object'];
+
+            $result = Validator::run($categorie->getFormUpdateCategorie(), $_POST);
+            if (empty($result)) {
+                try {
+                    $categorie->beginTransaction();
+                    $categorie->setNom($_POST['nom']);
+                    $categorie->setStatut($_POST['statut']);
+                    $categorie->setDescription($_POST['description']);
+                    if(!empty($_POST['parent_id'])){
+                        $categorie->setParentId($_POST['parent_id']);
+                    }
+
+                    $categorie->save();
+
+                    $categorie->commit();
+                    header('Location:/categorie?categorie_id='.$categorie->getId());
+                } catch (Exception $e) {
+                    $categorie->rollback();
+                    var_dump($e->getMessage());
+                    die;
+                }
+            }
+        } else {
+            $categorie = UrlHelper::getUrlParameters($_GET)['object'];
+            $view = new View("categorie/updateCategorie");
+            $view->assign("categorie", $categorie);
+        }
     }
 
     public function listCategories()

@@ -13,7 +13,6 @@ class MediaManager{
         if(self::verifyImageType($data['type']) === false){
             Security::returnError(415, "Le type de fichier n'est pas autorisé");
         }
-
         if(self::verifyNameUnicrity($filename) === false){
             Security::returnError(422, "Le nom du fichier n'est pas unique");
         }

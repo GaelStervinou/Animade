@@ -1,10 +1,9 @@
-<h1><?php use App\Core\Security;
+<h1 id="nom_personnage"><?=$personnage->getNom();?></h1>
+<?php use App\Core\Security;
 
-    echo $personnage->getNom();
 
-    if($personnage->hasMedia() === true):
-    ?></h1>
-
+if($personnage->hasMedia() === true):
+    ?>
 <img src="<?= $personnage->getMedia()->getChemin()?>" alt="Image du personnage"
      width="300"
      height="300" >

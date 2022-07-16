@@ -175,6 +175,12 @@
   security:
     rule: default
 
+/categorie/update:
+  controller: categorie
+  action: update
+  security:
+    rule: admin
+
 /categorie/delete:
   controller: categorie
   action: delete
@@ -232,6 +238,12 @@
   action: read
   security:
     rule: default
+
+/chapitre/update:
+  controller: chapitre
+  action: update
+  security:
+    rule: admin
 
 
 
