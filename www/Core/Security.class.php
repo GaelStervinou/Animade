@@ -192,7 +192,7 @@ class Security
      */
     public static function canAccessCommentaire(Commentaire $commentaire)
     {
-        if (self::isAdmin() || 
+        if (self::canAsAdmin() ||
             self::verifyStatut($commentaire->getStatut() && self::canDelete('commentaire'))) {
             return true;
         }
@@ -209,7 +209,7 @@ class Security
      */
     public static function canAccessPersonnage(Personnage $personnage)
     {
-        if( self::isAdmin() || self::verifyStatut($personnage->getStatut())){
+        if( self::canAsAdmin() || self::verifyStatut($personnage->getStatut())){
             return true;
         }
         self::returnError(403);
@@ -221,7 +221,7 @@ class Security
      */
     public static function canAccessChapitre(Chapitre $chapitre)
     {
-        if(self::isAdmin() || self::verifyStatut($chapitre->getStatut())){
+        if(self::canAsAdmin() || self::verifyStatut($chapitre->getStatut())){
             return true;
         }
         self::returnError(403);
@@ -261,6 +261,7 @@ class Security
         return match ($object) {
             'user' => self::canUpdateUser(),
             'page' => self::canUpdatePage(),
+            'media' => self::canUpdateMedia(),
             default => self::isSuperAdmin(),
         };
     }
@@ -271,7 +272,7 @@ class Security
     public static function canDeletePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
-        if(self::isAdmin() || $page->getAuteurId() === $_SESSION['user']['id']){
+        if(self::canAsAdmin() || $page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
         self::returnError(403);
@@ -283,7 +284,7 @@ class Security
     public static function canDeleteCommentaire()
     {
         $commentaire = UrlHelper::getUrlParameters($_GET)['object'];
-        if(self::isAdmin() || $commentaire->getAuteurId() === $_SESSION['user']['id'] ){
+        if(self::canAsAdmin() || $commentaire->getAuteurId() === $_SESSION['user']['id'] ){
             return true;
         }
         self::returnError(403);
@@ -295,7 +296,19 @@ class Security
     public static function canUpdateUser()
     {
         $user = UrlHelper::getUrlParameters($_GET)['object'];
-        if(self::isAdmin() || $user->getId() === $_SESSION['user']['id']){
+        if(self::canAsAdmin() || $user->getId() === $_SESSION['user']['id']){
+            return true;
+        }
+        self::returnError(403);
+    }
+
+    /**
+     * @return bool|void
+     */
+    public static function canUpdateMedia()
+    {
+        $media = UrlHelper::getUrlParameters($_GET)['object'];
+        if(self::canAsAdmin() || $media->getUserId() === $_SESSION['user']['id']){
             return true;
         }
         self::returnError(403);

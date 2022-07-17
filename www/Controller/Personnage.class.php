@@ -118,6 +118,20 @@ class Personnage
         }
     }
 
+    public function listPersonnages()
+    {
+        $personnage = new PersonnageModel();
+        $personnages = $personnage->findManyBy(['statut' => 2]);
+        $view = new View("personnage/listPersonnages");
+        $view->assign("personnages", $personnages);
+        $view->assign("meta",
+            [
+                'script' => ['../dist/js/dataTable.js'],
+                'titre' => 'Personnages',
+
+            ]);
+    }
+
     public function delete()
     {
         $personnage = UrlHelper::getUrlParameters($_GET)['object'];

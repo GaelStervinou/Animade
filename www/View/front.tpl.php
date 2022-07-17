@@ -13,7 +13,9 @@ if(!UrlHelper::isAjaxRequest()):
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title><?= $titleSeo??"Template du front" ?></title>
+    <title><?=$meta['titre'] ?? 'Template de back'?></title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
+
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -21,7 +23,7 @@ if(!UrlHelper::isAjaxRequest()):
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <?php
-    if(isset($meta)):
+    if(isset($meta['script'])):
         foreach($meta['script'] as $script):
     ?>
 
@@ -53,13 +55,20 @@ if(!UrlHelper::isAjaxRequest()):
             <nav id="site-nav">
                 <ul>
                     <li><a href="/">Accueil</a></li>
-                    <li><a href="#">Actualités</a></li>
                     <li><a href="#">Nous contacter</a></li>
+                    <?php
+                    if($user->getId() !== null):
+                    ?>
+                        <li><a href="/user?user_id=<?=$user->getId()?>">Profil</a></li>
+                        <li><a href="/logout">Se déconnecter</a></li>
+                    <?php
+                    endif;
+                    ?>
                 </ul>
             </nav>
         </div>
         <?php
-        if($user !== false):
+        if($user->getId() !== null):
             ?>
             <div id="recherche" class="recherche">
                 <form action="/recherche" method="GET">

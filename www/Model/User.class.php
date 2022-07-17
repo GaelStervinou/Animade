@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Controller\Admin;
 use App\Core\BaseSQL;
 use App\Core\Security;
+use App\Model\Page as PageModel;
 use App\Model\Role as RoleModel;
 use App\Model\Media as MediaModel;
 
@@ -242,6 +243,11 @@ class User extends BaseSQL
         $this->media_id = $media_id;
     }
 
+    public function getPages()
+    {
+        return (new PageModel())->findManyBy(['auteur_id' => $this->getId(), 'statut' => 2]);
+    }
+
     public function save()
     {
         parent::save();
@@ -311,6 +317,11 @@ class User extends BaseSQL
                     'type' => 'a',
                     'href' => '/forgottenPassword',
                     'placeholder' => 'Mot de passe oublié ?',
+                ],
+                "S'enregistrer" => [
+                    'type' => 'a',
+                    'href' => '/register',
+                    'placeholder' => "S'enregistrer",
                 ],
             ],
         ];
@@ -683,6 +694,14 @@ class User extends BaseSQL
                     'required' => true,
                     'error' => "Le nom n'est pas conrrect",
                     'default_value' => $settingValues['SMTP_HOST'] ?? '',
+                ],
+                'FAVICON' => [
+                    'type' => 'file',
+                    'label' => 'Image :',
+                    'id' => 'faviconSite',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                    'required' => false,
                 ],
                 'CONTACT_MAIL' => [
                     'type' => 'text',

@@ -2,10 +2,13 @@
 <html lang="fr">
 <?php
 use App\Core\Security;
-$user = Security::getUser();?>
+$user = Security::getUser();
+?>
+
 <head>
     <meta charset="UTF-8">
     <title><?=$meta['titre'] ?? 'Template de back'?></title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -14,7 +17,7 @@ $user = Security::getUser();?>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     <meta name="description" content="ceci est la description de ma page">
     <?php
-    if(isset($meta)):
+    if(isset($meta['script'])):
         foreach($meta['script'] as $script):
             ?>
             <script type="text/javascript" charset="utf8" src="<?= $script?>"></script>
@@ -60,6 +63,7 @@ $user = Security::getUser();?>
                     endif;
                     ?>
                     <li><a href="#">Nous contacter</a></li>
+                    <li><a href="/logout">Se déconnecter</a></li>
                 </ul>
             </nav>
             <?php

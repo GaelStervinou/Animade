@@ -91,12 +91,21 @@ class Admin
     {
 
         if(!empty($_POST)){
-
+            if (!empty($_FILES)) {
+                foreach ($_FILES as $name => $info) {
+                    $_POST[$name] = $info;
+                }
+            }
             $user = new UserModel();
 
             $result = Validator::run($user->getSettingsForm(), $_POST);
             if(empty($result)){
                 $configContent = "<?php\n";
+
+                if(!empty($_POST["FAVICON"])){
+                    move_uploaded_file($_POST["FAVICON"]['tmp_name'], "assets/images/favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]));
+                    $_POST["FAVICON"] = "favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]);
+                }
 
                 foreach($_POST as $key => $value){
                     $configContent .= "define(\"".$key."\", \"".$value."\");\n";

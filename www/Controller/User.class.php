@@ -41,7 +41,9 @@ class User
             }
         } else {
             $view = new View("Login");
-            $view->assign("titleSeo", "Se connecter au site");
+            $view->assign("meta", [
+                'titre' => 'Se connecter',
+            ]);
             $view->assign("user", $user);
         }
     }
@@ -102,6 +104,9 @@ class User
                 }
                 $user = new UserModel();
                 $view = new View("register");
+                $view->assign("meta", [
+                    'titre' => 'S\'enregistrer',
+                ]);
             }
         } else {
             $user = new UserModel();
@@ -130,6 +135,7 @@ class User
 
                 $view = new View("user/verifiedAccount");
                 $view->assign("meta", [
+                    'titre' => 'Votre compte est validé',
                     'script' => [
                         '../dist/js/verifiedAccount.js',
                     ]
@@ -190,7 +196,7 @@ class User
                     if (Security::canAsAdmin() === true) {
                         header('Location:/admin/users');
                     } else {
-                        header('Location:/');
+                        header('Location:/user?user_id='.$user->getId());
                     }
                 } catch (Exception $e) {
                     $user->rollback();
@@ -286,6 +292,31 @@ class User
             }
 
         }
+    }
+
+    public function read()
+    {
+        $user = UrlHelper::getUrlParameters($_GET)['object'];
+        if(!empty($user)) {
+            $view = new View("user/displayUser");
+            $view->assign("user", $user);
+        }else{
+            Security::returnError(403);
+        }
+
+    }
+
+    public function listAuteurs()
+    {
+        $auteurs = (new UserModel())->findManyBy(['status' => 2, 'role_id' => 2]);
+        $view = new View("auteur/listAuteurs");
+        $view->assign("auteurs", $auteurs);
+        $view->assign("meta",
+            [
+                'script' => ['../dist/js/dataTable.js'],
+                'titre' => 'Catégories',
+
+            ]);
     }
 
     /**

@@ -24,6 +24,12 @@ class Recherche{
 
         $view = new View("recherche/displayRecherche");
         $view->assign("resultats", $resultats);
+        $view->assign("meta",
+            [
+                'script' => ['../dist/js/dataTable.js'],
+                'titre' => 'Résultats',
+
+            ]);
         return true;
     }
 

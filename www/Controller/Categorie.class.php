@@ -115,6 +115,12 @@ class Categorie{
         $categories = $categorie->findManyBy(['statut' => 2]);
         $view = new View("categorie/listCategories");
         $view->assign("categories", $categories);
+        $view->assign("meta",
+            [
+                'script' => ['../dist/js/dataTable.js'],
+                'titre' => 'Catégories',
+
+            ]);
     }
 
     public function delete()
