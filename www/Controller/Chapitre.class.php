@@ -120,4 +120,18 @@ class Chapitre{
         }
     }
 
+    public function listChapitres()
+    {
+        $chapitre = new ChapitreModel();
+        $chapitres = $chapitre->findManyBy(['statut' => 2]);
+        $view = new View("chapitre/listChapitres");
+        $view->assign("chapitres", $chapitres);
+        $view->assign("meta",
+            [
+                'script' => ['../dist/js/dataTable.js'],
+                'titre' => 'Chapitres',
+
+            ]);
+    }
+
 }

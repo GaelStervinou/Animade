@@ -1,4 +1,12 @@
 <main>
+    <nav>
+        <ul>
+            <li><a href="/categorie/categories">Catégories</a></li>
+            <li><a href="/chapitre/chapitres">Chapitres</a></li>
+            <li><a href="/personnage/personnages">Personnages</a></li>
+            <li><a href="/auteurs">Auteurs</a></li>
+        </ul>
+    </nav>
     <h3>Les derniers articles</h3>
     <?php
     include('View/page/listPages.view.php');

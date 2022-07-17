@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <a href="/admin/medias">Voir les médias</a>
+            <a href="/media/listMedias">Voir les médias</a>
         </div>
     </div>
 </div>

@@ -118,6 +118,12 @@
   security:
     rule: default
 
+/personnage/personnages:
+  controller: personnage
+  action: listPersonnages
+  security:
+    rule: default
+
 /personnage/update:
   controller: personnage
   action: update
@@ -152,6 +158,19 @@
   security:
     rule:
       update: user
+
+/user:
+  controller: user
+  action: read
+  security:
+    rule:
+      update: user
+
+/auteurs:
+  controller: user
+  action: listAuteurs
+  security:
+    rule: default
 
 
 
@@ -245,6 +264,12 @@
   security:
     rule: admin
 
+/chapitre/chapitres:
+  controller: chapitre
+  action: listChapitres
+  security:
+    rule: default
+
 
 
 
@@ -263,3 +288,19 @@
   action: recherche
   security:
     rule: default
+
+
+
+# medias
+/media/listMedias:
+  controller: media
+  action: listMedias
+  security:
+    rule: default
+
+/media/updateStatut:
+  controller: media
+  action: updateStatut
+  security:
+    rule:
+      update: media

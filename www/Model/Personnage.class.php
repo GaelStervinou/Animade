@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Core\BaseSQL;
 use App\Model\Media as MediaModel;
+use App\Model\Page as PageModel;
 
 class Personnage extends BaseSQL
 {
@@ -111,6 +112,11 @@ class Personnage extends BaseSQL
     public function setStatut(?int $statut): void
     {
         $this->statut = $statut;
+    }
+
+    public function getPages()
+    {
+        return (new PageModel())->findManyBy(['personnage_id' => $this->getId(), 'statut' => 2]);
     }
 
     public function save()

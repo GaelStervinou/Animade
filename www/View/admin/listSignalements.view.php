@@ -36,9 +36,7 @@
 
 
                     <script>
-                        $('#table_id').DataTable({
-                            pagingType: 'full_numbers',
-                        });
+                        updateDataTable();
                     </script>
                     </div>      
                 </div>

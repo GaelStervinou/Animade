@@ -11,3 +11,4 @@ define("SMTP_USERNAME", "thomasesgipa@gmail.com");
 define("SMTP_PASSWORD", "fxopxxzbyzfbymmq");
 define("SMTP_HOST", "ssl://smtp.gmail.com");
 define("CONTACT_MAIL", "stervinou.g36@gmail.com");
+define("FAVICON", "favicon.png");

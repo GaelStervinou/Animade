@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Core\BaseSQL;
 use App\Model\Media as MediaModel;
+use App\Model\Page as PageModel;
 
 class Chapitre extends BaseSQL{
 
@@ -113,6 +114,11 @@ class Chapitre extends BaseSQL{
     public function setStatut(?int $statut): void
     {
         $this->statut = $statut;
+    }
+
+    public function getPages()
+    {
+        return (new PageModel())->findManyBy(['chapitre_id' => $this->getId(), 'statut' => 2]);
     }
 
     public function save()
