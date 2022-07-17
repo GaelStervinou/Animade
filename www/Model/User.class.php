@@ -180,7 +180,7 @@ class User extends BaseSQL
      */
     public function generateToken(): void
     {
-        $this->token = str_shuffle(md5(uniqid()));
+        $this->token = str_shuffle(md5(uniqid('', true)));
     }
 
     /**
