@@ -76,7 +76,6 @@ class BaseSQL implements QueryBuilder
         if(empty($email_token)){
             Security::returnError(404);
         }
-
         return $this->findOneBy($this->getTable(), ['email' => $user_email, 'emailToken' => $email_token]);
     }
 

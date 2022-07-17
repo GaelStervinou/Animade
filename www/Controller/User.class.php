@@ -91,7 +91,7 @@ class User
                     $user->save();
                     $user->commit();
 
-                    $view = new View("verifyaccount");
+                    $view = new View("verifyaccount", "without");
 
                 }catch(Exception $e){
                     echo $e->getMessage();
@@ -128,12 +128,13 @@ class User
                 $user->beginTransaction();
                 $user->setStatus(2);
                 $user->generateEmailToken();
+                $user->generateToken();
                 $user->save();
                 $user->commit();
 
                 Security::updateCurrentUser($user);
 
-                $view = new View("user/verifiedaccount");
+                $view = new View("user/verifiedcccount", "without");
                 $view->assign("meta", [
                     'titre' => 'Votre compte est validé',
                     'script' => [
