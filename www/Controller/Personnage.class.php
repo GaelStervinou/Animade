@@ -51,7 +51,7 @@ class Personnage
         } else {
             $user = new UserModel();
             $user = $user->setId($_SESSION['user']['id']);
-            $view = new View("personnage/newPersonnage");
+            $view = new View("personnage/newpersonnage");
             $personnage = new PersonnageModel();
             $view->assign("firstname", $user->getFirstname());
             $view->assign("lastname", $user->getLastname());
@@ -67,15 +67,15 @@ class Personnage
             $parameters['object'] = $parameters['personnage'];
         }
         Security::canAccessPersonnage($parameters['object'], $user);
-        $view = new View("personnage/displayPersonnage");
+        $view = new View("personnage/displaypersonnage");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
         $view->assign("personnage", $parameters['object']);
         $view->assign("meta", [
             'script' => [
-                "../dist/js/dataTable.js",
-                "../dist/js/getUrlParameters.js",
-                "../dist/js/displayPersonnage.js",
+                "../dist/js/datatable.js",
+                "../dist/js/geturlparameters.js",
+                "../dist/js/displaypersonnage.js",
             ],
         ]);
     }
@@ -113,7 +113,7 @@ class Personnage
             }
         } else {
             $personnage = UrlHelper::getUrlParameters($_GET)['object'];
-            $view = new View("personnage/updatePersonnage");
+            $view = new View("personnage/updatepersonnage");
             $view->assign("personnage", $personnage);
         }
     }
@@ -122,11 +122,11 @@ class Personnage
     {
         $personnage = new PersonnageModel();
         $personnages = $personnage->findManyBy(['statut' => 2]);
-        $view = new View("personnage/listPersonnages");
+        $view = new View("personnage/listpersonnages");
         $view->assign("personnages", $personnages);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Personnages',
 
             ]);

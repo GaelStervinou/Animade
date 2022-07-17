@@ -55,7 +55,7 @@ class Commentaire{
         }else{
             $user = new UserModel();
             $user = $user->setId($_SESSION['user']['id']);
-            $view = new View("page/newPage");
+            $view = new View("page/newpage");
             $page = new PageModel();
             $view->assign("firstname", $user->getFirstname());
             $view->assign("lastname", $user->getLastname());
@@ -66,7 +66,7 @@ class Commentaire{
     public function listCommentaires()
     {
         $commentaire = new PageModel();
-        $view = new View("page/listPages");
+        $view = new View("page/listpages");
 
         $commentaires = $commentaire->findManyBy(['statut' => 2]);
 
@@ -79,7 +79,7 @@ class Commentaire{
         $parameters = UrlHelper::getUrlParameters($_GET);
 
         Security::canAccessCommentaire($parameters['object'], $user);
-        $view = new View("commentaire/displayCommentaire");
+        $view = new View("commentaire/displaycommentaire");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
         $view->assign("commentaire", $parameters['object']);

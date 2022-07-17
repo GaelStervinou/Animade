@@ -10,7 +10,7 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     <meta name="description" content="ceci est la description de ma page">
-    <script type="text/javascript" charset="utf8" src="../dist/js/loadCss.js"></script>
+    <script type="text/javascript" charset="utf8" src="../dist/js/loadcss.js"></script>
 </head>
 <body>
 <main>

@@ -33,7 +33,7 @@ class Admin
         $view->assign("users", $users);
         $view->assign("meta",
         [
-            'script' => ['../dist/js/dataTable.js'],
+            'script' => ['../dist/js/datatable.js'],
             'titre' => 'Dashboard',
 
         ]);
@@ -46,11 +46,11 @@ class Admin
     {
         $user = new UserModel();
         $users = $user->findManyBy([]);
-        $view = new View("admin/listUsers", "back");
+        $view = new View("admin/listusers", "back");
         $view->assign("users", $users);
         $view->assign("meta", [
             'script' => [
-                "../dist/js/dataTable.js",
+                "../dist/js/datatable.js",
             ],
             'titre' => 'Modération des utilsateurs',
         ]);
@@ -59,11 +59,11 @@ class Admin
     public function listSignalements()
     {
         $signalements = $this->getSignalementsCommentaireUnique();
-        $view = new View("admin/listSignalements");
+        $view = new View("admin/listsignalements");
         $view->assign("signalements", $signalements);
         $view->assign("meta", [
             'script' => [
-                "../dist/js/dataTable.js",
+                "../dist/js/datatable.js",
             ],
             'titre' => 'Modération des commentaires',
         ]);

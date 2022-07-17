@@ -28,7 +28,7 @@ $user = Security::getUser();
             ?>
             <script type="text/javascript" charset="utf8" src="<?= $script?>"></script>
         <?php endforeach; endif; ?>
-    <script type="text/javascript" charset="utf8" src="../dist/js/loadCss.js"></script>
+    <script type="text/javascript" charset="utf8" src="../dist/js/loadcss.js"></script>
 
 </head>
 <body>

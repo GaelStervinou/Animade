@@ -22,11 +22,11 @@ class Recherche{
         $resultats['categories'] = $this->rechercheCategories($recherche);
         $resultats['chapitres'] = $this->rechercheChapitres($recherche);
 
-        $view = new View("recherche/displayRecherche");
+        $view = new View("recherche/displayrecherche");
         $view->assign("resultats", $resultats);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Résultats',
 
             ]);

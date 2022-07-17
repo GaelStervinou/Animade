@@ -91,7 +91,7 @@ class User
                     $user->save();
                     $user->commit();
 
-                    $view = new View("verifyAccount");
+                    $view = new View("verifyaccount");
 
                 }catch(Exception $e){
                     echo $e->getMessage();
@@ -133,11 +133,11 @@ class User
 
                 Security::updateCurrentUser($user);
 
-                $view = new View("user/verifiedAccount");
+                $view = new View("user/verifiedaccount");
                 $view->assign("meta", [
                     'titre' => 'Votre compte est validé',
                     'script' => [
-                        '../dist/js/verifiedAccount.js',
+                        '../dist/js/verifiedaccount.js',
                     ]
                 ]);
             } catch (Exception $e) {
@@ -206,7 +206,7 @@ class User
             }
         } else {
             $user = UrlHelper::getUrlParameters($_GET)['object'];
-            $view = new View("user/updateUser");
+            $view = new View("user/updateuser");
             $view->assign("user", $user);
         }
     }
@@ -237,7 +237,7 @@ class User
 
                     $user->commit();
 
-                    $view = new View("user/forgottenPassword");
+                    $view = new View("user/forgottenpassword");
                     $view->assign("message", "Un email vous a été envoyé pour changer votre mot de passe.");
 
                 }catch (Exception $e) {
@@ -248,7 +248,7 @@ class User
             }
         } else {
             $user = new UserModel();
-            $view = new View("user/forgottenPassword");
+            $view = new View("user/forgottenpassword");
             $view->assign("user", $user);
         }
     }
@@ -285,7 +285,7 @@ class User
             $user = new UserModel();
             $user = $user->getUserFromEmail($_GET["email"]);
             if(!empty($user) && $user->getMdpToken() === $_GET["mdpToken"]) {
-                $view = new View("user/updatePassword");
+                $view = new View("user/updatepassword");
                 $view->assign("user", $user);
             }else{
                 Security::returnError(403, "Le lien de réinitialisation de mot de passe n'est pas valide.");
@@ -298,7 +298,7 @@ class User
     {
         $user = UrlHelper::getUrlParameters($_GET)['object'];
         if(!empty($user)) {
-            $view = new View("user/displayUser");
+            $view = new View("user/displayuser");
             $view->assign("user", $user);
         }else{
             Security::returnError(403);
@@ -309,11 +309,11 @@ class User
     public function listAuteurs()
     {
         $auteurs = (new UserModel())->findManyBy(['status' => 2, 'role_id' => 2]);
-        $view = new View("auteur/listAuteurs");
+        $view = new View("auteur/listauteurs");
         $view->assign("auteurs", $auteurs);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Catégories',
 
             ]);

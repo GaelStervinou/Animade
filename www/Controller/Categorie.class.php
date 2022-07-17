@@ -41,7 +41,7 @@ class Categorie{
         }else{
             $user = new UserModel();
             $user = $user->setId($_SESSION['user']['id']);
-            $view = new View("categorie/newCategorie");
+            $view = new View("categorie/newcategorie");
             $categorie = new CategorieModel();
             $view->assign("firstname", $user->getFirstname());
             $view->assign("lastname", $user->getLastname());
@@ -58,15 +58,15 @@ class Categorie{
             $parameters['object'] = $parameters['categorie'];
         }
         Security::canAccessCategorie($parameters['object'], $user);
-        $view = new View("categorie/displayCategorie");
+        $view = new View("categorie/displaycategorie");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
         $view->assign("categorie", $parameters['object']);
         $view->assign("meta", [
             'script' => [
-                "../dist/js/dataTable.js",
-                "../dist/js/getUrlParameters.js",
-                "../dist/js/displayCategorie.js"
+                "../dist/js/datatable.js",
+                "../dist/js/geturlparameters.js",
+                "../dist/js/displaycategorie.js"
             ],
         ]);
     }
@@ -104,7 +104,7 @@ class Categorie{
             }
         } else {
             $categorie = UrlHelper::getUrlParameters($_GET)['object'];
-            $view = new View("categorie/updateCategorie");
+            $view = new View("categorie/updatecategorie");
             $view->assign("categorie", $categorie);
         }
     }
@@ -113,11 +113,11 @@ class Categorie{
     {
         $categorie = new CategorieModel();
         $categories = $categorie->findManyBy(['statut' => 2]);
-        $view = new View("categorie/listCategories");
+        $view = new View("categorie/listcategories");
         $view->assign("categories", $categories);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Catégories',
 
             ]);

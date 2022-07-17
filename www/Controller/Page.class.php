@@ -68,7 +68,7 @@ class Page{
         }else{
             $user = new UserModel();
             $user = $user->setId($_SESSION['user']['id']);
-            $view = new View("page/newPage");
+            $view = new View("page/newpage");
             $page = new PageModel();
             $view->assign("firstname", $user->getFirstname());
             $view->assign("lastname", $user->getLastname());
@@ -80,7 +80,7 @@ class Page{
     {
         try{
             $page = new PageModel();
-            $view = new View("page/listPages");
+            $view = new View("page/listpages");
             if(!empty($_GET)){
                 if(!empty($_GET['personnage'])){
                     $personnage = new Personnage();
@@ -116,7 +116,7 @@ class Page{
             $view->assign("pages", $pages);
             $view->assign("meta", [
                 'script' => [
-                    "../dist/js/dataTable.js",
+                    "../dist/js/datatable.js",
                 ],
             ]);
         }catch(Exception $e){
@@ -130,7 +130,7 @@ class Page{
         $parameters = UrlHelper::getUrlParameters($_GET);
         Security::canAccessPage($parameters['page'], $user);
         $can_comment = Security::displayCommentCreation();
-        $view = new View("page/displayPage");
+        $view = new View("page/displaypage");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
         $view->assign("page", $parameters['page']);
@@ -140,10 +140,10 @@ class Page{
         $view->assign("user_like", $parameters['page']->currentUserLike());
 
         $meta = [
-            'script' => ['../dist/js/displayPageSignalComment.js']
+            'script' => ['../dist/js/displaypagesignalcomment.js']
         ];
         if($user->getRoleId() == 1) {
-            $meta['script'][] = "../dist/js/displayPage.js";
+            $meta['script'][] = "../dist/js/displaypage.js";
         }
 
         $view->assign("meta", $meta);
@@ -211,7 +211,7 @@ class Page{
             }
         }else{
             $page = UrlHelper::getUrlParameters($_GET)['object'];
-            $view = new View("page/updatePage");
+            $view = new View("page/updatepage");
             $view->assign("page", $page);
         }
     }

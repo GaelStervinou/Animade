@@ -47,7 +47,7 @@ class Chapitre{
                 }
             }
         } else {
-            $view = new View("chapitre/newChapitre");
+            $view = new View("chapitre/newchapitre");
             $chapitre = new ChapitreModel();
             $view->assign("chapitre", $chapitre);
         }
@@ -61,15 +61,15 @@ class Chapitre{
             $parameters['object'] = $parameters['chapitre'];
         }
         Security::canAccessChapitre($parameters['object'], $user);
-        $view = new View("chapitre/displayChapitre");
+        $view = new View("chapitre/displaychapitre");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
         $view->assign("chapitre", $parameters['object']);
         $view->assign("meta", [
             'script' => [
-                "../dist/js/dataTable.js",
-                "../dist/js/getUrlParameters.js",
-                "../dist/js/displayChapitre.js"
+                "../dist/js/datatable.js",
+                "../dist/js/geturlparameters.js",
+                "../dist/js/displaychapitre.js"
             ],
         ]);
     }
@@ -124,11 +124,11 @@ class Chapitre{
     {
         $chapitre = new ChapitreModel();
         $chapitres = $chapitre->findManyBy(['statut' => 2]);
-        $view = new View("chapitre/listChapitres");
+        $view = new View("chapitre/listchapitres");
         $view->assign("chapitres", $chapitres);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Chapitres',
 
             ]);

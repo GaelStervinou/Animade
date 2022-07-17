@@ -39,7 +39,7 @@ class General{
         $view->assign("lastChapitre", $lastChapitre);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Accueil',
 
             ]);

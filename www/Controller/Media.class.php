@@ -18,11 +18,11 @@ class Media{
         }else{
             $medias = (new MediaModel())->findManyBy(['statut' => 2, 'user_id' => $_SESSION['user']['id']]);
         }
-        $view = new View("media/listMedias");
+        $view = new View("media/listmedias");
         $view->assign("medias", $medias);
         $view->assign("meta",
             [
-                'script' => ['../dist/js/dataTable.js'],
+                'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Liste des médias',
 
             ]);

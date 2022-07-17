@@ -9,7 +9,7 @@
     </nav>
     <h3>Les derniers articles</h3>
     <?php
-    include('View/page/listPages.view.php');
+    include('View/page/listpages.view.php');
     ?>
 
     <h3>Le dernier chapitre " <?=$lastChapitre->getTitre()?> " est sorti!</h3>
