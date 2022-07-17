@@ -350,7 +350,7 @@ COMMIT;
 
             $user->save();
             $user->commit();
-            header("Location:/login");
+            Security::logout();
         }else{
             $view = new View("install", "without");
 
