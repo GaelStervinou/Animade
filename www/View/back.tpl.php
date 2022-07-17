@@ -61,7 +61,7 @@ $user = Security::getUser();
                     ?>
                     <li><a href="/admin/administration">Paramètres</a></li>
                         <?php
-                    if(DBLINK !== null):
+                    if(defined('DBLINK')):
                         ?>
                     <li><a href="<?=DBLINK?>">Base de données</a></li>
                     <?php
