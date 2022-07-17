@@ -8,7 +8,13 @@ $user = Security::getUser();
 <head>
     <meta charset="UTF-8">
     <title><?=$meta['titre'] ?? 'Template de back'?></title>
-    <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
+    <?php
+    if(defined('FAVICON')):
+        ?>
+        <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
+    <?php
+    endif;
+    ?>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
