@@ -310,7 +310,7 @@ class Page extends BaseSQL
     public function countUnlikes()
     {
         $like = new Like();
-        return count($like->findManyBy(['aime' => -1]));
+        return count($like->findManyBy(['aime' => -1, 'page_id' => $this->getId()]));
     }
 
     public function currentUserLike()

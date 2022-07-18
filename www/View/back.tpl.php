@@ -2,7 +2,7 @@
 <html lang="fr">
 <?php
 use App\Core\Security;
-$user = Security::getUser();
+$currentUser = Security::getUser();
 ?>
 
 <head>
@@ -50,7 +50,7 @@ $user = Security::getUser();
             </a>
             <button id="menu-button"></button>
             <?php
-            if($user !== false):
+            if($currentUser !== false):
             ?>
             <nav id="site-nav">
                 <ul>

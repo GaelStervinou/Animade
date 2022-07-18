@@ -2,10 +2,10 @@
     <section id="login-form">
         <div class="grid">
             <?php
-            if($user->hasMedia() === true):
+            if($userUpdate->hasMedia() === true):
             ?>
 
-            <img src="../<?= $user->getMedia()->getChemin()?>" alt="Image du chapitre"
+            <img src="../<?= $userUpdate->getMedia()->getChemin()?>" alt="Image du chapitre"
                  width="300"
                  height="300" >
             <?php
@@ -16,7 +16,7 @@ endif;
                     <div class="col-4">
 
                     <?php
-                        $this->includePartial('form', $user->getFormUpdate($user->getId())); ?>
+                        $this->includePartial('form', $userUpdate->getFormUpdate($userUpdate->getId())); ?>
 
                     </div>
 

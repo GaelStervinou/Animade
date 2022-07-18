@@ -40,7 +40,7 @@ class User
                 echo "mot de passe incorrect";
             }
         } else {
-            $view = new View("Login");
+            $view = new View("login");
             $view->assign("meta", [
                 'titre' => 'Se connecter',
             ]);
@@ -206,9 +206,9 @@ class User
                 }
             }
         } else {
-            $user = UrlHelper::getUrlParameters($_GET)['object'];
+            $updateUser = UrlHelper::getUrlParameters($_GET)['object'];
             $view = new View("user/updateuser");
-            $view->assign("user", $user);
+            $view->assign("updateUser", $updateUser);
         }
     }
 

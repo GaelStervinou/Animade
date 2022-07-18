@@ -55,7 +55,7 @@
             <br>
             <span class="like_action" id="like"
               <?php
-              if($user_like->getAime() === 1):
+              if($user_like !== false && $user_like->getAime() === 1):
                   ?>
                   style="border: dotted green; cursor: pointer;"
               <?php
@@ -73,7 +73,7 @@
             </span>
             <span class="like_action" id="unlike"
                   <?php
-                  if($user_like->getAime() === -1):
+                  if($user_like !== false && $user_like->getAime() === -1):
                       ?>
                       style="border: dotted green; cursor: pointer;"
                   <?php

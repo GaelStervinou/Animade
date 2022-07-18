@@ -5,8 +5,8 @@ use App\Helpers\UrlHelper;
 
 use App\Core\Security;
 
-if(!isset($user)){
-    $user = Security::getUser();
+if(!isset($currentUser)){
+    $currentUser = Security::getUser();
 }
 if(!UrlHelper::isAjaxRequest()):
 ?>
@@ -62,9 +62,9 @@ if(!UrlHelper::isAjaxRequest()):
                     <li><a href="/">Accueil</a></li>
                     <li><a href="#">Nous contacter</a></li>
                     <?php
-                    if($user->getId() !== null):
+                    if($currentUser !== false):
                     ?>
-                        <li><a href="/user?user_id=<?=$user->getId()?>">Profil</a></li>
+                        <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                         <li><a href="/logout">Se déconnecter</a></li>
                     <?php
                     endif;
@@ -73,7 +73,7 @@ if(!UrlHelper::isAjaxRequest()):
             </nav>
         </div>
         <?php
-        if($user->getId() !== null):
+        if($currentUser !== false):
             ?>
             <div id="recherche" class="recherche">
                 <form action="/recherche" method="GET">
