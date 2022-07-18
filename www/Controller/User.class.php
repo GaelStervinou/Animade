@@ -40,7 +40,7 @@ class User
                 echo "mot de passe incorrect";
             }
         } else {
-            $view = new View("Login");
+            $view = new View("login");
             $view->assign("meta", [
                 'titre' => 'Se connecter',
             ]);
@@ -91,7 +91,7 @@ class User
                     $user->save();
                     $user->commit();
 
-                    $view = new View("verifyAccount");
+                    $view = new View("verifyAccount", "without");
 
                 }catch(Exception $e){
                     echo $e->getMessage();
@@ -133,7 +133,7 @@ class User
 
                 Security::updateCurrentUser($user);
 
-                $view = new View("user/verifiedAccount");
+                $view = new View("user/verifiedAccount", "without");
                 $view->assign("meta", [
                     'titre' => 'Votre compte est validé',
                     'script' => [
@@ -205,9 +205,9 @@ class User
                 }
             }
         } else {
-            $user = UrlHelper::getUrlParameters($_GET)['object'];
+            $userUpdate = UrlHelper::getUrlParameters($_GET)['object'];
             $view = new View("user/updateUser");
-            $view->assign("user", $user);
+            $view->assign("userUpdate", $userUpdate);
         }
     }
 

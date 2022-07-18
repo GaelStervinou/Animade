@@ -27,12 +27,10 @@ class Like {
                 $like->beginTransaction();
                 if((int)$infosLike['like'] === (int)$like->getAime()) {
                     $like->setAime('-2');
-                    echo "reset like";
                 }else{
                     $like->setAime($infosLike['like']);
                 }
             }
-
             $like->save();
 
             $like->commit();

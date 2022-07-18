@@ -50,6 +50,7 @@ function commentPage(e){
 
 function getCountLikes(page_id){
     $.get("/page/countLikes?page_id="+page_id, function(data){
+        alert(data);
         $('#likesCount').text(data);
     });
 }

@@ -5,8 +5,8 @@ use App\Helpers\UrlHelper;
 
 use App\Core\Security;
 
-if(!isset($user)){
-    $user = Security::getUser();
+if(!isset($currentUser)){
+    $currentUser = Security::getUser();
 }
 if(!UrlHelper::isAjaxRequest()):
 ?>
@@ -22,6 +22,9 @@ if(!UrlHelper::isAjaxRequest()):
     endif;
     ?>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+            rel="stylesheet"  type='text/css'>
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -62,9 +65,9 @@ if(!UrlHelper::isAjaxRequest()):
                     <li><a href="/">Accueil</a></li>
                     <li><a href="#">Nous contacter</a></li>
                     <?php
-                    if($user->getId() !== null):
+                    if($currentUser !== false):
                     ?>
-                        <li><a href="/user?user_id=<?=$user->getId()?>">Profil</a></li>
+                        <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                         <li><a href="/logout">Se déconnecter</a></li>
                     <?php
                     endif;
@@ -73,7 +76,7 @@ if(!UrlHelper::isAjaxRequest()):
             </nav>
         </div>
         <?php
-        if($user->getId() !== null):
+        if($currentUser !== false):
             ?>
             <div id="recherche" class="recherche">
                 <form action="/recherche" method="GET">

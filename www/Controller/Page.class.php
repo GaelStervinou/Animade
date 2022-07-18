@@ -71,7 +71,6 @@ class Page{
             $view = new View("page/newPage");
             $page = new PageModel();
             $view->assign("firstname", $user->getFirstname());
-            $view->assign("lastname", $user->getLastname());
             $view->assign("page", $page);
         }
     }
@@ -131,8 +130,6 @@ class Page{
         Security::canAccessPage($parameters['page'], $user);
         $can_comment = Security::displayCommentCreation();
         $view = new View("page/displayPage");
-        $view->assign("firstname", $user->getFirstname());
-        $view->assign("lastname", $user->getLastname());
         $view->assign("page", $parameters['page']);
         $view->assign("can_edit", Security::displayEditButton($parameters['page']));
         $view->assign("can_comment", $can_comment);
@@ -142,7 +139,7 @@ class Page{
         $meta = [
             'script' => ['../dist/js/displayPageSignalComment.js']
         ];
-        if($user->getRoleId() == 1) {
+        if($user->getRoleId() === 1) {
             $meta['script'][] = "../dist/js/displayPage.js";
         }
 
