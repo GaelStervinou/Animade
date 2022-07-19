@@ -42,8 +42,8 @@ class Chapitre{
                     header('Location:/chapitre?chapitre='.$chapitre->getTitre());
                 } catch (Exception $e) {
                     $chapitre->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));
@@ -59,10 +59,10 @@ class Chapitre{
     {
         $user = Security::getUser();
         $parameters = UrlHelper::getUrlParameters($_GET);
-        if(!empty($parameters['chapitre'])){
+        if(isset($parameters['chapitre'])){
             $parameters['object'] = $parameters['chapitre'];
         }
-        Security::canAccessChapitre($parameters['object'], $user);
+        Security::canAccessChapitre($parameters['object']);
         $view = new View("chapitre/displaychapitre");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
@@ -94,15 +94,8 @@ class Chapitre{
                     $chapitre->setTitre($_POST['titre']);
                     $chapitre->setStatut(2);
                     if(!empty($_POST['media']['tmp_name'])){
-                        if($chapitre->hasMedia() === true){
-                            $chapitre->getMedia()->delete();
-                        }
-
                         $chapitre->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $chapitre));
                     }elseif(!empty($_POST['select_media'])){
-                        if($chapitre->hasMedia() === true){
-                            $chapitre->getMedia()->delete();
-                        }
                         $chapitre->setMediaId($_POST['select_media']);
                     }
 
@@ -111,8 +104,8 @@ class Chapitre{
                     header('Location:/chapitre?chapitre='.$chapitre->getTitre());
                 } catch (Exception $e) {
                     $chapitre->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }
         } else {

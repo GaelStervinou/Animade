@@ -20,20 +20,20 @@
                             <tbody>
                                 <?php foreach ($users as $user) : ?>
                                     <tr>
-                                        <td><?php echo $user->getFirstName() ?></td>
-                                        <td><?php echo $user->getLastName() ?></td>
-                                        <td><?php echo $user->getEmail() ?></td>
-                                        <td><?php echo $user->getStatus() ?></td>
-                                        <td><?php echo date('Y-m-d', strtotime($user->createdAt)) ?></td>
-                                        <td><?php echo $user->getRoleId() ?></td>
+                                        <td><?= $user->getFirstName() ?></td>
+                                        <td><?= $user->getLastName() ?></td>
+                                        <td><?= $user->getEmail() ?></td>
+                                        <td><?= $user->getStatus() ?></td>
+                                        <td><?= \App\Helpers\Formalize::formalizeDateYearMonthDay($user->createdAt) ?></td>
+                                        <td><?= $user->getRoleId() ?></td>
                                         <?php if ($user->getRoleId() <= 2) : ?>
-                                            <td><a href="/user/update?user_id=<?php echo $user->getId() ?>">Modifier</a></td>
+                                            <td><a href="/user/update?user_id=<?= $user->getId() ?>">Modifier</a></td>
                                         <?php else: ?>
                                             <td></td>
                                         <?php
                                         endif; ?>
                                         <?php if ($user->getRoleId() <= 2) : ?>
-                                            <td><a href="/user/delete?user_id=<?php echo $user->getId() ?>">Supprimer</a></td>
+                                            <td><a href="/user/delete?user_id=<?= $user->getId() ?>">Supprimer</a></td>
                                         <?php
                                         else: ?>
                                             <td></td>

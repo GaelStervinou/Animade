@@ -44,8 +44,15 @@
                             foreach ($pages as $page):
                                 ?>
                                 <tr style="text-align: center">
-                                    <!-- TODO: rendre les infos cliquables ( on clique sur le nom du perso et on arrive sur sa fiche par ex)!-->
-                                    <td><a href="/categorie?categorie_id=<?= $page->getCategorieId()?>"><?= $page->getCategorie()->getNom()?></a></td>
+                                    <td>
+                                        <?php
+                                        if($page->hasCategorie() === true):
+                                            ?>
+                                            <a href="/categorie?categorie_id=<?= $page->getCategorieId()?>"><?= $page->getCategorie()->getNom()?></a>
+                                        <?php
+                                        endif;
+                                        ?>
+                                    </td>
                                     <td><a href="/page?page=<?= $page->getSlug()?>"><?= $page->getTitre()?></a></td>
                                     <td><?= substr($page->getDescription(), 0, 40)?></td>
                                     <td>
@@ -61,7 +68,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><a href="/page/pages?auteur_id=<?= $page->getAuteurId()?>"><?= $page->getAuteur()->getFullName() ?></a></td>
-                                    <td><?= date('Y-m-d', strtotime($page->getDateCreation()))?></td>
+                                    <td><?= \App\Helpers\Formalize::formalizeDateYearMonthDay($page->getDateCreation())?></td>
                                 </tr>
                             <?php
                             endforeach;

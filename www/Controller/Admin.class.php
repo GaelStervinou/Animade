@@ -8,6 +8,7 @@ use App\Core\View;
 use App\Model\Signalement as SignalementModel;
 use App\Model\User as UserModel;
 use App\Model\Page;
+use App\Helpers\MediaManager;
 use PDO;
 use PDOException;
 
@@ -102,9 +103,23 @@ class Admin
             if(empty($result)){
                 $configContent = "<?php\n";
 
-                if(!empty($_POST["FAVICON"])){
-                    move_uploaded_file($_POST["FAVICON"]['tmp_name'], "assets/images/favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]));
+                if(!empty($_POST["FAVICON"]["tmp_name"])){
+                    if(MediaManager::verifyImageType($_POST["FAVICON"]['type']) === false){
+                        Security::returnError(415, "Le type de fichier n'est pas autorisé");
+                    }
+                    move_uploaded_file($_POST["FAVICON"]['tmp_name'], "assets/images/administration/favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]));
                     $_POST["FAVICON"] = "favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]);
+                }elseif(defined("FAVICON")){
+                    $_POST["FAVICON"] = FAVICON;
+                }
+                if(!empty($_POST["LOGO"]["tmp_name"])){
+                    if(MediaManager::verifyImageType($_POST["LOGO"]['type']) === false){
+                        Security::returnError(415, "Le type de fichier n'est pas autorisé");
+                    }
+                    move_uploaded_file($_POST["LOGO"]['tmp_name'], "assets/images/administration/logo.".str_replace("image/", "",$_POST["LOGO"]["type"]));
+                    $_POST["LOGO"] = "logo.".str_replace("image/", "",$_POST["LOGO"]["type"]);
+                }elseif(defined("LOGO")){
+                    $_POST["LOGO"] = LOGO;
                 }
 
                 foreach($_POST as $key => $value){

@@ -59,7 +59,7 @@
                         <?php endif; ?>
                     </td>
                     <td><a href="/page/pages?auteur_id=<?= $page->getAuteurId()?>"><?= $page->getAuteur()->getFullName() ?></a></td>
-                    <td><?= date('d M, Y', strtotime($page->getDateCreation())) ?></td>
+                    <td><?= \App\Helpers\Formalize::formalizeDateYearMonthDay($page->getDateCreation()) ?></td>
                 </tr>
             <?php
             endforeach;

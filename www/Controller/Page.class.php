@@ -62,7 +62,7 @@ class Page{
                     header("Location:/page?page={$page->getSlug()}");
                 }catch (Exception $e) {
                     $page->rollback();
-                    var_dump($e->getMessage());die;
+                    Security::returnError(403, $e->getMessage());
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));
@@ -196,9 +196,6 @@ class Page{
                     }
 
                     if(!empty($_POST['media']['tmp_name'])){
-                        if($page->hasMedia() === true){
-                            $page->getMedia()->delete();
-                        }
                         $page->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $page));
                     }elseif(!empty($_POST['select_media'])){
                         $page->setMediaId($_POST['select_media']);
@@ -210,7 +207,7 @@ class Page{
                     header('Location:/page?page='.$page->getSlug());
                 }catch (Exception $e) {
                     $page->rollback();
-                    var_dump($e->getMessage());die;
+                    Security::returnError(403, $e->getMessage());
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));

@@ -17,7 +17,7 @@ if(!UrlHelper::isAjaxRequest()):
     <?php
     if(defined('FAVICON')):
     ?>
-    <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
+    <link rel="icon" type="image/x-icon" href="../assets/images/administration/<?=FAVICON?>">
     <?php
     endif;
     ?>
@@ -51,16 +51,19 @@ if(!UrlHelper::isAjaxRequest()):
         </div>
         <?php
         endif;
+            if(defined('LOGO')):
+                ?>
+        <a href="/">
+            <img src="../assets/images/administration/<?=LOGO?>" alt="Logo du site" style="width: 100px;">
+        </a>
+        <?php
+        endif;
         ?>
-        <div class="container">
-            <a href="#">
-                <img src="../assets/images/logo_animade.jpg" alt="Logo Animade">
-            </a>
             <button id="menu-button"></button>
             <nav id="site-nav">
                 <ul>
                     <li><a href="/">Accueil</a></li>
-                    <li><a href="#">Nous contacter</a></li>
+                    <li><a href="/contact">Nous contacter</a></li>
                     <?php
                     if($currentUser !== false):
                         if($currentUser->getRoleId() === 2):
@@ -69,6 +72,7 @@ if(!UrlHelper::isAjaxRequest()):
                         <?php
                         endif;
                     ?>
+                        <li><a href="/media/listMedias?user_id=<?=$currentUser->getId()?>">Médias</a></li>
                         <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                         <li><a href="/logout">Se déconnecter</a></li>
                     <?php

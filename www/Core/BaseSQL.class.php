@@ -19,16 +19,12 @@ class BaseSQL implements QueryBuilder
     }
     public function __construct()
     {
-        // Intégrer singleton
-        // cf exo design pattern
-
         try {
             $this->pdo = new \PDO("mysql:host=" . DBHOST . ";port=" . DBPORT . ";dbname=" . DBNAME . ";charset=utf8mb4", DBUSER, DBPWD);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\Exception $e) {
             die("Erreur SQL " . $e->getMessage());
         }
-        // récupérer le nom de la table ( = préfixe + nom de la classe enfant )
         $classExploded = explode("\\", get_called_class());
         $this->table = DBPREFIX . strtolower(end($classExploded));
     }
@@ -84,38 +80,6 @@ class BaseSQL implements QueryBuilder
         return $this->findOneBy($this->table, ['email' => $email]);
     }
 
-    //modifier pour avoir une fonction générique à tous les modèles ( getOneBy() );
-
-    public function findBy(array $options, string $table)
-    {
-        $parameters = ['table' => $table];
-        $where = $options['where'];
-        //var_dump($options);die;
-        foreach ($options['where'] as $key => $value) {
-            $parameters[$key] = $value;
-        }
-
-//var_dump(implode(",", $where), $where);die;
-        $sql = "SELECT id FROM " . DBPREFIX . ":table WHERE " . implode(",", $where);
-//var_dump($parameters, $sql);die;
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute($parameters);
-
-        $objectList = [];
-        foreach($queryPrepared->fetch() as $object){
-            $objectList[] = $object->fetchObject();
-        }
-        //$id = $queryPrepared->fetch()["id"];
-return $objectList;
-        //return $this->setId($id, "App\Model\User");
-    }
-
-    public function findPagesBy($parameters)
-    {
-        $where = [];
-        var_dump($_GET);die;
-    }
-
     public function delete()
     {
         try {
@@ -125,7 +89,7 @@ return $objectList;
             $this->commit();
         }catch (Exception $e){
             $this->rollback();
-            var_dump($e->getMessage());die;
+            Security::returnError(403, $e->getMessage());
         }
     }
 
@@ -193,12 +157,6 @@ return $objectList;
         return $this->fetchQuery($class);
     }
 
-    public function getTableFromClass($class)
-    {
-        $classExploded = explode("\\", $class);
-        return DBPREFIX.strtolower(end($classExploded));
-    }
-
     public function checkIfCanResponseToComment($comment_id)
     {
         $this
@@ -208,35 +166,16 @@ return $objectList;
         $query->execute();
         $commentaire = $query->fetch();
         if($commentaire['commentaire_id'] !== null || $commentaire['auteur_id'] === Security::getUser()->getId()){
-            return Security::return403("Vous ne pouvez pas répondre à ce commentaire");
+            Security::returnError(403, "Vous ne pouvez pas répondre à ce commentaire");
         }
         return true;
     }
-
-
-
-
-
-
 
     public function init() {
         $this->query = new \StdClass;
     }
 
     public function insert (string $table, array $values) : QueryBuilder {
-        return true;
-    }
-
-    public function updateTable(string $table, array $primaryKeys, array $valuesToUpdate) : QueryBuilder {
-        $this->init();
-        $finalValues = [];
-        foreach($valuesToUpdate as $column => $value){
-            $finalValues[] = $column . "='" . $value."'";
-        }
-        $this->query->base = "UPDATE ".$table." SET " . implode(',', $finalValues);
-        foreach($primaryKeys as $column => $value){
-            $this->where($column, $value);
-        }
         return $this;
     }
 

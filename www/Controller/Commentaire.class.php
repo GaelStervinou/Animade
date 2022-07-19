@@ -49,7 +49,7 @@ class Commentaire{
 
                 }catch (Exception $e) {
                     $commentaire->rollback();
-                    var_dump($e->getMessage());die;
+                    Security::returnError(403, $e->getMessage());
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));
@@ -80,7 +80,7 @@ class Commentaire{
         $user = Security::getUser();
         $parameters = UrlHelper::getUrlParameters($_GET);
 
-        Security::canAccessCommentaire($parameters['object'], $user);
+        Security::canAccessCommentaire($parameters['object']);
         $view = new View("commentaire/displaycommentaire");
         $view->assign("firstname", $user->getFirstname());
         $view->assign("lastname", $user->getLastname());
