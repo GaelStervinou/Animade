@@ -32,7 +32,7 @@ class UrlHelper
                 $categorie = new Categorie();
                 $result[ 'categorie' ] = $categorie->findOneBy($categorie->getTable(), ['nom' => $value]);
             }elseif(str_contains($param, '_id')){
-                $class = ucfirst("App\Model\\".str_replace("_id", "", $param));
+                $class ="App\Model\\". ucfirst(str_replace("_id", "", $param));
                 $object = new $class();
                 $result['object'] = $object->setId((int)$value);
             }
@@ -51,7 +51,7 @@ class UrlHelper
 
     public static function getObjectToString($param, $value)
     {
-        $class = ucfirst("App\Model\\".str_replace("_id", "", $param));
+        $class ="App\Model\\".ucfirst(str_replace("_id", "", $param));
 
         if(class_exists($class)){
             $object = new $class();
