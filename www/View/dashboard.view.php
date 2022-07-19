@@ -4,13 +4,13 @@
             <div class="row">
                 <?php include('View/admin/sidebar.view.php'); ?>
                 <div class="col-10">
-                    <h1>ANIMADE ONE PIECE</h1>
-                    <div class="row block-stat">
-                        <div class="images-stat">
-                            <img src="../assets/images/stat_1.png" alt="Statistics">
-                            <img src="../assets/images/stat_1.png" alt="Statistics">
-                        </div>
-                    </div>
+                    <?php
+                    if(defined("SITENAME")):
+                        ?>
+                        <h1><?= SITENAME?></h1>
+                    <?php
+                    endif;
+                    ?>
                     <div class="row block-stat ">
                         <div class="col-2 stat-nombre">
                             <p>Nombre d'articles publiés</p>

@@ -111,6 +111,8 @@ class Admin
                     $_POST["FAVICON"] = "favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]);
                 }elseif(defined("FAVICON")){
                     $_POST["FAVICON"] = FAVICON;
+                }else{
+                    unset($_POST["FAVICON"]);
                 }
                 if(!empty($_POST["LOGO"]["tmp_name"])){
                     if(MediaManager::verifyImageType($_POST["LOGO"]['type']) === false){
@@ -120,6 +122,8 @@ class Admin
                     $_POST["LOGO"] = "logo.".str_replace("image/", "",$_POST["LOGO"]["type"]);
                 }elseif(defined("LOGO")){
                     $_POST["LOGO"] = LOGO;
+                }else{
+                    unset($_POST["LOGO"]);
                 }
 
                 foreach($_POST as $key => $value){
@@ -385,6 +389,17 @@ COMMIT;
                 'title' => "Installation",
             ],
             'inputs' => [
+                'SITENAME' => [
+                    'type' => 'text',
+                    'label' => 'Nom du site:',
+                    'placeholder' => 'Nom du site',
+                    'id' => 'siteNameAdmin',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 150,
+                    'required' => true,
+                    'error' => "Le nom n'est pas conrrect",
+                ],
                 'DBNAME' => [
                     'type' => 'text',
                     'label' => 'Nom de la base de données:',
