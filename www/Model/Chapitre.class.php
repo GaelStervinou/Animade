@@ -141,6 +141,16 @@ class Chapitre extends BaseSQL{
         return $this->getTitre();
     }
 
+    public function getChapitreSelectOptions(): array
+    {
+        $chapitres = $this->findManyBy(['statut' => 2]);
+        $chapitres_options = ['' => ''];
+        foreach ($chapitres as $chapitre){
+            $chapitres_options[$chapitre->getTitre()] = $chapitre->getId();
+        }
+        return $chapitres_options;
+    }
+
     public function getNewChapitreForm()
     {
         return [
@@ -161,6 +171,20 @@ class Chapitre extends BaseSQL{
                     'min' => 2,
                     'max' => 75,
                     'error' => "Le titre est incorrect",
+                ],
+                'statut' => [
+                    'type' => 'select',
+                    'label' => 'Statut :',
+                    'options' =>
+                        [
+                            'Supprimé' => -1,
+                            'Privé' => 1,
+                            'Public' => 2,
+                        ],
+                    'id' => 'statutNewCategorie',
+                    'class' => 'inputRegister',
+                    'required' => true,
+                    'error' => "Impossible d'attribuer ce rôle",
                 ],
                 'media_name' => [
                     'type' => 'text',

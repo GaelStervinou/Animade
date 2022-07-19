@@ -21,6 +21,5 @@ function signalerCommentaire(e){
             }else{
                 alert('Erreur lors de la signalation');
             }
-            alert( data );
         })
 }

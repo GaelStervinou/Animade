@@ -47,6 +47,8 @@ class Personnage
                     var_dump($e->getMessage());
                     die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $user = new UserModel();
@@ -110,6 +112,8 @@ class Personnage
                     var_dump($e->getMessage());
                     die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $personnage = UrlHelper::getUrlParameters($_GET)['object'];

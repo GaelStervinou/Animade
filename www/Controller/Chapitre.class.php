@@ -45,6 +45,8 @@ class Chapitre{
                     var_dump($e->getMessage());
                     die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $view = new View("chapitre/newChapitre");

@@ -37,6 +37,8 @@ class Categorie{
                     var_dump($e->getMessage());die;
                 }
                 header('Location:/categorie?categorie_id='.$id);
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         }else{
             $user = new UserModel();
@@ -101,6 +103,8 @@ class Categorie{
                     var_dump($e->getMessage());
                     die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $categorie = UrlHelper::getUrlParameters($_GET)['object'];

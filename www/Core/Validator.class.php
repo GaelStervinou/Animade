@@ -21,7 +21,11 @@ class Validator{
             $result[] = "Formulaire modifié pas l'utilistaeur";
         }
         foreach($config['inputs'] as $name => $input){
-
+            if(!in_array($input['type'], ["wysiwyg", "file"])){
+                if($data[$name] !== strip_tags($data[$name])){
+                    $result[] = "Impossible d'insérer des balises HTML dans le champ {$name}";
+                }
+            }
             if(!isset($input['authorized'])){
                 $input['authorized'] = true;
             }
@@ -132,6 +136,21 @@ class Validator{
     }
 
     /**
+     * @return bool|string
+     */
+    public static function checkIfUserSignaledLessThanOneMinuteAgo(): bool|string
+    {
+        $lastSignalement = new Signalement();
+        $lastSignalement = $lastSignalement->findOneBy($lastSignalement->getTable(), ['user_id' => Security::getUser()->getid()], ['date_creation', 'DESC']);
+        $difference = date_diff(date_create($lastSignalement->getDateCreation()), date_create(date('Y-m-d H:m:s')))->format('%i');
+        if((int)$difference < 25){
+            return "Vous ne pouvez pas signaler de commentaire pour l'instant. Veuillez réessayer dans quelques minutes.";
+        }
+
+        return true;
+    }
+
+    /**
      * @param $commentaire_id
      * @return bool|string
      */
@@ -141,6 +160,16 @@ class Validator{
             && self::checkIfNotAlreadySignaled($commentaire_id) === true){
             return true;
         }
-        return 'error';
+
+        if(self::checkIfCommentExists($commentaire_id) !== true){
+            return self::checkIfCommentExists($commentaire_id);
+        }
+        if(self::checkIfNotAlreadySignaled($commentaire_id) !== true){
+            return self::checkIfNotAlreadySignaled($commentaire_id);
+        }
+        if(self::checkIfUserSignaledLessThanOneMinuteAgo() !== true){
+            return self::checkIfUserSignaledLessThanOneMinuteAgo();
+        }
+        return true;
     }
 }

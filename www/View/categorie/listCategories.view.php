@@ -4,6 +4,13 @@
             <div id="login-form">
                 <div class="row">
                     <div class="table">
+                        <?php
+                        if(\App\Core\Security::canAsAdmin()):
+                        ?>
+                            <a href="/categorie/new">Nouvelle catégorie</a>
+                        <?php
+                        endif;
+                        ?>
                         <table id="table_id" class="display" style="width: 1200px;">
                             <thead>
                                 <tr>

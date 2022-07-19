@@ -111,9 +111,12 @@ class Admin
                     $configContent .= "define(\"".$key."\", \"".$value."\");\n";
                 }
                 file_put_contents('conf.inc.php', $configContent);
+                header("Location:/admin/dashboard");
+
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
 
-            header("Location:/admin/dashboard");
         }else{
             $view = new View("admin/manager", "back");
             $user = Security::getUser();
