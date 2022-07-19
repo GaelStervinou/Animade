@@ -20,7 +20,7 @@
                                     <?= substr($signalement->getCommentaire()->getContenu(), 0, 50)?>
                                 </td>
                                 <td><?= $signalement->getUser()->getFullName()?></td>
-                                <td><?= date('d M, Y', strtotime($signalement->getDateCreation())) ?></td>
+                                <td><?= \App\Helpers\Formalize::formalizeDateYearCuttedMonthDay($signalement->getDateCreation()) ?></td>
                             </tr>
                         <?php endforeach; ?>
 

@@ -26,11 +26,11 @@
                                         if($media->getStatut() === 2):
                                         ?>
                                             <td>Actif</td>
-                                            <td><a href="/media/updateStatut?media_id=<?=$media->getId()?>">Désactvier</a></td>
+                                            <td><a href="/media/updateStatut?media_id=<?=$media->getId()?>">Supprimer</a></td>
 <?php
                                         else:
                                         ?>
-                                    <td>Inactif/Supprimé</td>
+                                    <td>Supprimé</td>
                                     <td><a href="/media/updateStatut?media_id=<?=$media->getId()?>">Activer</a></td>
                                 </tr>
                             <?php

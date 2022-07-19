@@ -34,7 +34,7 @@ class Categorie{
                     $categorie->commit();
                 }catch (Exception $e) {
                     $categorie->rollback();
-                    var_dump($e->getMessage());die;
+                    Security::returnError(403, $e->getMessage());
                 }
                 header('Location:/categorie?categorie_id='.$id);
             }else {
@@ -56,7 +56,7 @@ class Categorie{
         $user = new UserModel();
         $user = $user->setId($_SESSION['user']['id']);
         $parameters = UrlHelper::getUrlParameters($_GET);
-        if(!empty($parameters['categorie'])){
+        if(isset($parameters['categorie'])){
             $parameters['object'] = $parameters['categorie'];
         }
         Security::canAccessCategorie($parameters['object'], $user);
@@ -100,8 +100,8 @@ class Categorie{
                     header('Location:/categorie?categorie_id='.$categorie->getId());
                 } catch (Exception $e) {
                     $categorie->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));

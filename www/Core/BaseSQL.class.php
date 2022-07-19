@@ -91,14 +91,11 @@ class BaseSQL implements QueryBuilder
     {
         $parameters = ['table' => $table];
         $where = $options['where'];
-        //var_dump($options);die;
         foreach ($options['where'] as $key => $value) {
             $parameters[$key] = $value;
         }
 
-//var_dump(implode(",", $where), $where);die;
         $sql = "SELECT id FROM " . DBPREFIX . ":table WHERE " . implode(",", $where);
-//var_dump($parameters, $sql);die;
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute($parameters);
 
@@ -108,13 +105,6 @@ class BaseSQL implements QueryBuilder
         }
         //$id = $queryPrepared->fetch()["id"];
 return $objectList;
-        //return $this->setId($id, "App\Model\User");
-    }
-
-    public function findPagesBy($parameters)
-    {
-        $where = [];
-        var_dump($_GET);die;
     }
 
     public function delete()
@@ -126,7 +116,7 @@ return $objectList;
             $this->commit();
         }catch (Exception $e){
             $this->rollback();
-            var_dump($e->getMessage());die;
+            Security::returnError(403, $e->getMessage());
         }
     }
 

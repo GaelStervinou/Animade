@@ -11,7 +11,7 @@ $currentUser = Security::getUser();
     <?php
     if(defined('FAVICON')):
         ?>
-        <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
+        <link rel="icon" type="image/x-icon" href="../assets/images/administration/<?=FAVICON?>">
     <?php
     endif;
     ?>
@@ -45,9 +45,15 @@ $currentUser = Security::getUser();
             <?php
             endif;
             ?>
-            <a href="#">
-                <img src="../assets/images/logo_animade.jpg" alt="Logo Animade">
-            </a>
+            <?php
+            if(defined('LOGO')):
+                ?>
+                <a href="/">
+                    <img src="../assets/images/administration/<?=LOGO?>" alt="Logo du site" style="width: 100px;">
+                </a>
+            <?php
+            endif;
+            ?>
             <button id="menu-button"></button>
             <?php
             if($currentUser !== false):
@@ -69,6 +75,7 @@ $currentUser = Security::getUser();
                     endif;
                     ?>
                     <li><a href="#">Nous contacter</a></li>
+                    <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                     <li><a href="/logout">Se déconnecter</a></li>
                 </ul>
             </nav>

@@ -6,8 +6,8 @@
                        
     <h1>
 
-        <?php echo $page->getTitre(); ?></h1>
-    <h2><?php echo $page->getDescription(); ?></h2>
+        <?=  $page->getTitre(); ?></h1>
+    <h2><?=  $page->getDescription(); ?></h2>
 
     
 
@@ -31,12 +31,12 @@
     endif; ?>
     <br><br>
     <div>
-        By : <?php echo $page->getAuteur()->getFullName();
+        By : <?=  $page->getAuteur()->getFullName();
         ?>
     </div>
 
     <div>
-        <?= date('d M, Y', strtotime($page->getDateCreation()))
+        <?= \App\Helpers\Formalize::formalizeDateYearMonthDay($page->getDateCreation())
         ?>
     </div>
     <?php

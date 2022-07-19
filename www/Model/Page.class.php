@@ -64,11 +64,21 @@ class Page extends BaseSQL
         $this->categorie_id = $categorie_id;
     }
 
-    public function getCategorie()
+    public function getCategorie(): bool|Categorie
     {
-        $categorie = new Categorie();
-        $categorie = $categorie->setId($this->getCategorieId());
-        return $categorie;
+        if($this->hasCategorie() === true){
+            return (new Categorie())->setId($this->getCategorieId());
+        }
+        return false;
+
+    }
+
+    public function hasCategorie(): bool
+    {
+        if($this->getCategorieId() !== null) {
+            return (new Categorie())->setId($this->getCategorieId())->getStatut() === 2;
+        }
+        return false;
     }
     /**
      * @return int|null

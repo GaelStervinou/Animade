@@ -33,7 +33,6 @@ class Security
 
     public static function return403(string $message=null): bool
     {
-        //var_dump( debug_backtrace()[1]['function']);die;
         http_response_code(403);
         $view = new View("security/403");
         if($message === null){
@@ -56,7 +55,6 @@ class Security
             }
         }
         header('Location:/login');
-        die();
     }
 
     /**
@@ -166,16 +164,18 @@ class Security
     {
         session_destroy();
         header('Location:/login');
-        die();
     }
 
     /**
-     * @param PageModel $page
-     * @param UserModel $user
+     * @param PageModel|bool $page
+     * @param UserModel|bool $user
      * @return void|bool
      */
-    public static function canAccessPage(PageModel $page, UserModel $user)
+    public static function canAccessPage(PageModel|bool $page, UserModel|bool $user)
     {
+        if($page === false || $user === false){
+            self::returnError(404);
+        }
         if (self::verifyStatut($page->getStatut()) || $page->getAuteurId() === $user->getId()) {
             return true;
         }
@@ -187,11 +187,14 @@ class Security
     }
 
     /**
-     * @param Commentaire $commentaire
+     * @param Commentaire|bool $commentaire
      * @return void|bool
      */
-    public static function canAccessCommentaire(Commentaire $commentaire)
+    public static function canAccessCommentaire(Commentaire|bool $commentaire)
     {
+        if($commentaire === false){
+            self::returnError(404);
+        }
         if (self::canAsAdmin() ||
             self::verifyStatut($commentaire->getStatut() && self::canDelete('commentaire'))) {
             return true;
@@ -204,11 +207,14 @@ class Security
     }
 
     /**
-     * @param Personnage $personnage
+     * @param Personnage|bool $personnage
      * @return void|bool
      */
-    public static function canAccessPersonnage(Personnage $personnage)
+    public static function canAccessPersonnage(Personnage|bool $personnage)
     {
+        if($personnage === false){
+            self::returnError(404);
+        }
         if( self::canAsAdmin() || self::verifyStatut($personnage->getStatut())){
             return true;
         }
@@ -216,11 +222,14 @@ class Security
     }
 
     /**
-     * @param Chapitre $chapitre
+     * @param Chapitre|bool $chapitre
      * @return void|bool
      */
-    public static function canAccessChapitre(Chapitre $chapitre)
+    public static function canAccessChapitre(Chapitre|bool $chapitre)
     {
+        if($chapitre === false){
+            self::returnError(404);
+        }
         if(self::canAsAdmin() || self::verifyStatut($chapitre->getStatut())){
             return true;
         }
@@ -228,11 +237,14 @@ class Security
     }
 
     /**
-     * @param Categorie $categorie
+     * @param Categorie|bool $categorie
      * @return void|bool
      */
-    public static function canAccessCategorie(Categorie $categorie)
+    public static function canAccessCategorie(Categorie|bool $categorie)
     {
+        if($categorie === false){
+            self::returnError(404);
+        }
         if(self::isAdmin() || self::verifyStatut($categorie->getStatut())){
             return true;
         }
@@ -272,6 +284,9 @@ class Security
     public static function canDeletePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
+        if($page === false){
+            self::returnError(404);
+        }
         if(self::canAsAdmin() || $page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
@@ -284,6 +299,9 @@ class Security
     public static function canDeleteCommentaire()
     {
         $commentaire = UrlHelper::getUrlParameters($_GET)['object'];
+        if($commentaire === false){
+            self::returnError(404);
+        }
         if(self::canAsAdmin() || $commentaire->getAuteurId() === $_SESSION['user']['id'] ){
             return true;
         }
@@ -296,6 +314,9 @@ class Security
     public static function canUpdateUser()
     {
         $user = UrlHelper::getUrlParameters($_GET)['object'];
+        if($user === false){
+            self::returnError(404);
+        }
         if(self::canAsAdmin() || $user->getId() === $_SESSION['user']['id']){
             return true;
         }
@@ -308,6 +329,9 @@ class Security
     public static function canUpdateMedia()
     {
         $media = UrlHelper::getUrlParameters($_GET)['object'];
+        if($media === false){
+            self::returnError(404);
+        }
         if(self::canAsAdmin() || $media->getUserId() === $_SESSION['user']['id']){
             return true;
         }
@@ -320,6 +344,9 @@ class Security
     public static function canUpdatePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
+        if($page === false){
+            self::returnError(404);
+        }
         if($page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
@@ -380,25 +407,13 @@ class Security
     /**
      * @return bool|void
      */
-    public static function checkIfConfigExists()
-    {
-        if(empty(self::getConfig())){
-            header('Location:/install');
-            die();
-        }
-        return true;
-    }
-
-    /**
-     * @return bool|void
-     */
     public static function canBoot()
     {
         if(empty(self::getConfig())){
             return true;
         }
 
-        self::return403("Cette page n'est pas accessible");
+        self::returnError(403, "Cette page n'est pas accessible");
     }
 
     /**

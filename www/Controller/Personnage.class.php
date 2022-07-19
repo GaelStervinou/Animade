@@ -44,8 +44,8 @@ class Personnage
                     header('Location:/personnage?personnage_id='.$id);
                 } catch (Exception $e) {
                     $personnage->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));
@@ -65,7 +65,7 @@ class Personnage
     {
         $user = Security::getUser();
         $parameters = UrlHelper::getUrlParameters($_GET);
-        if(!empty($parameters['personnage'])){
+        if(isset($parameters['personnage'])){
             $parameters['object'] = $parameters['personnage'];
         }
         Security::canAccessPersonnage($parameters['object'], $user);
@@ -109,8 +109,8 @@ class Personnage
                     header('Location:/personnage?personnage_id='.$personnage->getId());
                 } catch (Exception $e) {
                     $personnage->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));

@@ -49,7 +49,7 @@ class Commentaire{
 
                 }catch (Exception $e) {
                     $commentaire->rollback();
-                    var_dump($e->getMessage());die;
+                    Security::returnError(403, $e->getMessage());
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));

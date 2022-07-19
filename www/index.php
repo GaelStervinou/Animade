@@ -32,7 +32,7 @@ if(!file_exists($routeFile)){
 }
 
 if($uri !== "/install" && empty(Security::getConfig())){
-    header('Location:install');
+    header('Location:/install');
 }
 $routes = yaml_parse_file($routeFile);
 

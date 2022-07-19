@@ -131,7 +131,7 @@ class Chapitre extends BaseSQL{
         parent::save();
     }
 
-    public function getChapitreFromTitre(string $titre): ?Chapitre
+    public function getChapitreFromTitre(string $titre): bool|Chapitre
     {
         return $this->findOneBy($this->getTable(), ['titre' => $titre]);
     }
@@ -214,6 +214,7 @@ class Chapitre extends BaseSQL{
         $form['config']['title'] = "Modifier chapitre";
 
         $form['inputs']['titre']['default_value'] = $this->getTitre();
+        $form['inputs']['statut']['default_value'] = $this->getStatut();
 
         $form['inputs']['select_media'] =
             [

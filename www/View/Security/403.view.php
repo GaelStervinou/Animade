@@ -7,3 +7,5 @@
 echo $message;
     ?>
 </h2>
+
+<a href="/">Revenir à l'accueil</a>

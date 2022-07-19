@@ -428,7 +428,7 @@ class User extends BaseSQL
                 'media_name' => [
                     'type' => 'text',
                     'label' => 'Nom image :',
-                    'authorized' => !$admin_fields,
+                    'authorized' => !$admin_fields || $this->getId() === $_SESSION['user']['id'],
                     'placeholder' => 'Nom image',
                     'id' => 'nomMediaUpdateUser',
                     'class' => 'inputRegister',
@@ -437,7 +437,7 @@ class User extends BaseSQL
                 'media' => [
                     'type' => 'file',
                     'label' => 'Avatar :',
-                    'authorized' => !$admin_fields,
+                    'authorized' => !$admin_fields || $this->getId() === $_SESSION['user']['id'],
                     'id' => 'mediaUpdateUser',
                     'class' => 'inputRegister',
                     'error' => 'Image incorrecte',
@@ -448,6 +448,7 @@ class User extends BaseSQL
                     'label' => 'Role :',
                     'options' =>
                     [
+                        '' => '',
                         'Utilisateur' => 1,
                         'Auteur' => 2,
                         'Administrateur' => 3,
@@ -697,8 +698,16 @@ class User extends BaseSQL
                 ],
                 'FAVICON' => [
                     'type' => 'file',
-                    'label' => 'Image :',
+                    'label' => 'Favicon :',
                     'id' => 'faviconSite',
+                    'class' => 'inputRegister',
+                    'error' => 'Image incorrecte',
+                    'required' => false,
+                ],
+                'LOGO' => [
+                    'type' => 'file',
+                    'label' => 'Logo :',
+                    'id' => 'logoSite',
                     'class' => 'inputRegister',
                     'error' => 'Image incorrecte',
                     'required' => false,

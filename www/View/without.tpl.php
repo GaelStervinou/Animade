@@ -6,7 +6,7 @@
     <?php
     if(defined('FAVICON')):
         ?>
-        <link rel="icon" type="image/x-icon" href="../assets/images/<?=FAVICON?>">
+        <link rel="icon" type="image/x-icon" href="../assets/images/administration/<?=FAVICON?>">
     <?php
     endif;
     ?>

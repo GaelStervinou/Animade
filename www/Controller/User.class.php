@@ -135,8 +135,8 @@ class User
                 ]);
             } catch (Exception $e) {
                 $user->rollback();
-                var_dump($e->getMessage());
-                die;
+                Security::returnError(403, $e->getMessage());
+
             }
         }
     }
@@ -177,9 +177,6 @@ class User
                         $user->setRoleId($_POST["role_id"]);
                     }
                     if(!empty($_POST['media']['tmp_name'])){
-                        if($user->hasMedia() === true){
-                            $user->getMedia()->delete();
-                        }
                         $user->setMediaId(MediaManager::saveFile($_POST['media_name'], $_POST['media'], $user));
                     }elseif(!empty($_POST['select_media'])){
                         $user->setMediaId($_POST['select_media']);
@@ -193,8 +190,8 @@ class User
                     }
                 } catch (Exception $e) {
                     $user->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));
@@ -237,8 +234,8 @@ class User
 
                 }catch (Exception $e) {
                     $user->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }
         } else {
@@ -272,8 +269,8 @@ class User
 
                 }catch (Exception $e) {
                     $user->rollback();
-                    var_dump($e->getMessage());
-                    die;
+                    Security::returnError(403, $e->getMessage());
+
                 }
             }else {
                 Security::returnError(403, implode("\r\n", $result));
@@ -329,8 +326,8 @@ class User
             $user->commit();
         } catch (Exception $e) {
             $user->rollback();
-            var_dump($e->getMessage());
-            die;
+            Security::returnError(403, $e->getMessage());
+
         }
     }
 }
