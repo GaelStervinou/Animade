@@ -40,11 +40,11 @@ class View
 
     public function includePartial($name, $config)
     {
-        if(!file_exists('View/Partial/'.$name.'.partial.php'))
+        if(!file_exists('View/partial/'.$name.'.partial.php'))
         {
             die('partial : '. $name . ' 404' );
         }
-        include('View/Partial/'.$name.'.partial.php');
+        include('View/partial/'.$name.'.partial.php');
     }
 
     public function includeView($name)
