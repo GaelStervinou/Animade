@@ -21,7 +21,7 @@ class Validator{
             $result[] = "Formulaire modifié pas l'utilistaeur";
         }
         foreach($config['inputs'] as $name => $input){
-            if(!in_array($input['type'], ["wysiwyg", "file"])){
+            if(!empty($data[$name]) && !in_array($input['type'], ["wysiwyg", "file"])){
                 if($data[$name] !== strip_tags($data[$name])){
                     $result[] = "Impossible d'insérer des balises HTML dans le champ {$name}";
                 }
