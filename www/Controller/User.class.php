@@ -197,9 +197,9 @@ class User
                 Security::returnError(403, implode("\r\n", $result));
             }
         } else {
-            $updateUser = UrlHelper::getUrlParameters($_GET)['object'];
+            $userUpdate = UrlHelper::getUrlParameters($_GET)['object'];
             $view = new View("user/updateuser");
-            $view->assign("updateUser", $updateUser);
+            $view->assign("userUpdate", $userUpdate);
         }
     }
 
