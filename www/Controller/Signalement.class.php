@@ -17,11 +17,10 @@ class Signalement{
                 $signalement->beginTransaction();
                 $signalement->setUserId(Security::getUser()->getId());
                 $canComment = Validator::canSignalComment($_POST['commentaire_id']);
-                if( $canComment === true){
+                if($canComment === true){
                     $signalement->setCommentaireId($_POST[ 'commentaire_id' ]);
                 }else{
-                    echo $canComment;
-                    http_response_code(403);
+                    Security::returnError(403, $canComment);
                 }
                 $signalement->setStatut(2);
                 $signalement->save();
@@ -31,10 +30,9 @@ class Signalement{
                 return true;
 
             }catch (Exception $e) {
-                $signalement->rollback();
-                return "erreur";
+                Security::returnError(500);
             }
         }
-        return Security::return403("Page innaccessible");
+        return Security::returnError(403, "Page innaccessible");
     }
 }

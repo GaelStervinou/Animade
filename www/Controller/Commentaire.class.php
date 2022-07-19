@@ -51,6 +51,8 @@ class Commentaire{
                     $commentaire->rollback();
                     var_dump($e->getMessage());die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         }else{
             $user = new UserModel();

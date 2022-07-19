@@ -13,7 +13,7 @@ if(!UrlHelper::isAjaxRequest()):
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title><?=$meta['titre'] ?? 'Template de back'?></title>
+    <title><?=$meta['titre'] ?? 'Utilisateur'?></title>
     <?php
     if(defined('FAVICON')):
     ?>
@@ -63,6 +63,11 @@ if(!UrlHelper::isAjaxRequest()):
                     <li><a href="#">Nous contacter</a></li>
                     <?php
                     if($currentUser !== false):
+                        if($currentUser->getRoleId() === 2):
+                            ?>
+                            <li><a href="/page/new">Nouvelle page</a></li>
+                        <?php
+                        endif;
                     ?>
                         <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                         <li><a href="/logout">Se déconnecter</a></li>

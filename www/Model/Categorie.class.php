@@ -135,7 +135,7 @@ class Categorie extends BaseSQL{
         return $this->getNom();
     }
 
-    public function getCategorieSelectOptions()
+    public function getCategorieSelectOptions(): array
     {
         $categories = $this->findManyBy(['statut' => 2]);
         $categories_options = ['' => ''];

@@ -135,6 +135,16 @@ class Personnage extends BaseSQL
         return $this->getNom();
     }
 
+    public function getPersonnageSelectOptions(): array
+    {
+        $personnages = $this->findManyBy(['statut' => 2]);
+        $personnages_options = ['' => ''];
+        foreach ($personnages as $personnage){
+            $personnages_options[$personnage->getNom()] = $personnage->getId();
+        }
+        return $personnages_options;
+    }
+
     public function getFormNewPersonnage()
     {
         return [

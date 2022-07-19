@@ -64,15 +64,16 @@ class Page{
                     $page->rollback();
                     var_dump($e->getMessage());die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         }else{
             $user = new UserModel();
             $user = $user->setId($_SESSION['user']['id']);
             $view = new View("page/newpage");
             $page = new PageModel();
-            $view->assign("firstname", $user->getFirstname());
-            $view->assign("lastname", $user->getLastname());
             $view->assign("page", $page);
+            $view->assign("meta", ['title' => 'Nouvel article']);
         }
     }
 
@@ -190,6 +191,9 @@ class Page{
                     if (!empty($_POST['categorie_id'])) {
                         $page->setCategorieId($_POST[ 'categorie_id' ]);
                     }
+                    if (!empty($_POST['personnage_id'])) {
+                        $page->setCategorieId($_POST[ 'personnage_id' ]);
+                    }
 
                     if(!empty($_POST['media']['tmp_name'])){
                         if($page->hasMedia() === true){
@@ -208,6 +212,8 @@ class Page{
                     $page->rollback();
                     var_dump($e->getMessage());die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         }else{
             $page = UrlHelper::getUrlParameters($_GET)['object'];

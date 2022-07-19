@@ -36,8 +36,8 @@ class User
                 } else {
                     header('Location:/');
                 }
-            } else {
-                echo "mot de passe incorrect";
+            }else {
+                Security::returnError(403, "Mot de passe incorrect");
             }
         } else {
             $view = new View("login");
@@ -97,16 +97,8 @@ class User
                     echo $e->getMessage();
                 }
 
-            } else {
-                echo "Formulaire invalide :<br>";
-                foreach ($result as $error) {
-                    echo $error . "<br>";
-                }
-                $user = new UserModel();
-                $view = new View("register");
-                $view->assign("meta", [
-                    'titre' => 'S\'enregistrer',
-                ]);
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $user = new UserModel();
@@ -204,6 +196,8 @@ class User
                     var_dump($e->getMessage());
                     die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $updateUser = UrlHelper::getUrlParameters($_GET)['object'];
@@ -281,6 +275,8 @@ class User
                     var_dump($e->getMessage());
                     die;
                 }
+            }else {
+                Security::returnError(403, implode("\r\n", $result));
             }
         } else {
             $user = new UserModel();

@@ -12,10 +12,14 @@
     include('View/page/listpages.view.php');
     ?>
 
+    <?php
+    if(!empty($lastChapitre)):
+    ?>
     <h3>Le dernier chapitre " <?=$lastChapitre->getTitre()?> " est sorti!</h3>
     <p>Ne manquez pas les articles sur le <a href="/page/pages?chapitre_id=<?=$lastChapitre->getId()?>">sujet</a></p>
 
     <?php
+    endif;
     if(!empty($mostLikedPage)):
         ?>
         <h3>Et l'auteur le plus liké de la semaine est..........</h3>
