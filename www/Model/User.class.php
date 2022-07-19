@@ -564,6 +564,18 @@ class User extends BaseSQL
                 'title' => "Mettre à jour",
             ],
             'inputs' => [
+                'SITENAME' => [
+                    'type' => 'text',
+                    'label' => 'Nom du site:',
+                    'placeholder' => 'Nom du site',
+                    'id' => 'siteNameAdmin',
+                    'class' => 'inputRegister',
+                    'min' => 2,
+                    'max' => 150,
+                    'required' => true,
+                    'error' => "Le nom n'est pas conrrect",
+                    'default_value' => $settingValues["SITENAME"] ?? '',
+                ],
                 'DBNAME' => [
                     'type' => 'text',
                     'label' => 'Nom de la base de données:',

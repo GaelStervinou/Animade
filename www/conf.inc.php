@@ -1,4 +1,5 @@
 <?php
+define("SITENAME", "ANIMADE FINAL");
 define("DBNAME", "testbddinstall");
 define("DBUSER", "root");
 define("DBPWD", "password");
@@ -11,5 +12,5 @@ define("SMTP_USERNAME", "thomasesgipa@gmail.com");
 define("SMTP_PASSWORD", "fxopxxzbyzfbymmq");
 define("SMTP_HOST", "ssl://smtp.gmail.com");
 define("CONTACT_MAIL", "stervinou.g36@gmail.com");
-define("FAVICON", "Array");
+define("FAVICON", "favicon.png");
 define("LOGO", "logo.png");

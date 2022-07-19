@@ -20,4 +20,19 @@
             <a href="/media/listMedias">Voir les médias</a>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <a href="/categorie/categories">Voir les catégories</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a href="/chapitre/chapitres">Voir les chapitres</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a href="/personnage/personnages">Voir les personnages</a>
+        </div>
+    </div>
 </div>
