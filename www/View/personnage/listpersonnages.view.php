@@ -22,7 +22,7 @@
                             <?php
                             foreach ($personnages as $personnage):?>
                                 <tr style="text-align: center">
-                                    <td><a href="/chapitre?chapitre_id=<?=$personnage->getId()?>"><?= $personnage->getNom()?></a></td>
+                                    <td><a href="/personnage?personnage_id=<?=$personnage->getId()?>"><?= $personnage->getNom()?></a></td>
                                     <td>
                                         <?php
                                         if(!empty($personnage->getPages())): ?>

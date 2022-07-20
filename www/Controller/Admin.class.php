@@ -107,6 +107,12 @@ class Admin
                     if(MediaManager::verifyImageType($_POST["FAVICON"]['type']) === false){
                         Security::returnError(415, "Le type de fichier n'est pas autorisé");
                     }
+                    if(MediaManager::verifyImageType($_POST["FAVICON"]['type']) === false){
+                        Security::returnError(415, "Le type de fichier n'est pas autorisé");
+                    }
+                    if(MediaManager::verifyImageSize($_POST["FAVICON"]['size']) === false){
+                        Security::returnError(413, "Le fichier est trop lourd pour être chargé");
+                    }
                     move_uploaded_file($_POST["FAVICON"]['tmp_name'], "assets/images/administration/favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]));
                     $_POST["FAVICON"] = "favicon.".str_replace("image/", "",$_POST["FAVICON"]["type"]);
                 }elseif(defined("FAVICON")){
@@ -117,6 +123,9 @@ class Admin
                 if(!empty($_POST["LOGO"]["tmp_name"])){
                     if(MediaManager::verifyImageType($_POST["LOGO"]['type']) === false){
                         Security::returnError(415, "Le type de fichier n'est pas autorisé");
+                    }
+                    if(MediaManager::verifyImageSize($_POST["LOGO"]['size']) === false){
+                        Security::returnError(413, "Le fichier est trop lourd pour être chargé");
                     }
                     move_uploaded_file($_POST["LOGO"]['tmp_name'], "assets/images/administration/logo.".str_replace("image/", "",$_POST["LOGO"]["type"]));
                     $_POST["LOGO"] = "logo.".str_replace("image/", "",$_POST["LOGO"]["type"]);
@@ -133,7 +142,7 @@ class Admin
                 header("Location:/admin/dashboard");
 
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         }else{
             $view = new View("admin/manager", "back");
@@ -374,6 +383,7 @@ COMMIT;
             Security::logout();
         }else{
             $view = new View("install", "without");
+            $view->assign('meta', ['titre' => 'Installation']);
 
             $view->assign("installForm", $this->getInstallForm());
         }

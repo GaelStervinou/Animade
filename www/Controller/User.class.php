@@ -40,6 +40,7 @@ class User
                 Security::returnError(403, "Mot de passe incorrect");
             }
         } else {
+            session_destroy();
             $view = new View("login");
             $view->assign("meta", [
                 'titre' => 'Se connecter',
@@ -98,7 +99,7 @@ class User
                 }
 
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $user = new UserModel();
@@ -112,10 +113,8 @@ class User
      */
     public function verifyAccount(): void
     {
-        $user = new UserModel();
-
-        $user = $user->emailVerification();
-        if (!empty($user)) {
+        $user = (new UserModel())->emailVerification();
+        if ($user !== false) {
             try {
                 $user->beginTransaction();
                 $user->setStatus(2);
@@ -126,7 +125,7 @@ class User
 
                 Security::updateCurrentUser($user);
 
-                $view = new View("user/verifiedcccount", "without");
+                $view = new View("user/verifiedaccount", "without");
                 $view->assign("meta", [
                     'titre' => 'Votre compte est validé',
                     'script' => [
@@ -135,9 +134,10 @@ class User
                 ]);
             } catch (Exception $e) {
                 $user->rollback();
-                Security::returnError(403, $e->getMessage());
-
+                Security::returnError(422, $e->getMessage());
             }
+        }else{
+            Security::returnError(404);
         }
     }
 
@@ -190,11 +190,10 @@ class User
                     }
                 } catch (Exception $e) {
                     $user->rollback();
-                    Security::returnError(403, $e->getMessage());
-
+                    Security::returnError(422, $e->getMessage());
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $userUpdate = UrlHelper::getUrlParameters($_GET)['object'];
@@ -234,7 +233,7 @@ class User
 
                 }catch (Exception $e) {
                     $user->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
 
                 }
             }
@@ -269,11 +268,11 @@ class User
 
                 }catch (Exception $e) {
                     $user->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
 
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $user = new UserModel();
@@ -309,7 +308,6 @@ class User
             [
                 'script' => ['../dist/js/datatable.js'],
                 'titre' => 'Catégories',
-
             ]);
     }
 
@@ -324,10 +322,14 @@ class User
             $user->setStatus(-1);
             $user->save();
             $user->commit();
+            if(Security::canAsAdmin() === true && Security::getUser()->getId() !== $user->getId()){
+                header('Location:/admin/users');
+            } else {
+                header('Location:/logout');
+            }
         } catch (Exception $e) {
             $user->rollback();
-            Security::returnError(403, $e->getMessage());
-
+            Security::returnError(422, $e->getMessage());
         }
     }
 }

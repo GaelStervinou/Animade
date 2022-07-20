@@ -49,7 +49,7 @@ class Page{
                         $page->setChapitreId($_POST['chapitre_id']);
                     }
                     if(!empty($_POST['categorie_id'])){
-                        $page->setChapitreId($_POST['categorie_id']);
+                        $page->setCategorieId($_POST['categorie_id']);
                     }
 
                     if(!empty($_POST['media']['tmp_name'])){
@@ -62,10 +62,10 @@ class Page{
                     header("Location:/page?page={$page->getSlug()}");
                 }catch (Exception $e) {
                     $page->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         }else{
             $user = new UserModel();
@@ -132,8 +132,6 @@ class Page{
         Security::canAccessPage($parameters['page'], $user);
         $can_comment = Security::displayCommentCreation();
         $view = new View("page/displaypage");
-        $view->assign("firstname", $user->getFirstname());
-        $view->assign("lastname", $user->getLastname());
         $view->assign("page", $parameters['page']);
         $view->assign("can_edit", Security::displayEditButton($parameters['page']));
         $view->assign("can_comment", $can_comment);
@@ -141,7 +139,8 @@ class Page{
         $view->assign("user_like", $parameters['page']->currentUserLike());
 
         $meta = [
-            'script' => ['../dist/js/displaypagesignalcomment.js']
+            'script' => ['../dist/js/displaypagesignalcomment.js'],
+            'link' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css'
         ];
         if($user->getRoleId() == 1) {
             $meta['script'][] = "../dist/js/displaypage.js";
@@ -192,7 +191,7 @@ class Page{
                         $page->setCategorieId($_POST[ 'categorie_id' ]);
                     }
                     if (!empty($_POST['personnage_id'])) {
-                        $page->setCategorieId($_POST[ 'personnage_id' ]);
+                        $page->setPersonnageId($_POST[ 'personnage_id' ]);
                     }
 
                     if(!empty($_POST['media']['tmp_name'])){
@@ -207,10 +206,10 @@ class Page{
                     header('Location:/page?page='.$page->getSlug());
                 }catch (Exception $e) {
                     $page->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         }else{
             $page = UrlHelper::getUrlParameters($_GET)['object'];

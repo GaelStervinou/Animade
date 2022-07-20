@@ -42,11 +42,11 @@ class Chapitre{
                     header('Location:/chapitre?chapitre='.$chapitre->getTitre());
                 } catch (Exception $e) {
                     $chapitre->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
 
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $view = new View("chapitre/newchapitre");
@@ -104,7 +104,7 @@ class Chapitre{
                     header('Location:/chapitre?chapitre='.$chapitre->getTitre());
                 } catch (Exception $e) {
                     $chapitre->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
 
                 }
             }

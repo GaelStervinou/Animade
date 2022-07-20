@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\Security;
 use App\Core\View;
+use App\Helpers\MediaManager;
 use App\Helpers\UrlHelper;
 use App\Model\User;
 use App\Model\Media as MediaModel;
@@ -46,11 +47,17 @@ class Media{
                 header('Location:/media/listMedias');
             }catch (Exception $e) {
                 $media->rollback();
-                Security::returnError(403, $e->getMessage());
+                Security::returnError(422, $e->getMessage());
             }
         }else{
             Security::returnError(404);
 
         }
+    }
+
+    public function downloadMedia()
+    {
+        Security::canUpdateMedia();
+        MediaManager::downloadMedia($_GET['media_id']);
     }
 }

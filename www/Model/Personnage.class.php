@@ -61,16 +61,15 @@ class Personnage extends BaseSQL
     }
 
     /**
-     * @return MediaModel
+     * @return MediaModel|bool
      */
-    public function getMedia(): ?MediaModel
+    public function getMedia(): bool|MediaModel
     {
-        if(!empty($this->hasMedia())){
+        if($this->hasMedia() === true){
             $media = new MediaModel();
             return $media->setId($this->getMediaId());
-        }else{
-            return false;
         }
+        return false;
     }
 
     public function hasMedia()
@@ -190,7 +189,6 @@ class Personnage extends BaseSQL
     public function getFormUpdatePersonnage()
     {
         $this->setId($_GET['personnage_id']);
-
         $form = [
             'config' => [
                 'method' => 'POST',
@@ -202,7 +200,9 @@ class Personnage extends BaseSQL
         ];
 
         $form['inputs']['nom']['default_value'] = $this->getNom();
-        $form['inputs']['media_name']['default_value'] = $this->getMedia()->getNom();
+        if($this->hasMedia() === true){
+            $form['inputs']['media_name']['default_value'] = $this->getMedia()->getNom();
+        }
         $form['inputs']['statut'] =
             [
                 'type' => 'select',

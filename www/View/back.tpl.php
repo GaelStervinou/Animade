@@ -7,7 +7,7 @@ $currentUser = Security::getUser();
 
 <head>
     <meta charset="UTF-8">
-    <title><?=$meta['titre'] ?? 'Template de back'?></title>
+    <title><?=$meta['titre'] ?? 'Admin '.SITENAME?></title>
     <?php
     if(defined('FAVICON')):
         ?>
@@ -16,6 +16,11 @@ $currentUser = Security::getUser();
     endif;
     ?>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <?php
+    if(isset($meta['link'])){
+        echo "<link rel='stylesheet' type='text/css' href='".$meta['link']."'>";
+    }
+    ?>
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="

@@ -32,5 +32,6 @@
 
     <?php
     endif;
+    echo $test;
     ?>
 </main>

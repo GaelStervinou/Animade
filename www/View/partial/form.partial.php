@@ -1,3 +1,7 @@
+<?php
+$csrfToken = md5(uniqid(mt_rand(), true));
+$_SESSION['csrfToken'] = $csrfToken;
+?>
 <form id="form" method="<?= $config['config']['method'] ?>" action="<?= $config['config']['action'] ?>" enctype="multipart/form-data">
 
     <h1><?= $config['config']['title']?></h1>
@@ -141,6 +145,7 @@
 
 
         <?php endswitch; endif; endforeach; ?>
+        <input type="hidden" name="csrfToken" value="<?= $csrfToken ?>" />
         <div class="row">
             <button id="submit" class="button" type="submit" value="<?= $config['config']['submit']?>"><?= $config['config']['submit']?>
         </div>

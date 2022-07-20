@@ -5,8 +5,7 @@
                 <div class="row">
                     <div class="col-3">
                         <?php $this->includePartial('form', $categorie->getFormNewCategorie());
-                        //TODO insérer les select de chapitre?>
-
+                        ?>
                     </div>
 
                 </div>

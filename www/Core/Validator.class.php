@@ -15,6 +15,10 @@ class Validator{
     public static function run(array $config, array $data, int $hiddenFields=0): array
     {
         $result = [];
+        if($data['csrfToken'] !== $_SESSION['csrfToken']){
+            $result[] = 'Token CSRF invalide';
+        }
+        unset($data['csrfToken']);
         $inputs_nb = self::countAuthorizedFields($config['inputs'], $hiddenFields);
 
         if(count($data) !== $inputs_nb){
@@ -142,9 +146,11 @@ class Validator{
     {
         $lastSignalement = new Signalement();
         $lastSignalement = $lastSignalement->findOneBy($lastSignalement->getTable(), ['user_id' => Security::getUser()->getid()], ['date_creation', 'DESC']);
-        $difference = date_diff(date_create($lastSignalement->getDateCreation()), date_create(date('Y-m-d H:m:s')))->format('%i');
-        if((int)$difference < 25){
-            return "Vous ne pouvez pas signaler de commentaire pour l'instant. Veuillez réessayer dans quelques minutes.";
+        if($lastSignalement !== false){
+            $difference = date_diff(date_create($lastSignalement->getDateCreation()), date_create(date('Y-m-d H:m:s')))->format('%i');
+            if((int)$difference < 25){
+                return "Vous ne pouvez pas signaler de commentaire pour l'instant. Veuillez réessayer dans quelques minutes.";
+            }
         }
 
         return true;

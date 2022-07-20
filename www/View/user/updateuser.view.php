@@ -5,7 +5,7 @@
             if($userUpdate->hasMedia() === true):
             ?>
 
-            <img src="../<?= $userUpdate->getMedia()->getChemin()?>" alt="Image du chapitre"
+            <img src="../<?= $userUpdate->getMedia()->getChemin()?>" alt="Image de l'utilisateur"
                  width="300"
                  height="300" >
             <?php

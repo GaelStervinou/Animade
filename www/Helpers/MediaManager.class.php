@@ -16,6 +16,9 @@ class MediaManager{
         if(self::verifyNameUnicrity($filename) === false){
             Security::returnError(422, "Le nom du fichier n'est pas unique");
         }
+        if(self::verifyImageSize($data['size']) === false){
+            Security::returnError(413, "Le fichier est trop lourd pour être chargé");
+        }
 
         $chemin = 'assets/images/'.str_replace(" ", "_",$filename).".".str_replace("image/", "",$data["type"]);
         move_uploaded_file($data['tmp_name'], $chemin);
@@ -49,5 +52,21 @@ class MediaManager{
         }
 
         return true;
+    }
+
+    public static function verifyImageSize(int $size): bool
+    {
+        return $size < 640000;
+    }
+
+    public static function downloadMedia(int $media_id): void
+    {
+        $media = new Media();
+        $media->setId($media_id);
+        $media = $media->findOneBy($media->getTable(), ['id' => $media_id]);
+
+        header('Content-Type: '.end(explode('.', $media->getChemin())));
+        header('Content-Disposition: attachment; filename="'.$media->getNom().'"');
+        readfile($media->getChemin());
     }
 }

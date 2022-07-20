@@ -30,18 +30,6 @@ class Security
         die;
     }
 
-
-    public static function return403(string $message=null): bool
-    {
-        http_response_code(403);
-        $view = new View("security/403");
-        if($message === null){
-            $message = "Vous n'avez pas les droits d'accès à cette page";
-        }
-        $view->assign("message", $message);
-        return false;
-    }
-
     /**
      * @return bool|void
      */
@@ -66,7 +54,7 @@ class Security
         if(self::getUser()->getRoleId() === 1){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'êtes pas utilisateur");
     }
 
     /**
@@ -78,7 +66,7 @@ class Security
         if(self::getUser()->getRoleId() === 2){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'êtes pas auteur");
     }
 
     /**
@@ -90,7 +78,7 @@ class Security
         if(self::getUser()->getRoleId() >= 3){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'êtes pas administrateur");
     }
 
     /**
@@ -102,7 +90,7 @@ class Security
         if(self::getUser()->getRoleId() === 4){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'êtes pas super administrateur");
     }
 
     /**
@@ -173,9 +161,11 @@ class Security
      */
     public static function canAccessPage(PageModel|bool $page, UserModel|bool $user)
     {
-        if($page === false || $user === false){
-            self::returnError(404);
-        }
+        self::missingParameter($page);
+        self::unkownEntity($page);
+        self::missingParameter($user);
+        self::unkownEntity($user);
+
         if (self::verifyStatut($page->getStatut()) || $page->getAuteurId() === $user->getId()) {
             return true;
         }
@@ -183,7 +173,7 @@ class Security
         if($page->getStatut() === 1) {
             self::returnError(404);
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'avez pas accès à cet article");
     }
 
     /**
@@ -192,9 +182,8 @@ class Security
      */
     public static function canAccessCommentaire(Commentaire|bool $commentaire)
     {
-        if($commentaire === false){
-            self::returnError(404);
-        }
+        self::missingParameter($commentaire);
+        self::unkownEntity($commentaire);
         if (self::canAsAdmin() ||
             self::verifyStatut($commentaire->getStatut() && self::canDelete('commentaire'))) {
             return true;
@@ -203,7 +192,7 @@ class Security
         if($commentaire->getStatut() === 1) {
             self::returnError(404);
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'avez pas accès à ce commentaire");
     }
 
     /**
@@ -212,13 +201,12 @@ class Security
      */
     public static function canAccessPersonnage(Personnage|bool $personnage)
     {
-        if($personnage === false){
-            self::returnError(404);
-        }
+        self::missingParameter($personnage);
+        self::unkownEntity($personnage);
         if( self::canAsAdmin() || self::verifyStatut($personnage->getStatut())){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'avez pas accès à ce personnage");
     }
 
     /**
@@ -227,13 +215,12 @@ class Security
      */
     public static function canAccessChapitre(Chapitre|bool $chapitre)
     {
-        if($chapitre === false) {
-            self::returnError(404);
-        }
+        self::missingParameter($chapitre);
+        self::unkownEntity($chapitre);
         if(self::canAsAdmin() || self::verifyStatut($chapitre->getStatut())){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'avez pas accès à ce chapitre");
     }
 
     /**
@@ -242,13 +229,12 @@ class Security
      */
     public static function canAccessCategorie(Categorie|bool $categorie)
     {
-        if($categorie === false){
-            self::returnError(404);
-        }
-        if(self::isAdmin() || self::verifyStatut($categorie->getStatut())){
+        self::missingParameter($categorie);
+        self::unkownEntity($categorie);
+        if(self::canAsAdmin() || self::verifyStatut($categorie->getStatut())){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous n'avez pas accès à cette catégorie");
     }
 
     /**
@@ -284,13 +270,13 @@ class Security
     public static function canDeletePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
-        if($page === false){
-            self::returnError(404);
-        }
+
+        self::missingParameter($page);
+        self::unkownEntity($page);
         if(self::canAsAdmin() || $page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous ne pouvez pas supprimer cette page");
     }
 
     /**
@@ -299,13 +285,12 @@ class Security
     public static function canDeleteCommentaire()
     {
         $commentaire = UrlHelper::getUrlParameters($_GET)['object'];
-        if($commentaire === false){
-            self::returnError(404);
-        }
+        self::missingParameter($commentaire);
+        self::unkownEntity($commentaire);
         if(self::canAsAdmin() || $commentaire->getAuteurId() === $_SESSION['user']['id'] ){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous ne pouvez pas supprimer ce commentaire");
     }
 
     /**
@@ -314,13 +299,13 @@ class Security
     public static function canUpdateUser()
     {
         $user = UrlHelper::getUrlParameters($_GET)['object'];
-        if($user === false){
-            self::returnError(404);
-        }
+        self::missingParameter($user);
+        self::unkownEntity($user);
+
         if(self::canAsAdmin() || $user->getId() === $_SESSION['user']['id']){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous ne pouvez pas modifier cet utilisateur");
     }
 
     /**
@@ -329,13 +314,12 @@ class Security
     public static function canUpdateMedia()
     {
         $media = UrlHelper::getUrlParameters($_GET)['object'];
-        if($media === false){
-            self::returnError(404);
-        }
+        self::missingParameter($media);
+        self::unkownEntity($media);
         if(self::canAsAdmin() || $media->getUserId() === $_SESSION['user']['id']){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous ne pouvez pas modifier ce media");
     }
 
     /**
@@ -344,13 +328,12 @@ class Security
     public static function canUpdatePage()
     {
         $page = UrlHelper::getUrlParameters($_GET)['object'];
-        if($page === false){
-            self::returnError(404);
-        }
+        self::missingParameter($page);
+        self::unkownEntity($page);
         if($page->getAuteurId() === $_SESSION['user']['id']){
             return true;
         }
-        self::returnError(403);
+        self::returnError(403, "Vous ne pouvez pas modifier cette page");
     }
 
     /**
@@ -422,6 +405,30 @@ class Security
     public static function getConfig(): ?string
     {
         return file_get_contents('conf.inc.php');
+    }
+
+    /**
+     * @param bool|object $object
+     * @return bool
+     */
+    public static function unkownEntity(bool|object $object)
+    {
+        if($object === false){
+            self::returnError(404);
+        }
+        return true;
+    }
+
+    /**
+     * @param null|object|bool $object
+     * @return bool
+     */
+    public static function missingParameter(null|object|bool $object=null)
+    {
+        if($object === null){
+            self::returnError(500);
+        }
+        return true;
     }
 
 }

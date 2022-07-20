@@ -89,7 +89,7 @@ class BaseSQL implements QueryBuilder
             $this->commit();
         }catch (Exception $e){
             $this->rollback();
-            Security::returnError(403, $e->getMessage());
+            Security::returnError(422, $e->getMessage());
         }
     }
 

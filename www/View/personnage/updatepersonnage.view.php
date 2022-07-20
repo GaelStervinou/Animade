@@ -2,9 +2,15 @@
     <section id="login-form">
         <div class="grid">
             <div id="login-form">
-                <img src="../<?= $personnage->getMedia()->getChemin()?>" alt="Image de l'article"
+                <?php
+                if($personnage->hasMedia() === true):
+                ?>
+                <img src="../<?= $personnage->getMedia()->getChemin()?>" alt="Image du personnage"
                      width="300"
                      height="300" >
+                <?php
+                endif;
+                ?>
                 <div class="row">
                     <div class="col-3">
                         <?php

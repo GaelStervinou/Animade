@@ -1,6 +1,6 @@
 <main>
-    <h1 id="nom_personnage"><?=$user->getFullName();?></h1>
-    <?php use App\Core\Security;
+    <h1><?=$user->getFullName();?></h1>
+    <?php
 
 
     if($user->hasMedia() === true):
@@ -11,9 +11,6 @@
     <?php
     endif;
     ?>
-        <a href="/user/update?user_id=<?= $user->getId() ?>">Modifier</a>
-
-    <div id="list_pages">
-
-    </div>
+    <a href="/user/update?user_id=<?= $user->getId() ?>">Modifier</a>
+    <a href="/user/delete?user_id=<?= $user->getId() ?>">Clôturer le compte</a>
 </main>

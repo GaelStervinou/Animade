@@ -296,7 +296,7 @@ class User extends BaseSQL
                 'email' => [
                     'type' => 'email',
                     'placeholder' => 'Votre email',
-                    'label' => 'Email ou Pseudo :',
+                    'label' => 'Email :',
                     'id' => 'emailRegister',
                     'class' => 'inputRegister',
                     'required' => true,
@@ -370,7 +370,7 @@ class User extends BaseSQL
                 ],
                 'password' => [
                     'type' => 'password',
-                    'label' => 'Email ou Pseudo :',
+                    'label' => 'Mot de passe :',
                     'placeholder' => 'Votre mot de passe',
                     'id' => 'pwdRegister',
                     'class' => 'inputRegister',
@@ -379,7 +379,7 @@ class User extends BaseSQL
                 ],
                 'passwordConfirmation' => [
                     'type' => 'password',
-                    'label' => 'Mot de Passe :',
+                    'label' => 'Confirmation :',
                     'placeholder' => 'Confirmation du mot de passe',
                     'id' => 'pwdConfirmationRegister',
                     'class' => 'inputRegister',

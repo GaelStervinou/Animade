@@ -49,10 +49,10 @@ class Commentaire{
 
                 }catch (Exception $e) {
                     $commentaire->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         }else{
             $user = new UserModel();

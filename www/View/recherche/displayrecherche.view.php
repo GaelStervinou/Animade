@@ -6,7 +6,6 @@
         </h1>
 
         <?php
-        // TODO faire un truc pcq resultats n'est jamais vide
             if(empty($resultats)):
         ?>
             <p>

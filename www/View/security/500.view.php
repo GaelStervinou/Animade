@@ -1,5 +1,4 @@
-<h1>
-    Page introuvable
-</h1>
+<h1>Erreur du serveur.</h1>
+
 
 <a href="/">Revenir à l'accueil</a>

@@ -11,15 +11,16 @@
                                 <th>Nom</th>
                                 <th>Statut</th>
                                 <th>Action</th>
+                                <th>Télécharger</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($medias as $media): ?>
                                 <tr>
                                     <td>
-                                        <img src="../<?= $media->getChemin()?>" alt="Image du chapitre"
-                                             width="300"
-                                             height="300" >
+                                        <img src="../<?= $media->getChemin()?>" alt="Image"
+                                             width="150"
+                                             height="150" >
                                     </td>
                                     <td><?= $media->getNom()?></td>
                                     <?php
@@ -32,9 +33,14 @@
                                         ?>
                                     <td>Supprimé</td>
                                     <td><a href="/media/updateStatut?media_id=<?=$media->getId()?>">Activer</a></td>
+                                    <?php
+                                        endif;
+                                        ?>
+                                    <td>
+                                        <a href="/download_media?media_id=<?=$media->getId()?>">Télécharger</a>
+                                    </td>
                                 </tr>
                             <?php
-                            endif;
                             endforeach; ?>
 
                             </tbody>
@@ -43,11 +49,10 @@
                                 <th>Nom</th>
                                 <th>Statut</th>
                                 <th>Action</th>
+                                <th>Télécharger</th>
                             </tr>
                             </tfoot>
                         </table>
-
-
                         <script>
                             updateDataTable();
                         </script>

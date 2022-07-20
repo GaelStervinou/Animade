@@ -6,7 +6,9 @@ use App\Core\Security;
 session_start();
 
 require "conf.inc.php";
-
+if(http_response_code() === 500){
+    Security::returnError(500);
+}
 
 function myAutoloader(string $class): void
 {

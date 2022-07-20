@@ -34,11 +34,11 @@ class Categorie{
                     $categorie->commit();
                 }catch (Exception $e) {
                     $categorie->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
                 }
                 header('Location:/categorie?categorie_id='.$id);
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         }else{
             $user = new UserModel();
@@ -53,16 +53,13 @@ class Categorie{
 
     public function read()
     {
-        $user = new UserModel();
-        $user = $user->setId($_SESSION['user']['id']);
         $parameters = UrlHelper::getUrlParameters($_GET);
         if(isset($parameters['categorie'])){
             $parameters['object'] = $parameters['categorie'];
         }
         Security::canAccessCategorie($parameters['object']);
         $view = new View("categorie/displaycategorie");
-        $view->assign("firstname", $user->getFirstname());
-        $view->assign("lastname", $user->getLastname());
+
         $view->assign("categorie", $parameters['object']);
         $view->assign("meta", [
             'script' => [
@@ -100,11 +97,11 @@ class Categorie{
                     header('Location:/categorie?categorie_id='.$categorie->getId());
                 } catch (Exception $e) {
                     $categorie->rollback();
-                    Security::returnError(403, $e->getMessage());
+                    Security::returnError(422, $e->getMessage());
 
                 }
             }else {
-                Security::returnError(403, implode("\r\n", $result));
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $categorie = UrlHelper::getUrlParameters($_GET)['object'];

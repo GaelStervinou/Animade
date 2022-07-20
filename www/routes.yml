@@ -150,7 +150,8 @@
   controller: user
   action: delete
   security:
-    rule: admin
+    rule:
+      update: user
 
 /user/update:
   controller: user
@@ -301,6 +302,13 @@
 /media/updateStatut:
   controller: media
   action: updateStatut
+  security:
+    rule:
+      update: media
+
+/download_media:
+  controller: media
+  action: downloadMedia
   security:
     rule:
       update: media

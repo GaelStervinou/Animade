@@ -48,9 +48,7 @@
     endif;
     ?>
     <div>
-        <?php
-        if($can_comment === "yes"):
-            ?>
+
             <br>
             <span class="like_action" id="like"
               <?php
@@ -88,9 +86,6 @@
                 <?= $page->countUnlikes()?>
             </span>
 
-        <?php
-        endif;
-        ?>
     </div>
 
     <div>

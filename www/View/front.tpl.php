@@ -13,7 +13,7 @@ if(!UrlHelper::isAjaxRequest()):
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title><?=$meta['titre'] ?? 'Utilisateur'?></title>
+    <title><?=$meta['titre'] ?? SITENAME?></title>
     <?php
     if(defined('FAVICON')):
     ?>
@@ -28,6 +28,9 @@ if(!UrlHelper::isAjaxRequest()):
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <?php
+    if(isset($meta['link'])){
+        echo "<link rel='stylesheet' type='text/css' href='".$meta['link']."'>";
+    }
     if(isset($meta['script'])):
         foreach($meta['script'] as $script):
     ?>
@@ -71,8 +74,9 @@ if(!UrlHelper::isAjaxRequest()):
                             <li><a href="/page/new">Nouvelle page</a></li>
                         <?php
                         endif;
+
                     ?>
-                        <li><a href="/media/listMedias?user_id=<?=$currentUser->getId()?>">Médias</a></li>
+                        <li><a href="/media/listMedias">Médias</a></li>
                         <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                         <li><a href="/logout">Se déconnecter</a></li>
                     <?php

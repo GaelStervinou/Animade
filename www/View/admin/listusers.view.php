@@ -26,13 +26,14 @@
                                         <td><?= $user->getStatus() ?></td>
                                         <td><?= \App\Helpers\Formalize::formalizeDateYearMonthDay($user->createdAt) ?></td>
                                         <td><?= $user->getRoleId() ?></td>
-                                        <?php if ($user->getRoleId() <= 2) : ?>
+                                        <?php if ($user->getRoleId() <= 2 || \App\Core\Security::canAsSuperAdmin() === true) : ?>
                                             <td><a href="/user/update?user_id=<?= $user->getId() ?>">Modifier</a></td>
                                         <?php else: ?>
                                             <td></td>
                                         <?php
                                         endif; ?>
-                                        <?php if ($user->getRoleId() <= 2) : ?>
+                                        <?php if (($user->getRoleId() <= 2 || \App\Core\Security::canAsSuperAdmin() === true) && $user->getStatus() !== -1) :
+                                            ?>
                                             <td><a href="/user/delete?user_id=<?= $user->getId() ?>">Supprimer</a></td>
                                         <?php
                                         else: ?>
