@@ -21,6 +21,8 @@
 
 namespace App\Core;
 
+use App\Core\Security;
+
 /**
  * PHPMailer - PHP email creation and transport class.
  *
@@ -5067,10 +5069,9 @@ class PHPMailer
 
             //On envoie le mail
             $this->send();
-            echo "Mail envoyé correctement";
 
         }catch(Exception $e){
-            echo "Message non envoyé. Erreur: {$this->ErrorInfo}";
+            Security::returnError(500);
 
         }
     }

@@ -82,7 +82,8 @@ class User
                     $user->setStatus(1);
                     $user->setRoleId(1);
                     $user->generateEmailToken();
-                    $mail = new PHPMailer();
+                    $mail = new PHPMailer(true);
+                    $mail->CharSet = 'UTF-8';
                     $options = [
                         'subject' => 'Validation de votre e-mail pour votre compte Animade',
                         'body' => "Bonjour, veuillez valider votre adresse email en cliquant sur le lien suivant : http://{$_SERVER['HTTP_HOST']}/verifyAccount?email={$user->getEmail()}&emailToken={$user->getEmailToken()}",
@@ -218,7 +219,8 @@ class User
                     $user->generateMdpToken();
                     $user->save();
 
-                    $mail = new PHPMailer();
+                    $mail = new PHPMailer(true);
+                    $mail->CharSet = 'UTF-8';
                     $options = [
                         'subject' => 'Récupération de votre mot de passe pour votre compte Animade',
                         'body' => "Bonjour, veuillez cliquer sur le lien suivant : http://{$_SERVER['HTTP_HOST']}/updatePassword?email={$user->getEmail()}&mdpToken={$user->getMdpToken()}

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Core\Exception;
 use App\Core\Security;
+use App\Core\Observer\SignalementObserver;
+use App\Core\Observer\SignalementSubject;
 use App\Core\Validator;
 use App\Core\BaseSQL;
 use App\Model\Signalement as SignalementModel;
@@ -23,8 +25,15 @@ class Signalement{
                     Security::returnError(403, $canComment);
                 }
                 $signalement->setStatut(2);
+
+                $subject = new SignalementSubject();
+                $observer = new SignalementObserver($signalement);
+                $subject->attach($observer);
+
+                $subject->notify();
                 $signalement->save();
                 $signalement->commit();
+
 
                 echo "Commentaire signalé";
                 return true;
@@ -33,6 +42,7 @@ class Signalement{
                 Security::returnError(500);
             }
         }
-        return Security::returnError(403, "Page innaccessible");
+        Security::returnError(403, "Page innaccessible");
     }
+
 }
