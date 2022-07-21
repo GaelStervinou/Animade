@@ -45,13 +45,13 @@
                                                 echo '<td><a href="/page/pages?auteur_id='.$res->getId().'">'.$res->getFullName().'</a></td>';
                                                 break;
                                             case 'categories':
-                                                echo '<td><a href="/page/pages?categorie_id='.$res->getId().'">'.$res->getNom().'</a></td>';
+                                                echo '<td><a href="/categorie?categorie_id='.$res->getId().'">'.$res->getNom().'</a></td>';
                                                 break;
                                             case 'personnages':
-                                                echo '<td><a href="/page/pages?personnage_id='.$res->getId().'">'.$res->getNom().'</a></td>';
+                                                echo '<td><a href="/personnage?personnage_id='.$res->getId().'">'.$res->getNom().'</a></td>';
                                                 break;
                                             case 'chapitres':
-                                                echo '<td><a href="/page/pages?chapitre_id='.$res->getId().'">'.$res->getTitre().'</a></td>';
+                                                echo '<td><a href="/chapitre?chapitre_id='.$res->getId().'">'.$res->getTitre().'</a></td>';
                                                 break;
                                         }
                                         if(method_exists($res, "getDescription")){

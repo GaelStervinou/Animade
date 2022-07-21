@@ -4,19 +4,19 @@ services:
     build: site
     container_name: apache-3IW
     ports :
-     - "8008:8008"
+      - "80:80"
     volumes:
-     - ./www:/var/www/html/
-     - ./server/000-default.conf:/etc/apache2/sites-available/000-default.conf
-     - ./server/apache2.conf:/etc/apache2/apache2.conf
-     - ./server/php.ini:/usr/local/etc/php/php.ini
+      - ./www:/var/www/html/
+      - ./server/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./server/apache2.conf:/etc/apache2/apache2.conf
+      - ./server/php.ini:/usr/local/etc/php/php.ini
     depends_on:
-     - database
+      - database
     environment:
       - UPLOAD_LIMIT=64M
 
   database:
-    platform: linux/x86_64
+    platform: linux/amd64
     image: mysql:5.7
     container_name: mysql-mvc
     ports :
@@ -38,8 +38,5 @@ services:
     ports:
       - 8888:80
     environment:
-        - PMA_ARBITRARY=1
-        - UPLOAD_LIMIT=64M
-
-      
-      
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=64M
