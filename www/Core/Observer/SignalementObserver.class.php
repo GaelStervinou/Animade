@@ -19,7 +19,7 @@ class SignalementObserver
     public function setAdmins()
     {
         $admins = (new User())->findManyBy(['role_id' => 3]);
-        array_merge($admins, (new User())->findManyBy(['role_id' => 4]));
+        $amins = array_merge($admins, (new User())->findManyBy(['role_id' => 4]));
         $this->admins = $admins;
     }
 
