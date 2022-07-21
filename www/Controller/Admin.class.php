@@ -183,6 +183,8 @@ class Admin
                     }
                 }
                 file_put_contents('conf.inc.php', $configContent);
+            }else{
+                Security::returnError(400, implode("\r\n", $result));
             }
             try {
                 $db = $_POST['DBNAME'];

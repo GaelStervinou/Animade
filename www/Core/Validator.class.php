@@ -25,15 +25,16 @@ class Validator{
             $result[] = "Formulaire modifié pas l'utilistaeur";
         }
         foreach($config['inputs'] as $name => $input){
-            if(!empty($data[$name]) &&!in_array($input['type'], ["wysiwyg", "file"])){
-                if($data[$name] !== strip_tags($data[$name])){
-                    $result[] = "Impossible d'insérer des balises HTML dans le champ {$name}";
-                }
-            }
+
             if(!isset($input['authorized'])){
                 $input['authorized'] = true;
             }
             if($input['authorized'] === true){
+                if(!empty($data[$name]) &&!in_array($input['type'], ["wysiwyg", "file"])){
+                    if($data[$name] !== strip_tags($data[$name])){
+                        $result[] = "Impossible d'insérer des balises HTML dans le champ {$name}";
+                    }
+                }
                 if(!isset($data[$name]) && $input['required'] === true){
                     $result[] = "Il manque des champs";
                 }
@@ -48,6 +49,10 @@ class Validator{
                 }
                 if($input['type'] === 'select' && !empty($data[$name]) && !in_array($data[ $name ], array_values($input[ 'options' ]), false)){
                     Security::returnError(403, "Option non autorisée pour le champs ".$name);
+                }
+
+                if($name === 'media' && empty($data['media_name']) && !empty($data['media']['tmp_name'])){
+                    $result[] = "Veuillez renseigné un nom pour le media";
                 }
             }
         }

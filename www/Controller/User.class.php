@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Core\CleanWords as Clean;
 use App\Core\Validator;
 use App\Core\View;
 use App\Core\PHPMailer;
-use App\Core\SMTP;
 use App\Core\Exception;
 use App\Core\Security;
 
@@ -32,15 +30,34 @@ class User
                 Security::login($user);
 
                 if (Security::canAsAdmin() === true) {
-                    header('Location:/admin/dashboard');
+                    if(!empty($_SESSION['requested_url'])){
+                        $url = $_SESSION['requested_url'];
+                        unset($_SESSION['requested_url']);
+                        header("Location: $url");
+                    }else{
+                        header('Location:/admin/dashboard');
+                    }
                 } else {
-                    header('Location:/');
+                    if(!empty($_SESSION['requested_url'])){
+                        $url = $_SESSION['requested_url'];
+                        unset($_SESSION['requested_url']);
+                        header("Location: $url");
+                    }else{
+                        header('Location:/');
+                    }
                 }
             }else {
                 Security::returnError(403, "Mot de passe incorrect");
             }
         } else {
+            if(isset($_SESSION['requested_url'])) {
+                $requestedUrl = $_SESSION['requested_url'];
+            }
             session_destroy();
+            if(isset($requestedUrl)){
+                session_start();
+                $_SESSION['requested_url'] = $requestedUrl;
+            }
             $view = new View("login");
             $view->assign("meta", [
                 'titre' => 'Se connecter',
@@ -135,7 +152,7 @@ class User
                 ]);
             } catch (Exception $e) {
                 $user->rollback();
-                Security::returnError(422, $e->getMessage());
+                Security::returnError(422);
             }
         }else{
             Security::returnError(404);
@@ -191,7 +208,7 @@ class User
                     }
                 } catch (Exception $e) {
                     $user->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
                 }
             }else {
                 Security::returnError(400, implode("\r\n", $result));
@@ -211,6 +228,8 @@ class User
             $result = Validator::run($user->getEmailPasswordForgottenForm(), $_POST);
             if(empty($result)){
                 $user = $user->getUserFromEmail($_POST["email"]);
+            }else{
+                Security::returnError(400, implode("\r\n", $result));
             }
             if(!empty($user))
             {
@@ -235,9 +254,11 @@ class User
 
                 }catch (Exception $e) {
                     $user->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
+            }else{
+                Security::returnError(404);
             }
         } else {
             $user = new UserModel();
@@ -270,7 +291,7 @@ class User
 
                 }catch (Exception $e) {
                     $user->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
             }else {
@@ -331,7 +352,7 @@ class User
             }
         } catch (Exception $e) {
             $user->rollback();
-            Security::returnError(422, $e->getMessage());
+            Security::returnError(422);
         }
     }
 }

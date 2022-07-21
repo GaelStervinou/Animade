@@ -6,7 +6,8 @@
                     <div class="col-3">
 
                         <?php
-                        $this->includePartial('form', $user->getFormLogin()); ?>
+                        $this->includePartial('form', $user->getFormLogin());
+                        ?>
                     </div>
 
                 </div>

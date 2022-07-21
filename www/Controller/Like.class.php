@@ -38,7 +38,7 @@ class Like {
             $like->commit();
         }catch (Exception $e) {
             $like->rollback();
-            Security::returnError(422, $e->getMessage());
+            Security::returnError(422);
         }
 
         return true;

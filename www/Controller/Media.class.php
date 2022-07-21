@@ -47,7 +47,7 @@ class Media{
                 header('Location:/media/listMedias');
             }catch (Exception $e) {
                 $media->rollback();
-                Security::returnError(422, $e->getMessage());
+                Security::returnError(422);
             }
         }else{
             Security::returnError(404);

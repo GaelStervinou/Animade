@@ -8,7 +8,7 @@
   controller: general
   action: sitemap
 
-/me-contacter:
+/contact:
   controller: general
   action: contact
 

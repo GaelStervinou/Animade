@@ -62,7 +62,7 @@ class Page{
                     header("Location:/page?page={$page->getSlug()}");
                 }catch (Exception $e) {
                     $page->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
                 }
             }else {
                 Security::returnError(400, implode("\r\n", $result));
@@ -206,7 +206,7 @@ class Page{
                     header('Location:/page?page='.$page->getSlug());
                 }catch (Exception $e) {
                     $page->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
                 }
             }else {
                 Security::returnError(400, implode("\r\n", $result));

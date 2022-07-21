@@ -61,10 +61,10 @@
                                             echo '<td>Aucune description</td>';
                                         }
                                     if(method_exists($res, "getDateCreation")){
-                                        echo '<td>'.$res->getDateCreation().'</td>';
+                                        echo '<td>'.\App\Helpers\Formalize::formalizeDateYearMonthDay($res->getDateCreation()).'</td>';
                                     }
                                     else{
-                                        echo '<td>Aucune</td>';
+                                        echo '<td></td>';
                                     }
                                     ?>
 

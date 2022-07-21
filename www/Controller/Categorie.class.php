@@ -34,7 +34,7 @@ class Categorie{
                     $categorie->commit();
                 }catch (Exception $e) {
                     $categorie->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
                 }
                 header('Location:/categorie?categorie_id='.$id);
             }else {
@@ -97,7 +97,7 @@ class Categorie{
                     header('Location:/categorie?categorie_id='.$categorie->getId());
                 } catch (Exception $e) {
                     $categorie->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
             }else {

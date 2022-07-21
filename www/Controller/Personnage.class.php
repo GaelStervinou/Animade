@@ -44,7 +44,7 @@ class Personnage
                     header('Location:/personnage?personnage_id='.$id);
                 } catch (Exception $e) {
                     $personnage->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
             }else {
@@ -109,11 +109,11 @@ class Personnage
                     header('Location:/personnage?personnage_id='.$personnage->getId());
                 } catch (Exception $e) {
                     $personnage->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
-            }else {
-                Security::returnError(105, implode("\r\n", $result));
+            }else{
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $personnage = UrlHelper::getUrlParameters($_GET)['object'];

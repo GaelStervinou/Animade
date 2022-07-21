@@ -25,7 +25,6 @@ class Chapitre{
             $chapitre = new ChapitreModel();
 
             $result = Validator::run($chapitre->getNewChapitreForm(), $_POST);
-
             if (empty($result)) {
                 try {
                     $chapitre->beginTransaction();
@@ -42,7 +41,7 @@ class Chapitre{
                     header('Location:/chapitre?chapitre='.$chapitre->getTitre());
                 } catch (Exception $e) {
                     $chapitre->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
             }else {
@@ -88,6 +87,7 @@ class Chapitre{
 
             $chapitre = (new ChapitreModel())->setId($_GET['chapitre_id']);
             $result = Validator::run($chapitre->getUpdateChapitreForm(), $_POST);
+
             if (empty($result)) {
                 try {
                     $chapitre->beginTransaction();
@@ -104,9 +104,11 @@ class Chapitre{
                     header('Location:/chapitre?chapitre='.$chapitre->getTitre());
                 } catch (Exception $e) {
                     $chapitre->rollback();
-                    Security::returnError(422, $e->getMessage());
+                    Security::returnError(422);
 
                 }
+            }else{
+                Security::returnError(400, implode("\r\n", $result));
             }
         } else {
             $view = new View("chapitre/updateChapitre");

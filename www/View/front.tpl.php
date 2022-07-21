@@ -43,25 +43,26 @@ if(!UrlHelper::isAjaxRequest()):
 </head>
 <body>
 
-    <header id="site-header">
-        <?php
-        $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
-        $isMob = is_numeric(strpos($ua, "mobile"));
-        if($isMob):
-        ?>
-        <div class="mobile_access">
-            <p>Nous vous recommandons d'accéder au site via un ordinateur pour une meilleure expérience.</p>
-        </div>
-        <?php
-        endif;
+    <header>
+        <div class="container">
+            <?php
+            $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
+            $isMob = is_numeric(strpos($ua, "mobile"));
+            if($isMob):
+                ?>
+                <div class="mobile_access">
+                    <p>Nous vous recommandons d'accéder au site via un ordinateur pour une meilleure expérience.</p>
+                </div>
+            <?php
+            endif;
             if(defined('LOGO')):
                 ?>
-        <a href="/">
-            <img src="../assets/images/administration/<?=LOGO?>" alt="Logo du site" style="width: 100px;">
-        </a>
-        <?php
-        endif;
-        ?>
+                <a href="/">
+                    <img src="../assets/images/administration/<?=LOGO?>" alt="Logo du site" style="width: 100px;">
+                </a>
+            <?php
+            endif;
+            ?>
             <button id="menu-button"></button>
             <nav id="site-nav">
                 <ul>
@@ -75,7 +76,7 @@ if(!UrlHelper::isAjaxRequest()):
                         <?php
                         endif;
 
-                    ?>
+                        ?>
                         <li><a href="/media/listMedias">Médias</a></li>
                         <li><a href="/user?user_id=<?=$currentUser->getId()?>">Profil</a></li>
                         <li><a href="/logout">Se déconnecter</a></li>
@@ -85,6 +86,7 @@ if(!UrlHelper::isAjaxRequest()):
                 </ul>
             </nav>
         </div>
+
         <?php
         if($currentUser !== false):
             ?>

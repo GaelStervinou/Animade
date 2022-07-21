@@ -75,9 +75,7 @@ $_SESSION['csrfToken'] = $csrfToken;
 
             <div id="toolbar-container" style="width:500px;"></div>
 
-            <textarea id="editor" name="<?= $name?>" style="width:500px;" rows="15" cols="33">
-            <?= $input['default_value']?>
-        </textarea>
+            <textarea id="editor" name="<?= $name?>" style="width:500px;" rows="15" cols="33"><?= $input['default_value']?></textarea>
 
             <?php
             break;
@@ -96,8 +94,7 @@ $_SESSION['csrfToken'] = $csrfToken;
                          required='required'
                      <?php endif;?>
                     ><?php if(!empty($input['default_value'])):?><?=$input['default_value']?>
-                        <?php endif;?>
-        </textarea>
+                        <?php endif;?></textarea>
                 </div>
             </div>
 
