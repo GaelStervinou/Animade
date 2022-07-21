@@ -157,20 +157,6 @@ class BaseSQL implements QueryBuilder
         return $this->fetchQuery($class);
     }
 
-    public function checkIfCanResponseToComment($comment_id)
-    {
-        $this
-            ->select(DBPREFIX.'commentaire', ['commentaire_id', 'auteur_id'])
-            ->where('id', $comment_id);
-        $query = $this->prepareQuery();
-        $query->execute();
-        $commentaire = $query->fetch();
-        if($commentaire['commentaire_id'] !== null || $commentaire['auteur_id'] === Security::getUser()->getId()){
-            Security::returnError(403, "Vous ne pouvez pas répondre à ce commentaire");
-        }
-        return true;
-    }
-
     public function init() {
         $this->query = new \StdClass;
     }

@@ -173,4 +173,13 @@ class Validator{
         }
         return true;
     }
+
+    public static function checkIfCanResponseToComment($comment_id)
+    {
+        $commentaire = (new CommentaireModel())->findOneBy(DBPREFIX."commentaire", ['id' => $comment_id]);
+        if($commentaire->getId() === null || $commentaire->getAuteurId() === Security::getUser()->getId()){
+            Security::returnError(403, "Vous ne pouvez pas répondre à ce commentaire");
+        }
+        return true;
+    }
 }

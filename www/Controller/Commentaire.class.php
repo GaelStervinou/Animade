@@ -35,7 +35,7 @@ class Commentaire{
                     $commentaire->setStatut(2);
                     $commentaire->setAuteurId($_SESSION['user']['id']);
                     $commentaire->setPageId($_POST['page_id']);
-                    if(!empty($_POST['commentaire_id']) && $commentaire->checkIfCanResponseToComment($_POST['commentaire_id']) === true){
+                    if(!empty($_POST['commentaire_id']) && Validator::checkIfCanResponseToComment($_POST['commentaire_id']) === true){
                         $commentaire->setCommentaireId($_POST['commentaire_id']);
                     }
 
