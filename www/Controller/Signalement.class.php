@@ -22,7 +22,8 @@ class Signalement{
                 if($canComment === true){
                     $signalement->setCommentaireId($_POST[ 'commentaire_id' ]);
                 }else{
-                    Security::returnError(403, $canComment);
+                    echo $canComment;
+                    return false;
                 }
                 $signalement->setStatut(2);
 

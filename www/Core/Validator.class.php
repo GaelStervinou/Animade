@@ -132,8 +132,8 @@ class Validator{
     public static function checkIfNotAlreadySignaled($commentaire_id): bool|string
     {
         $signalement = new Signalement();
-        if($signalement->findOneBy($signalement->getTable(), ['commentaire_id' => $commentaire_id, 'user_id' => Security::getUser()->getid()])) {
-            return "Commentaire déjà signalé";
+        if($signalement->findOneBy($signalement->getTable(), ['commentaire_id' => $commentaire_id, 'user_id' => Security::getUser()->getId()])) {
+            return "Vous avez déjà signalé ce commentaire";
         }
 
         return true;
@@ -142,14 +142,14 @@ class Validator{
     /**
      * @return bool|string
      */
-    public static function checkIfUserSignaledLessThanOneMinuteAgo(): bool|string
+    public static function checkIfUserSignaledLessThanOneDayAgo(): bool|string
     {
         $lastSignalement = new Signalement();
         $lastSignalement = $lastSignalement->findOneBy($lastSignalement->getTable(), ['user_id' => Security::getUser()->getid()], ['date_creation', 'DESC']);
         if($lastSignalement !== false){
-            $difference = date_diff(date_create($lastSignalement->getDateCreation()), date_create(date('Y-m-d H:m:s')))->format('%i');
-            if((int)$difference < 25){
-                return "Vous ne pouvez pas signaler de commentaire pour l'instant. Veuillez réessayer dans quelques minutes.";
+            $difference = date_diff(date_create($lastSignalement->getDateCreation()), date_create(date('Y-m-d H:m:s')))->format('%d');
+            if((int)$difference < 1){
+                return "Vous ne pouvez pas signaler de commentaire pour l'instant. Veuillez réessayer demain.";
             }
         }
 
@@ -168,8 +168,8 @@ class Validator{
         if(self::checkIfNotAlreadySignaled($commentaire_id) !== true){
             return self::checkIfNotAlreadySignaled($commentaire_id);
         }
-        if(self::checkIfUserSignaledLessThanOneMinuteAgo() !== true){
-            return self::checkIfUserSignaledLessThanOneMinuteAgo();
+        if(self::checkIfUserSignaledLessThanOneDayAgo() !== true){
+            return self::checkIfUserSignaledLessThanOneDayAgo();
         }
         return true;
     }

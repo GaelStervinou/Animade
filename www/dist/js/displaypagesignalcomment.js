@@ -15,12 +15,12 @@ function signalerCommentaire(e){
             commentaire_id: $(this).data('id'),
         },
         function(data, status){
-            if(status === "success") {
+            if(status === "success" && data === "Commentaire signalé") {
                 element.after("<p style='color:grey; font-style: italic'>Commentaire signalé</p>")
                 element.remove();
-            }else{
+            }else if(status !== "success"){
                 alert('Erreur lors de la signalation');
             }
-            alert( data );
-        })
+            alert(data);
+        });
 }
