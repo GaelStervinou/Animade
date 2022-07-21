@@ -364,18 +364,18 @@ table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.
   height: auto;
   background-color: #2e2e2e;
   bottom: 0;
-  margin-top: 10px;
   filter: drop-shadow(0px -4px 4px rgba(0, 0, 0, 0.25));
 }
 
-.footer .col {
+.footer .by {
   width: 190px;
   height: auto;
   float: left;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  padding: 0px 20px 20px 20px;
+  color: #FFF;
+  text-align: center;
 }
 
 .footer .col h1 {
@@ -427,8 +427,7 @@ table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.
 
 @media only screen and (min-width: 1280px) {
   .contain {
-    width: 1200px;
-    margin: 0 auto;
+    margin-left: 45%;
   }
 }
 @media only screen and (max-width: 1139px) {
