@@ -65,8 +65,9 @@ class MediaManager{
         $media->setId($media_id);
         $media = $media->findOneBy($media->getTable(), ['id' => $media_id]);
 
-        header('Content-Type: '.end(explode('.', $media->getChemin())));
-        header('Content-Disposition: attachment; filename="'.$media->getNom().'"');
+        $array = explode('.', $media->getChemin());
+        header('Content-Type: '.end($array));
+        header('Content-Disposition: attachment; filename="'.$media->getNom().'.'.end($array).'"');
         readfile($media->getChemin());
     }
 }
